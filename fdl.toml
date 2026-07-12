@@ -1,0 +1,27 @@
+name = "metro_tokyo"
+command = "python main.py"
+
+[targets.default]
+url = "s3://${FDL_S3_BUCKET}"
+public_url = "https://data.queria.io"
+s3_endpoint = "${FDL_S3_ENDPOINT}"
+s3_access_key_id = "${FDL_S3_ACCESS_KEY_ID}"
+s3_secret_access_key = "${FDL_S3_SECRET_ACCESS_KEY}"
+
+[targets.local]
+url = "~/.local/share/fdl"
+public_url = "http://localhost:4001"
+
+[meta]
+license = "クリエイティブ・コモンズ 表示 4.0 国際 (CC BY 4.0)"
+license_url = "https://creativecommons.org/licenses/by/4.0/deed.ja"
+title = "東京都オープンデータカタログ"
+description = """東京都オープンデータカタログ (catalog.data.metro.tokyo.lg.jp) から取得した東京都のオープンデータ。
+東京都福祉局「社会福祉施設等一覧」の認可保育所・児童館など、都内の施設情報を提供。"""
+cover = "🗼"
+tags = ['東京都', '子育て', '保育所', '児童館', '施設', 'GIS']
+source_url = "https://catalog.data.metro.tokyo.lg.jp/"
+repository_url = "https://github.com/queria-io/dataset-metro-tokyo"
+
+[meta.schemas]
+childcare.title = "子育て施設"

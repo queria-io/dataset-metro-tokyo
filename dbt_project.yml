@@ -1,0 +1,20 @@
+name: "metro_tokyo"
+version: "1.0.0"
+
+profile: "metro_tokyo"
+
+model-paths: ["models"]
+macro-paths: ["macros", "shared/macros"]
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  metro_tokyo:
+    +database: metro_tokyo
+    +materialized: view
+    childcare:
+      raw:
+        +materialized: table
+      stg:
+        +materialized: table
+      mart:
+        +materialized: table

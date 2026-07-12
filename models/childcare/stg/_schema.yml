@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: stg_nursery_school
+    description: |
+      認可保育所のステージング。列名を英語化し、経度・緯度を DOUBLE、
+      認可定員を INTEGER に型変換（'-' や空欄は NULL）。
+      所在地は都道府県名を含まない（「千代田区外神田…」形式）。
+  - name: stg_children_center
+    description: |
+      児童館のステージング。列名を英語化し、経度・緯度を DOUBLE、
+      定員を INTEGER に型変換（'-' や空欄は NULL）。
+      所在地は都道府県名を含まない（「千代田区外神田…」形式）。
