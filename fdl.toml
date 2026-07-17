@@ -17,11 +17,13 @@ license = "クリエイティブ・コモンズ 表示 4.0 国際 (CC BY 4.0)"
 license_url = "https://creativecommons.org/licenses/by/4.0/deed.ja"
 title = "東京都オープンデータカタログ"
 description = """東京都オープンデータカタログ (catalog.data.metro.tokyo.lg.jp) から取得した東京都のオープンデータ。
-東京都福祉局「社会福祉施設等一覧」の認可保育所・児童館など、都内の施設情報を提供。"""
+全データセットのメタデータ（カタログ台帳）と、東京都福祉局「社会福祉施設等一覧」の
+認可保育所・児童館など、都内の施設情報を提供。"""
 cover = "🗼"
-tags = ['東京都', '子育て', '保育所', '児童館', '施設', 'GIS']
+tags = ['東京都', '子育て', '保育所', '児童館', '施設', 'GIS', 'カタログ', 'メタデータ']
 source_url = "https://catalog.data.metro.tokyo.lg.jp/"
 repository_url = "https://github.com/queria-io/dataset-metro-tokyo"
 
 [meta.schemas]
+catalog.title = "カタログ"
 childcare.title = "子育て施設"

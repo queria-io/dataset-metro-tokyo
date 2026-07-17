@@ -1,0 +1,203 @@
+version: 2
+
+_meta: &meta
+  source_url: "https://catalog.data.metro.tokyo.lg.jp/"
+  published: true
+  tags: ["東京都", "オープンデータ", "カタログ", "メタデータ"]
+
+models:
+  - name: datasets
+    description: |
+      東京都オープンデータカタログ (catalog.data.metro.tokyo.lg.jp) に登録された
+      全データセットのメタデータ一覧（約9,600件）。都庁各局と都内62区市町村が提供する
+      オープンデータの台帳で、タイトル・提供組織・ライセンス・更新頻度・リソース数を持つ。
+      CKAN API (package_search) から毎回全量を取得して洗い替える。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "データセット一覧"
+    columns:
+      - name: package_id
+        meta:
+          title: データセットID
+          description: CKAN の内部 UUID。resources / dataset_tags / dataset_groups との結合キー
+      - name: dataset_code
+        meta:
+          title: データセットコード
+          description: カタログ上の識別名（例 t132071d3100000006）。先頭が組織コード
+      - name: title
+        meta:
+          title: タイトル
+      - name: description
+        meta:
+          title: 説明
+      - name: organization_code
+        meta:
+          title: 提供組織コード
+          description: organizations との結合キー（例 t000003 = 東京都総務局）
+      - name: organization_title
+        meta:
+          title: 提供組織名
+      - name: license_id
+        meta:
+          title: ライセンスID
+          description: ほぼ全件が CC-BY-4.0
+      - name: license_title
+        meta:
+          title: ライセンス名
+      - name: maintainer
+        meta:
+          title: 管理者
+          description: データを管理する部署名
+      - name: update_frequency
+        meta:
+          title: 更新頻度
+          description: 元データの自由記述（「年１回」「随時」「月次」等。未記載は NULL）
+      - name: num_resources
+        meta:
+          title: リソース数
+      - name: metadata_created
+        meta:
+          title: メタデータ作成日時
+      - name: metadata_modified
+        meta:
+          title: メタデータ更新日時
+          description: データセットの更新検知に使える最終更新日時
+      - name: portal_url
+        meta:
+          title: ポータルURL
+          description: カタログサイトのデータセットページ URL
+
+  - name: resources
+    description: |
+      全データセットのリソース（配布ファイル）一覧。ファイル名・フォーマット・
+      ダウンロード URL を持つ。URL は都の共有ストレージや各自治体サイトに分散しており、
+      ファイル更新で URL が変わることがあるため、常に本テーブルの最新 URL を参照する。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "リソース一覧"
+    columns:
+      - name: resource_id
+        meta:
+          title: リソースID
+      - name: package_id
+        meta:
+          title: データセットID
+          description: datasets との結合キー
+      - name: name
+        meta:
+          title: リソース名
+      - name: description
+        meta:
+          title: 説明
+      - name: format
+        meta:
+          title: フォーマット
+          description: CSV / XLS / XLSX / PDF / GeoJSON 等
+      - name: url
+        meta:
+          title: ダウンロードURL
+      - name: mimetype
+        meta:
+          title: MIMEタイプ
+      - name: size_bytes
+        meta:
+          title: サイズ
+          description: バイト数（未記載は NULL）
+      - name: created
+        meta:
+          title: 作成日時
+      - name: last_modified
+        meta:
+          title: 最終更新日時
+      - name: resource_position
+        meta:
+          title: 表示順
+          description: データセット内での表示順（0始まり）
+
+  - name: organizations
+    description: |
+      データ提供組織の一覧（約100組織）。東京都の各局と都内62区市町村。
+      組織コードは JIS 全国地方公共団体コード準拠（t000xxx=都庁各局、
+      t131xxx=特別区、t132xxx=市、t133xxx=町村）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "提供組織"
+    columns:
+      - name: organization_code
+        meta:
+          title: 組織コード
+      - name: title
+        meta:
+          title: 組織名
+      - name: organization_type
+        meta:
+          title: 組織種別
+          description: 都庁各局 / 特別区 / 市 / 町村
+      - name: description
+        meta:
+          title: 説明
+      - name: dataset_count
+        meta:
+          title: データセット数
+
+  - name: groups
+    description: グループ（分野分類、16分類）の一覧。行財政・くらし・防災・交通など。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "分野分類"
+    columns:
+      - name: group_code
+        meta:
+          title: グループコード
+      - name: title
+        meta:
+          title: 分野名
+      - name: description
+        meta:
+          title: 説明
+      - name: dataset_count
+        meta:
+          title: データセット数
+
+  - name: dataset_tags
+    description: |
+      データセットとタグの対応（多対多）。「自治体標準オープンデータセット」
+      「都知事杯ハッカソン」などのタグでデータセットを絞り込める。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "データセットタグ"
+    columns:
+      - name: package_id
+        meta:
+          title: データセットID
+          description: datasets との結合キー
+      - name: tag
+        meta:
+          title: タグ
+
+  - name: dataset_groups
+    description: データセットとグループ（分野分類）の対応（多対多）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "データセット分野"
+    columns:
+      - name: package_id
+        meta:
+          title: データセットID
+          description: datasets との結合キー
+      - name: group_code
+        meta:
+          title: グループコード
+          description: groups との結合キー
