@@ -69,3 +69,103 @@ datasets:
         source: ["URL"]
       - key: notes
         source: ["備考"]
+
+  - id: aed
+    title: AED設置箇所一覧
+    slug_patterns: ["aed"]
+    title_patterns: ["AED設置"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["名称"]
+      - key: name_kana
+        source: ["名称_カナ"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: phone_number
+        source: ["電話番号"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: install_position
+        source: ["設置位置"]
+      - key: available_days
+        source: ["利用可能曜日"]
+      - key: start_time
+        source: ["開始時間"]
+      - key: end_time
+        source: ["終了時間"]
+      - key: available_notes
+        source: ["利用可能日時特記事項"]
+      - key: for_children
+        source: ["小児対応設備の有無"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]
+
+  - id: preschool
+    title: 子育て施設一覧
+    slug_patterns: ["preschool"]
+    title_patterns: ["子育て施設一覧"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["名称"]
+      - key: name_kana
+        source: ["名称_カナ"]
+      - key: facility_type
+        source: ["種別"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: phone_number
+        source: ["電話番号"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: access
+        source: ["アクセス方法"]
+      - key: parking
+        source: ["駐車場情報"]
+      - key: corporate_name
+        source: ["団体名"]
+      - key: capacity
+        source: ["収容定員"]
+      - key: age_range
+        source: ["受入年齢"]
+      - key: available_days
+        source: ["利用可能曜日"]
+      - key: start_time
+        source: ["開始時間"]
+      - key: end_time
+        source: ["終了時間"]
+      - key: available_notes
+        source: ["利用可能日時特記事項"]
+      - key: temporary_care
+        source: ["一時預かりの有無"]
+      - key: sick_care
+        source: ["病児保育の有無"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]

@@ -1,0 +1,29 @@
+{# AED設置箇所のステージング。緯度経度を数値化し、小児対応設備を BOOLEAN に正規化する。 #}
+
+select
+    municipality_code,
+    facility_id,
+    name,
+    name_kana,
+    address,
+    prefecture,
+    city,
+    postal_code,
+    phone_number,
+    try_cast(lat as double) as lat,
+    try_cast(lon as double) as lon,
+    install_position,
+    available_days,
+    start_time,
+    end_time,
+    available_notes,
+    {{ ods_flag('for_children') }} as for_children,
+    url,
+    notes,
+    _extras as extras,
+    _package_id as package_id,
+    _resource_id as resource_id,
+    _org_code as org_code,
+    _org_title as org_title,
+    _source_url as source_url
+from {{ ref('raw_aed') }}

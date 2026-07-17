@@ -21,10 +21,7 @@ select
     try_cast(lon as double) as lon,
     try_cast(elevation as double) as elevation,
     {% for flag in flags %}
-    case
-        when {{ flag }} in ('1', '○', '〇') then true
-        when {{ flag }} in ('0', '×') then false
-    end as {{ flag }},
+    {{ ods_flag(flag) }} as {{ flag }},
     {% endfor %}
     capacity_note,
     target_area,
