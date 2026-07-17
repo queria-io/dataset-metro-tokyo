@@ -169,3 +169,99 @@ datasets:
         source: ["URL"]
       - key: notes
         source: ["備考"]
+
+  # タイトル判定は使わない: 「〜実施医療機関一覧」（予防接種・検査等の目的別リスト）に
+  # 誤爆するため、ファイル名スラッグのみで判定する
+  - id: hospital
+    title: 医療機関一覧
+    slug_patterns: ["hospital"]
+    title_patterns: []
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["名称"]
+      - key: name_kana
+        source: ["名称_カナ"]
+      - key: institution_type
+        source: ["医療機関の種類"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: phone_number
+        source: ["電話番号"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: corporate_name
+        source: ["法人の名称", "団体名"]
+      - key: medical_institution_code
+        source: ["医療機関コード"]
+      - key: consultation_days
+        source: ["診療曜日", "利用可能曜日"]
+      - key: start_time
+        source: ["診療開始時間", "開始時間"]
+      - key: end_time
+        source: ["診療終了時間", "終了時間"]
+      - key: consultation_notes
+        source: ["診療日時特記事項", "利用可能日時特記事項"]
+      - key: after_hours
+        source: ["時間外における対応"]
+      - key: departments
+        source: ["診療科目"]
+      - key: beds
+        source: ["病床数"]
+      - key: disaster_base
+        source: ["災害拠点分類"]
+      - key: status
+        source: ["状況"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]
+
+  - id: public_wireless_lan
+    title: 公衆無線LANアクセスポイント一覧
+    slug_patterns: ["public_wireless_lan"]
+    title_patterns: ["公衆無線LAN"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["名称"]
+      - key: name_kana
+        source: ["名称_カナ"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: phone_number
+        source: ["電話番号"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: installer
+        source: ["設置者"]
+      - key: ssid
+        source: ["SSID"]
+      - key: coverage_area
+        source: ["提供エリア"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]
