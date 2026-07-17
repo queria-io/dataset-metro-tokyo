@@ -3,5 +3,9 @@ version: 2
 models:
   - name: stg_evacuation_space
     description: 指定緊急避難場所のステージング。緯度経度・標高を数値化、災害種別を BOOLEAN に正規化。
+  - name: stg_aed
+    description: AED設置箇所のステージング。緯度経度を数値化、小児対応設備を BOOLEAN に正規化。
+  - name: stg_preschool
+    description: 子育て施設のステージング。緯度経度・収容定員を数値化、一時預かり・病児保育を BOOLEAN に正規化。
   - name: stg_ods_source_files
     description: ODS 取り込み結果のステージング。行数・取得日時を型変換。
