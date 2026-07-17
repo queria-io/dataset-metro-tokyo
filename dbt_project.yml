@@ -18,6 +18,13 @@ models:
         +materialized: table
       mart:
         +materialized: table
+    ods:
+      raw:
+        +materialized: table
+      stg:
+        +materialized: table
+      mart:
+        +materialized: table
     childcare:
       raw:
         +materialized: table
