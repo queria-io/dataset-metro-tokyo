@@ -7,5 +7,9 @@ models:
     description: AED設置箇所のステージング。緯度経度を数値化、小児対応設備を BOOLEAN に正規化。
   - name: stg_preschool
     description: 子育て施設のステージング。緯度経度・収容定員を数値化、一時預かり・病児保育を BOOLEAN に正規化。
+  - name: stg_hospital
+    description: 医療機関のステージング。緯度経度・病床数を数値化。
+  - name: stg_public_wireless_lan
+    description: 公衆無線LANアクセスポイントのステージング。緯度経度を数値化。
   - name: stg_ods_source_files
     description: ODS 取り込み結果のステージング。行数・取得日時を型変換。
