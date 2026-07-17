@@ -11,5 +11,9 @@ models:
     description: 自治体標準ODS「医療機関一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
   - name: raw_public_wireless_lan
     description: 自治体標準ODS「公衆無線LANアクセスポイント一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+  - name: raw_public_facility
+    description: 自治体標準ODS「公共施設一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+  - name: raw_public_toilet
+    description: 自治体標準ODS「公衆トイレ一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
   - name: raw_ods_source_files
     description: ODS 取り込みの実行結果（1行=1リソース、成功/失敗/スキップと理由）。

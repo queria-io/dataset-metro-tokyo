@@ -1,0 +1,32 @@
+{# 公衆トイレのステージング。緯度経度・便器数を数値化し、設備の有無を BOOLEAN に正規化する。 #}
+
+select
+    municipality_code,
+    facility_id,
+    name,
+    name_kana,
+    address,
+    prefecture,
+    city,
+    install_position,
+    try_cast(lat as double) as lat,
+    try_cast(lon as double) as lon,
+    try_cast(male_total as integer) as male_total,
+    try_cast(female_total as integer) as female_total,
+    try_cast(unisex_total as integer) as unisex_total,
+    try_cast(barrier_free_total as integer) as barrier_free_total,
+    {{ ods_flag('wheelchair') }} as wheelchair,
+    {{ ods_flag('baby_facility') }} as baby_facility,
+    {{ ods_flag('ostomate') }} as ostomate,
+    start_time,
+    end_time,
+    available_notes,
+    image,
+    notes,
+    _extras as extras,
+    _package_id as package_id,
+    _resource_id as resource_id,
+    _org_code as org_code,
+    _org_title as org_title,
+    _source_url as source_url
+from {{ ref('raw_public_toilet') }}

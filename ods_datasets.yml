@@ -265,3 +265,107 @@ datasets:
         source: ["URL"]
       - key: notes
         source: ["備考"]
+
+  - id: public_facility
+    title: 公共施設一覧
+    slug_patterns: ["public_facility"]
+    title_patterns: ["公共施設一覧"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["名称"]
+      - key: name_kana
+        source: ["名称_カナ"]
+      - key: name_alias
+        source: ["名称_通称"]
+      - key: poi_code
+        source: ["POIコード"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: phone_number
+        source: ["電話番号"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: corporate_number
+        source: ["法人番号"]
+      - key: corporate_name
+        source: ["団体名"]
+      - key: available_days
+        source: ["利用可能曜日"]
+      - key: start_time
+        source: ["開始時間"]
+      - key: end_time
+        source: ["終了時間"]
+      - key: available_notes
+        source: ["利用可能時間特記事項", "利用可能日時特記事項"]
+      - key: access
+        source: ["アクセス方法"]
+      - key: parking
+        source: ["駐車場情報"]
+      - key: description
+        source: ["説明"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]
+
+  - id: public_toilet
+    title: 公衆トイレ一覧
+    slug_patterns: ["public_toilet"]
+    title_patterns: ["公衆トイレ"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["名称"]
+      - key: name_kana
+        source: ["名称_カナ"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: install_position
+        source: ["設置位置"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: male_total
+        source: ["男性トイレ総数"]
+      - key: female_total
+        source: ["女性トイレ総数"]
+      - key: unisex_total
+        source: ["男女共用トイレ総数"]
+      - key: barrier_free_total
+        source: ["バリアフリートイレ数"]
+      - key: wheelchair
+        source: ["車椅子使用者用トイレ有無"]
+      - key: baby_facility
+        source: ["乳幼児用設備設置トイレ有無"]
+      - key: ostomate
+        source: ["オストメイト設置トイレ有無"]
+      - key: start_time
+        source: ["利用開始時間", "開始時間"]
+      - key: end_time
+        source: ["利用終了時間", "終了時間"]
+      - key: available_notes
+        source: ["利用可能時間特記事項"]
+      - key: image
+        source: ["画像"]
+      - key: notes
+        source: ["備考"]
