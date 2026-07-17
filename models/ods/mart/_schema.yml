@@ -1,0 +1,181 @@
+version: 2
+
+_meta: &meta
+  source_url: "https://catalog.data.metro.tokyo.lg.jp/"
+  published: true
+  tags: ["東京都", "自治体標準オープンデータセット", "ODS"]
+
+models:
+  - name: evacuation_space
+    description: |
+      都内区市町村が公開する「指定緊急避難場所一覧」（自治体標準オープンデータセット）を
+      横断統合したテーブル。災害対策基本法に基づき市町村長が指定する、切迫した災害の危険
+      から逃れるための緊急避難場所。災害種別ごとの対応可否を BOOLEAN で持つ。
+      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+      全国網羅の類似データとして gsi.emergency_evacuation_site（国土地理院）がある。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "指定緊急避難場所"
+        tags: ["東京都", "防災", "避難場所", "自治体標準オープンデータセット", "GIS"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+      - name: facility_id
+        meta:
+          title: ID
+          description: 自治体内で一意の施設 ID（元データの ID / NO 列）
+      - name: name
+        meta:
+          title: 名称
+      - name: name_kana
+        meta:
+          title: 名称カナ
+      - name: address
+        meta:
+          title: 所在地
+          description: 所在地の連結表記（旧形式の「住所」列を含む）
+      - name: prefecture
+        meta:
+          title: 都道府県
+      - name: city
+        meta:
+          title: 市区町村
+      - name: postal_code
+        meta:
+          title: 郵便番号
+      - name: phone_number
+        meta:
+          title: 電話番号
+      - name: lat
+        meta:
+          title: 緯度
+          description: 十進度
+      - name: lon
+        meta:
+          title: 経度
+          description: 十進度
+      - name: elevation
+        meta:
+          title: 標高
+          description: メートル
+      - name: for_flood
+        meta:
+          title: 災害種別_洪水
+          description: 対応=true、非対応=false、不明=NULL（以下の災害種別も同じ）
+      - name: for_landslide
+        meta:
+          title: 災害種別_崖崩れ土石流地滑り
+      - name: for_storm_surge
+        meta:
+          title: 災害種別_高潮
+      - name: for_earthquake
+        meta:
+          title: 災害種別_地震
+      - name: for_tsunami
+        meta:
+          title: 災害種別_津波
+      - name: for_large_fire
+        meta:
+          title: 災害種別_大規模な火事
+      - name: for_inland_flooding
+        meta:
+          title: 災害種別_内水氾濫
+      - name: for_volcano
+        meta:
+          title: 災害種別_火山現象
+      - name: shelter_overlap
+        meta:
+          title: 指定避難所との重複
+      - name: capacity_note
+        meta:
+          title: 想定収容人数
+          description: 元データの表記のまま（「810人（2平方メートルあたり1人）」等の自由記述）
+      - name: target_area
+        meta:
+          title: 対象地区
+          description: 対象となる町会・自治会等（; 区切り）
+      - name: url
+        meta:
+          title: URL
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON、ヘッダー名→値）
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+
+  - name: source_files
+    description: |
+      自治体標準ODS取り込みの実行結果（1行=1リソース）。どの自治体のどのファイルを
+      取り込んだか・スキップや失敗の理由・エンコーディング・行数を記録する。
+      種別ごとの自治体カバレッジの把握に使う。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "ODS取り込み結果"
+    columns:
+      - name: dataset_id
+        meta:
+          title: 種別ID
+          description: ODS のデータセット種別（evacuation_space 等）
+      - name: org_code
+        meta:
+          title: 提供組織コード
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: package_title
+        meta:
+          title: データセット名
+      - name: resource_id
+        meta:
+          title: リソースID
+      - name: resource_name
+        meta:
+          title: リソース名
+      - name: url
+        meta:
+          title: 取得元URL
+      - name: status
+        meta:
+          title: 取得結果
+          description: ok / failed（取得エラー）/ skipped（ヘッダー不一致等）
+      - name: reason
+        meta:
+          title: 理由
+          description: failed / skipped の理由
+      - name: encoding
+        meta:
+          title: エンコーディング
+          description: 判定されたエンコーディング（utf-8-sig / cp932 等）
+      - name: row_count
+        meta:
+          title: 行数
+          description: 取り込んだデータ行数（status=ok のみ）
+      - name: fetched_at
+        meta:
+          title: 取得日時

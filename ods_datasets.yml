@@ -1,0 +1,71 @@
+# 自治体標準オープンデータセット (ODS) の取り込み対象定義
+#
+# 1エントリ = 1データセット種別。pipelines/ods.py が catalog スキーマ用に取得した
+# data/catalog/packages.ndjson から対象リソースを判定し、列名を標準キーに正規化して
+# data/ods/<id>.ndjson に出力する。種別の追加はここに1エントリ + models/ods/ に
+# raw/stg/mart を追加するだけでよい。
+#
+# - id: 種別ID。デジタル庁「自治体標準オープンデータセット」のファイル名スラッグに揃える
+# - slug_patterns: リソース URL のファイル名に含まれるスラッグ（主判定）
+# - title_patterns: データセットタイトルのキーワード（副判定。マッチしたデータセットの
+#   CSV リソースを候補にし、ヘッダー検査で最終判定する）
+# - columns: 公開する列。key は英語列名、source は元 CSV のヘッダー候補（先勝ち）。
+#   新標準（データセット定義書A）と旧推奨データセット形式の両方のヘッダーを列挙する。
+#   どの source にもマッチしないヘッダーは _extras (JSON) に退避する
+
+datasets:
+  - id: evacuation_space
+    title: 指定緊急避難場所一覧
+    slug_patterns: ["evacuation_space"]
+    title_patterns: ["指定緊急避難場所"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["名称"]
+      - key: name_kana
+        source: ["名称_カナ"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: phone_number
+        source: ["電話番号"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: elevation
+        source: ["標高"]
+      - key: for_flood
+        source: ["災害種別_洪水"]
+      - key: for_landslide
+        source: ["災害種別_崖崩れ、土石流及び地滑り", "災害種別_崖崩れ・土石流及び地滑り"]
+      - key: for_storm_surge
+        source: ["災害種別_高潮"]
+      - key: for_earthquake
+        source: ["災害種別_地震", "災害種別_地震(火災)"]
+      - key: for_tsunami
+        source: ["災害種別_津波"]
+      - key: for_large_fire
+        source: ["災害種別_大規模な火事"]
+      - key: for_inland_flooding
+        source: ["災害種別_内水氾濫"]
+      - key: for_volcano
+        source: ["災害種別_火山現象"]
+      - key: shelter_overlap
+        source: ["指定避難所との重複"]
+      - key: capacity_note
+        source: ["想定収容人数"]
+      - key: target_area
+        source: ["対象となる町会・自治会", "対象となる地区"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]

@@ -27,3 +27,4 @@ repository_url = "https://github.com/queria-io/dataset-metro-tokyo"
 [meta.schemas]
 catalog.title = "カタログ"
 childcare.title = "子育て施設"
+ods.title = "自治体標準データセット"

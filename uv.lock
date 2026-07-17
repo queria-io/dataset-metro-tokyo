@@ -179,6 +179,7 @@ dependencies = [
     { name = "dbt-core" },
     { name = "dbt-duckdb" },
     { name = "frozen-ducklake" },
+    { name = "pyyaml" },
 ]
 
 [package.metadata]
@@ -186,6 +187,7 @@ requires-dist = [
     { name = "dbt-core", specifier = ">=1.11.2" },
     { name = "dbt-duckdb", specifier = ">=1.10.0" },
     { name = "frozen-ducklake", specifier = ">=0.10.2,<0.11" },
+    { name = "pyyaml", specifier = ">=6.0.3" },
 ]
 
 [[package]]
