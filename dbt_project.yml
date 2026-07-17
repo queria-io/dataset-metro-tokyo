@@ -11,6 +11,13 @@ models:
   metro_tokyo:
     +database: metro_tokyo
     +materialized: view
+    catalog:
+      raw:
+        +materialized: table
+      stg:
+        +materialized: table
+      mart:
+        +materialized: table
     childcare:
       raw:
         +materialized: table

@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: raw_packages
+    description: CKAN API package_search の生データ（1行=1データセット）。スカラーは VARCHAR、ネスト構造は JSON 型で保持。
+  - name: raw_organizations
+    description: CKAN API organization_list(all_fields) の生データ。全列 VARCHAR で取り込む。
+  - name: raw_groups
+    description: CKAN API group_list(all_fields) の生データ。全列 VARCHAR で取り込む。

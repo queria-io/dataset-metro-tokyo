@@ -4,11 +4,25 @@
 
 ## データ出典
 
-東京都福祉局「社会福祉施設等一覧（令和7年5月1日時点）」のうち、認可保育所と児童館の CSV を使用する。緯度経度は十進度、座標系は JGD2011。
-
 - 東京都オープンデータカタログ: https://catalog.data.metro.tokyo.lg.jp/
-- 認可保育所: https://www.opendata.metro.tokyo.lg.jp/fukushi/202505-2-1-hoikusyo.csv
-- 児童館: https://www.opendata.metro.tokyo.lg.jp/fukushi/202505-2-2_06-zidoukan.csv
+  - catalog スキーマ: CKAN API（package_search / organization_list / group_list）から取得したメタデータ
+- 東京都福祉局「社会福祉施設等一覧（令和7年5月1日時点）」のうち、認可保育所と児童館の CSV。緯度経度は十進度、座標系は JGD2011
+  - 認可保育所: https://www.opendata.metro.tokyo.lg.jp/fukushi/202505-2-1-hoikusyo.csv
+  - 児童館: https://www.opendata.metro.tokyo.lg.jp/fukushi/202505-2-2_06-zidoukan.csv
+
+## スキーマ: catalog（カタログメタデータ）
+
+東京都オープンデータカタログに登録された全データセット（約9,600件）のメタデータ台帳。
+都庁各局と都内62区市町村が提供するオープンデータの全体像を SQL で俯瞰できる。
+CKAN API から毎回全量を取得して洗い替える。
+
+- catalog.datasets: 全データセット一覧（タイトル・提供組織・ライセンス・更新頻度・metadata_modified・ポータルURL）
+- catalog.resources: 全リソース（配布ファイル）一覧（フォーマット・ダウンロードURL・更新日時）。
+  リソース URL はファイル更新で変わることがあるため、常に本テーブルの最新 URL を参照する
+- catalog.organizations: 提供組織一覧（組織コード・組織種別: 都庁各局/特別区/市/町村）
+- catalog.groups: 分野分類（16分類）
+- catalog.dataset_tags: データセット×タグ（「自治体標準オープンデータセット」「都知事杯ハッカソン」等）
+- catalog.dataset_groups: データセット×分野分類
 
 ## テーブル: childcare.nursery_school
 
@@ -40,9 +54,10 @@
 
 ### データ更新手順
 
-pipelines/childcare.py がパイプライン実行時に認可保育所・児童館の CSV をダウンロードし、
-cp932 から UTF-8 に変換して data/childcare/ に保存する。
-ビルドは `bash scripts/build.sh local` で実行する。
+パイプライン実行時に以下を行う。ビルドは `bash scripts/build.sh local` で実行する。
+
+- pipelines/ckan.py: CKAN API からカタログメタデータ全量を取得し NDJSON で data/catalog/ に保存（毎回洗い替え）
+- pipelines/childcare.py: 認可保育所・児童館の CSV をダウンロードし、cp932 から UTF-8 に変換して data/childcare/ に保存
 
 ## ライセンス
 
