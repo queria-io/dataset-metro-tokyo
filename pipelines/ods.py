@@ -94,6 +94,9 @@ def classify(
 
     リソース URL のファイル名スラッグを主判定、データセットタイトルを副判定とする。
     副判定はパッケージ内の全 CSV リソースを候補にし、ヘッダー検査で最終判定する。
+
+    同一 URL が複数のリソースとして登録されている場合（更新時点だけが異なる版を
+    同じファイルに上書き公開している自治体がある）は最初の1件だけを対象にする。
     """
     targets = []
     seen: set[tuple[str, str]] = set()
@@ -122,7 +125,7 @@ def classify(
                     title_hit = any(p in title for p in dataset.title_patterns)
                     if not (slug_hit or title_hit):
                         continue
-                    key = (dataset.id, resource["id"])
+                    key = (dataset.id, url)
                     if key in seen:
                         continue
                     seen.add(key)
@@ -200,6 +203,7 @@ def _normalize_rows(
 
     どの標準キーにもマッチしないヘッダーの値は _extras に退避する。
     標準キーは先勝ち（同じキーに複数ヘッダーがマッチしたら最初の列を採用）。
+    名称が空の行は実体を持たないため落とす（表末尾のバージョン表記など）。
     """
     header = rows[header_index]
     key_by_index: dict[int, str] = {}
@@ -226,7 +230,7 @@ def _normalize_rows(
                 record[key_by_index[i]] = value
             elif i in extra_by_index:
                 extras[extra_by_index[i]] = value
-        if not record and not extras:
+        if not record.get("name"):
             continue
         if extras:
             record["_extras"] = extras

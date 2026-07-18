@@ -369,3 +369,149 @@ datasets:
         source: ["画像"]
       - key: notes
         source: ["備考"]
+
+  # タイトル判定は「文化財一覧」まで絞る:「文化財」では埋蔵文化財包蔵地・刊行図書一覧・
+  # 文化財庭園の入園者数など別物のデータセットに誤爆する
+  - id: cultural_property
+    title: 文化財一覧
+    slug_patterns: ["cultural_property"]
+    title_patterns: ["文化財一覧"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["名称"]
+      - key: name_kana
+        source: ["名称_カナ", "カナ名称"]
+      - key: name_alias
+        source: ["名称_通称"]
+      - key: name_en
+        source: ["名称_英語"]
+      - key: property_class
+        source: ["文化財分類"]
+      - key: property_type
+        source: ["種類"]
+      - key: place_name
+        source: ["場所名称"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: building_name
+        source: ["建物名等(方書)", "方書"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: phone_number
+        source: ["電話番号"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: quantity
+        source: ["員数（数）"]
+      - key: quantity_unit
+        source: ["員数（単位）"]
+      - key: corporate_number
+        source: ["法人番号"]
+      - key: owner
+        source: ["所有者等"]
+      - key: designated_date
+        source: ["文化財指定日"]
+      - key: available_days
+        source: ["利用可能曜日"]
+      - key: start_time
+        source: ["開始時間"]
+      - key: end_time
+        source: ["終了時間"]
+      - key: available_notes
+        source: ["利用可能日時特記事項"]
+      - key: image
+        source: ["画像"]
+      - key: image_license
+        source: ["画像_ライセンス"]
+      - key: summary
+        source: ["概要"]
+      - key: summary_en
+        source: ["概要_英語"]
+      - key: description
+        source: ["説明"]
+      - key: description_en
+        source: ["説明_英語"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]
+
+  - id: tourism
+    title: 観光施設一覧
+    slug_patterns: ["tourism"]
+    title_patterns: ["観光施設一覧"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["名称"]
+      - key: name_kana
+        source: ["名称_カナ", "カナ名称"]
+      - key: name_en
+        source: ["名称_英語"]
+      - key: poi_code
+        source: ["POIコード"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: building_name
+        source: ["建物名等(方書)", "方書"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: corporate_number
+        source: ["法人番号"]
+      - key: available_days
+        source: ["利用可能曜日"]
+      - key: start_time
+        source: ["開始時間"]
+      - key: end_time
+        source: ["終了時間"]
+      - key: available_notes
+        source: ["利用可能日時特記事項"]
+      - key: fee
+        source: ["料金(基本)"]
+      - key: fee_details
+        source: ["料金(詳細)"]
+      - key: description
+        source: ["説明"]
+      - key: description_en
+        source: ["説明_英語"]
+      - key: access
+        source: ["アクセス方法"]
+      - key: parking
+        source: ["駐車場情報"]
+      - key: barrier_free
+        source: ["バリアフリー情報"]
+      - key: contact_name
+        source: ["連絡先名称"]
+      - key: contact_phone
+        source: ["連絡先電話番号"]
+      - key: contact_extension
+        source: ["連絡先内線番号"]
+      - key: image
+        source: ["画像"]
+      - key: image_license
+        source: ["画像_ライセンス"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]
