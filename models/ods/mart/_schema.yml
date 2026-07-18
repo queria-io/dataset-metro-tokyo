@@ -737,6 +737,297 @@ models:
         meta:
           title: 取得元URL
 
+  - name: cultural_property
+    description: |
+      都内区市町村が公開する「文化財一覧」（自治体標準オープンデータセット）を横断統合した
+      テーブル。文化財保護法および地方公共団体の文化財保護条例に基づき指定・登録・選定された
+      文化財を、分類（重要文化財・都指定文化財・区登録有形文化財等）・種類・所有者・指定日・
+      所在地とともに収録する。無形文化財や個人所有で住所非公開のものを含むため、緯度経度が
+      入らない行がある。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "文化財"
+        tags: ["東京都", "文化財", "歴史", "観光", "自治体標準オープンデータセット", "GIS"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+      - name: facility_id
+        meta:
+          title: ID
+          description: 自治体内で一意の ID（元データの ID / NO 列）
+      - name: name
+        meta:
+          title: 名称
+      - name: name_kana
+        meta:
+          title: 名称カナ
+      - name: name_alias
+        meta:
+          title: 名称_通称
+      - name: name_en
+        meta:
+          title: 名称_英語
+      - name: property_class
+        meta:
+          title: 文化財分類
+          description: 重要文化財・都指定文化財・区登録有形文化財など。複数指定は「;」区切り
+      - name: property_type
+        meta:
+          title: 種類
+          description: 建造物・美術工芸品・無形民俗文化財・考古資料など
+      - name: place_name
+        meta:
+          title: 場所名称
+          description: 文化財が設置されている施設・建物などの名称
+      - name: address
+        meta:
+          title: 所在地
+          description: 所在地の連結表記（旧形式の「住所」列を含む）
+      - name: prefecture
+        meta:
+          title: 都道府県
+      - name: city
+        meta:
+          title: 市区町村
+      - name: building_name
+        meta:
+          title: 建物名等(方書)
+      - name: postal_code
+        meta:
+          title: 郵便番号
+      - name: phone_number
+        meta:
+          title: 電話番号
+      - name: lat
+        meta:
+          title: 緯度
+          description: |
+            十進度。無形文化財・住所非公開のものは NULL。
+            元データで緯度と経度が入れ替わっている自治体がある（豊島区の全行）。
+            値の入れ替えは行わず原典のまま保持しているため、地図表示の前に値域で確認すること
+      - name: lon
+        meta:
+          title: 経度
+          description: 十進度。緯度と同じ注意点がある（元データの入れ替わりを補正していない）
+      - name: quantity
+        meta:
+          title: 員数（数）
+          description: 数値化できない表記は NULL
+      - name: quantity_unit
+        meta:
+          title: 員数（単位）
+          description: 棟・基・幅・軀・双など
+      - name: corporate_number
+        meta:
+          title: 法人番号
+          description: 所有者・管理者・保護団体等の法人番号（元データの表記のまま）
+      - name: owner
+        meta:
+          title: 所有者等
+          description: 所有者・管理者・保護団体等。個人所有は「個人」と記載される
+      - name: designated_date
+        meta:
+          title: 文化財指定日
+          description: 原典の文字列のまま。日不明を 99 で埋める表記（1982-04-99 等）があるため日付型にしていない
+      - name: available_days
+        meta:
+          title: 利用可能曜日
+          description: 公開している文化財のみ
+      - name: start_time
+        meta:
+          title: 開始時間
+      - name: end_time
+        meta:
+          title: 終了時間
+      - name: available_notes
+        meta:
+          title: 利用可能日時特記事項
+      - name: image
+        meta:
+          title: 画像
+          description: 画像の格納先 URL
+      - name: image_license
+        meta:
+          title: 画像_ライセンス
+      - name: summary
+        meta:
+          title: 概要
+      - name: summary_en
+        meta:
+          title: 概要_英語
+      - name: description
+        meta:
+          title: 説明
+      - name: description_en
+        meta:
+          title: 説明_英語
+      - name: url
+        meta:
+          title: URL
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON）。指定番号・作成年代等
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+
+  - name: tourism
+    description: |
+      都内区市町村が公開する「観光施設一覧」（自治体標準オープンデータセット）を横断統合した
+      テーブル。観光施設の位置・利用可能時間・料金・アクセス方法・バリアフリー情報を収録する。
+      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+      文化財を観光資源として扱う場合は ods.cultural_property も併せて参照する。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "観光施設"
+        tags: ["東京都", "観光", "施設", "自治体標準オープンデータセット", "GIS"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+      - name: facility_id
+        meta:
+          title: ID
+          description: 自治体内で一意の施設 ID（元データの ID / NO 列）
+      - name: name
+        meta:
+          title: 名称
+      - name: name_kana
+        meta:
+          title: 名称カナ
+      - name: name_en
+        meta:
+          title: 名称_英語
+      - name: poi_code
+        meta:
+          title: POIコード
+          description: 共通語彙基盤の POI コード（統制語彙）
+      - name: address
+        meta:
+          title: 所在地
+          description: 所在地の連結表記（旧形式の「住所」列を含む）
+      - name: prefecture
+        meta:
+          title: 都道府県
+      - name: city
+        meta:
+          title: 市区町村
+      - name: building_name
+        meta:
+          title: 建物名等(方書)
+      - name: postal_code
+        meta:
+          title: 郵便番号
+      - name: lat
+        meta:
+          title: 緯度
+          description: 十進度
+      - name: lon
+        meta:
+          title: 経度
+          description: 十進度
+      - name: corporate_number
+        meta:
+          title: 法人番号
+          description: 情報の管理主体が地方公共団体以外の場合の法人番号
+      - name: available_days
+        meta:
+          title: 利用可能曜日
+      - name: start_time
+        meta:
+          title: 開始時間
+      - name: end_time
+        meta:
+          title: 終了時間
+      - name: available_notes
+        meta:
+          title: 利用可能日時特記事項
+      - name: fee
+        meta:
+          title: 料金(基本)
+          description: 日本円。数値化できない表記は NULL
+      - name: fee_details
+        meta:
+          title: 料金(詳細)
+      - name: description
+        meta:
+          title: 説明
+      - name: description_en
+        meta:
+          title: 説明_英語
+      - name: access
+        meta:
+          title: アクセス方法
+      - name: parking
+        meta:
+          title: 駐車場情報
+      - name: barrier_free
+        meta:
+          title: バリアフリー情報
+          description: 旧形式の自由記述欄。新形式の項目別バリアフリー列は extras に入る
+      - name: contact_name
+        meta:
+          title: 連絡先名称
+      - name: contact_phone
+        meta:
+          title: 連絡先電話番号
+      - name: contact_extension
+        meta:
+          title: 連絡先内線番号
+      - name: image
+        meta:
+          title: 画像
+          description: 画像の格納先 URL
+      - name: image_license
+        meta:
+          title: 画像_ライセンス
+      - name: url
+        meta:
+          title: URL
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON）。項目別バリアフリー情報等
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+
   - name: source_files
     description: |
       自治体標準ODS取り込みの実行結果（1行=1リソース）。どの自治体のどのファイルを
