@@ -19,5 +19,9 @@ models:
     description: 自治体標準ODS「文化財一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
   - name: raw_tourism
     description: 自治体標準ODS「観光施設一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+  - name: raw_event
+    description: 自治体標準ODS「イベント一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+  - name: raw_school_district
+    description: 自治体標準ODS「小中学校通学区域情報」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
   - name: raw_ods_source_files
     description: ODS 取り込みの実行結果（1行=1リソース、成功/失敗/スキップと理由）。

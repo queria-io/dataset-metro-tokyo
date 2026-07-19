@@ -47,6 +47,11 @@ HEADER_MIN_MATCHES = 2
 # 取り込み対象とするライセンス
 ALLOWED_LICENSES = {"CC-BY-4.0"}
 
+# 種別誤判定を弾くために最低限マッピングできていなければならない標準キー。
+# 施設系の種別は所在地を持つ前提だが、住所列を持たない種別（小中学校通学区域情報など）は
+# ods_datasets.yml の required_columns で上書きする
+DEFAULT_REQUIRED_COLUMNS = ["name", "address"]
+
 
 @dataclass
 class OdsDataset:
@@ -58,6 +63,7 @@ class OdsDataset:
     title_patterns: list[str]
     # 正規化済みヘッダー名 → 標準キー（先勝ちのため列挙順を保持した dict）
     header_map: dict[str, str]
+    required_columns: list[str]
 
 
 def normalize_header(header: str) -> str:
@@ -82,6 +88,9 @@ def load_config(path: str = "ods_datasets.yml") -> list[OdsDataset]:
                 slug_patterns=entry["slug_patterns"],
                 title_patterns=entry.get("title_patterns", []),
                 header_map=header_map,
+                required_columns=entry.get(
+                    "required_columns", DEFAULT_REQUIRED_COLUMNS
+                ),
             )
         )
     return datasets
@@ -308,8 +317,8 @@ def download_and_normalize(
                 continue
 
             records, mapped = _normalize_rows(rows, header_index, dataset)
-            # 名称と所在地の両方を取れないファイルは種別誤判定とみなして隔離する
-            if "name" not in mapped or "address" not in mapped:
+            # 種別の必須列を取れないファイルは種別誤判定とみなして隔離する
+            if any(column not in mapped for column in dataset.required_columns):
                 log_source(
                     dataset, package, resource,
                     status="skipped",
