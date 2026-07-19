@@ -19,5 +19,9 @@ models:
     description: 文化財のステージング。緯度経度・員数を数値化。文化財指定日は日不明表記があるため文字列のまま保持。
   - name: stg_tourism
     description: 観光施設のステージング。緯度経度・基本料金を数値化。
+  - name: stg_event
+    description: イベントのステージング。開催日・申込締切日を DATE に正規化、緯度経度・基本料金を数値化。定員は自由記述が混在するため文字列のまま保持。
+  - name: stg_school_district
+    description: 小中学校通学区域のステージング。登録日・廃止日を DATE に正規化、POIコードから学校種別を導出。
   - name: stg_ods_source_files
     description: ODS 取り込み結果のステージング。行数・取得日時を型変換。

@@ -12,6 +12,8 @@
 # - columns: 公開する列。key は英語列名、source は元 CSV のヘッダー候補（先勝ち）。
 #   新標準（データセット定義書A）と旧推奨データセット形式の両方のヘッダーを列挙する。
 #   どの source にもマッチしないヘッダーは _extras (JSON) に退避する
+# - required_columns: 種別誤判定を弾くための必須マッピング列（省略時は name + address）。
+#   住所列を持たない種別のみ指定する
 
 datasets:
   - id: evacuation_space
@@ -515,3 +517,143 @@ datasets:
         source: ["URL"]
       - key: notes
         source: ["備考"]
+
+  - id: event
+    title: イベント一覧
+    slug_patterns: ["event"]
+    title_patterns: ["イベント一覧"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: corporate_number
+        source: ["法人番号"]
+      - key: event_id
+        source: ["ID", "NO"]
+      - key: organization_name
+        source: ["地方公共団体名"]
+      - key: name
+        source: ["イベント名"]
+      - key: name_kana
+        source: ["イベント名_カナ"]
+      - key: name_en
+        source: ["イベント名_英語"]
+      - key: name_alias
+        source: ["イベント通称"]
+      - key: subtitle
+        source: ["サブタイトル"]
+      - key: content_url
+        source: ["コンテンツURL"]
+      - key: status
+        source: ["状態"]
+      - key: keywords
+        source: ["キーワード"]
+      - key: tags
+        source: ["タグ"]
+      - key: schedule_pattern
+        source: ["開催パターン"]
+      - key: start_date
+        source: ["開始日"]
+      - key: end_date
+        source: ["終了日"]
+      - key: start_time
+        source: ["開始時間"]
+      - key: end_time
+        source: ["終了時間"]
+      - key: schedule_notes
+        source: ["開始日時特記事項"]
+      - key: summary
+        source: ["概要"]
+      - key: description
+        source: ["説明"]
+      - key: event_type
+        source: ["イベント種類"]
+      - key: fee
+        source: ["料金(基本)"]
+      - key: fee_details
+        source: ["料金(詳細)"]
+      - key: fee_type
+        source: ["料金種別", "料金_要否"]
+      - key: organizer
+        source: ["主催者"]
+      - key: co_organizer
+        source: ["共催団体", "共催・協力団体"]
+      - key: target_audience
+        source: ["対象者"]
+      - key: venue_name
+        source: ["場所名称"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: building_name
+        source: ["建物名等(方書)", "方書"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: access
+        source: ["アクセス方法"]
+      - key: parking
+        source: ["駐車場情報"]
+      - key: capacity
+        source: ["定員"]
+      - key: application_deadline_date
+        source: ["参加申込終了日"]
+      - key: application_deadline_time
+        source: ["参加申込終了時間"]
+      - key: application_method
+        source: ["参加申込方法"]
+      - key: contact_name
+        source: ["連絡先名称"]
+      - key: contact_phone
+        source: ["連絡先電話番号"]
+      - key: contact_extension
+        source: ["連絡先内線番号"]
+      - key: image
+        source: ["画像"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]
+
+  # 施設ではなく学校×通学区域の一覧のため住所列を持たない。必須列を name + city にする
+  - id: school_district
+    title: 小中学校通学区域情報
+    slug_patterns: ["school_district"]
+    title_patterns: ["通学区域"]
+    required_columns: ["name", "city"]
+    columns:
+      - key: municipality_code
+        source: ["情報の管理主体_全国地方公共団体コード", "全国地方公共団体コード"]
+      - key: school_id
+        source: ["学校ID"]
+      - key: school_code
+        source: ["学校コード"]
+      - key: prefecture
+        source: ["学校所在地_都道府県名"]
+      - key: district
+        source: ["学校所在地_郡名"]
+      - key: city
+        source: ["学校所在地_市区町村名"]
+      - key: ward
+        source: ["学校所在地_行政区名"]
+      - key: school_municipality_code
+        source: ["学校所在地_全国地方公共団体コード"]
+      - key: name
+        source: ["学校名称"]
+      - key: name_kana
+        source: ["学校名称_カナ"]
+      - key: poi_code
+        source: ["行政サービス拠点種別"]
+      - key: registered_date
+        source: ["通学区域_登録年月日"]
+      - key: abolished_date
+        source: ["通学区域_廃止日"]
+      - key: district_addresses
+        source: ["通学区域の住所"]
+      - key: notes
+        source: ["特記事項"]
+      - key: polygon_file
+        source: ["ポリゴン_ファイル名"]
