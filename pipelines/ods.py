@@ -52,6 +52,10 @@ ALLOWED_LICENSES = {"CC-BY-4.0"}
 # ods_datasets.yml の required_columns で上書きする
 DEFAULT_REQUIRED_COLUMNS = ["name", "address"]
 
+# 値が空なら実体を持たない行とみなす標準キー（表末尾のバージョン表記などの除去用）。
+# 名称列を持たない種別（消防水利施設一覧など）は ods_datasets.yml の identity_column で上書きする
+DEFAULT_IDENTITY_COLUMN = "name"
+
 
 @dataclass
 class OdsDataset:
@@ -64,6 +68,7 @@ class OdsDataset:
     # 正規化済みヘッダー名 → 標準キー（先勝ちのため列挙順を保持した dict）
     header_map: dict[str, str]
     required_columns: list[str]
+    identity_column: str
 
 
 def normalize_header(header: str) -> str:
@@ -90,6 +95,9 @@ def load_config(path: str = "ods_datasets.yml") -> list[OdsDataset]:
                 header_map=header_map,
                 required_columns=entry.get(
                     "required_columns", DEFAULT_REQUIRED_COLUMNS
+                ),
+                identity_column=entry.get(
+                    "identity_column", DEFAULT_IDENTITY_COLUMN
                 ),
             )
         )
@@ -212,7 +220,7 @@ def _normalize_rows(
 
     どの標準キーにもマッチしないヘッダーの値は _extras に退避する。
     標準キーは先勝ち（同じキーに複数ヘッダーがマッチしたら最初の列を採用）。
-    名称が空の行は実体を持たないため落とす（表末尾のバージョン表記など）。
+    識別列（既定は名称）が空の行は実体を持たないため落とす（表末尾のバージョン表記など）。
     """
     header = rows[header_index]
     key_by_index: dict[int, str] = {}
@@ -239,7 +247,7 @@ def _normalize_rows(
                 record[key_by_index[i]] = value
             elif i in extra_by_index:
                 extras[extra_by_index[i]] = value
-        if not record.get("name"):
+        if not record.get(dataset.identity_column):
             continue
         if extras:
             record["_extras"] = extras

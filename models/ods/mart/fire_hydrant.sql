@@ -1,0 +1,24 @@
+-- 消防水利施設一覧（自治体標準ODS、区市町村横断）
+select
+    municipality_code,
+    facility_id,
+    facility_type,
+    organization_name,
+    address,
+    prefecture,
+    city,
+    town,
+    street_number,
+    building_name,
+    town_id,
+    location_municipality_code,
+    lat,
+    lon,
+    diameter,
+    notes,
+    extras,
+    org_code,
+    org_title,
+    package_id,
+    source_url
+from {{ ref('stg_fire_hydrant') }}

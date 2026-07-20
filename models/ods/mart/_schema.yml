@@ -1318,6 +1318,94 @@ models:
         meta:
           title: 取得元URL
 
+  - name: fire_hydrant
+    description: |
+      都内区市町村が公開する「消防水利施設一覧」（自治体標準オープンデータセット）を
+      横断統合したテーブル。1行=1水利で、消火栓・防火水槽・プール・河川など消防が
+      消火用水として使える水利の位置と口径を持つ。名称の列は定義上持たず、種別で識別する。
+      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+      標準形式ではない独自様式（管轄・水利番号の一覧など）は収録していない。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "消防水利施設"
+        tags: ["東京都", "防災", "消防", "消火栓", "自治体標準オープンデータセット", "GIS"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 情報の管理主体の6桁の全国地方公共団体コード
+      - name: facility_id
+        meta:
+          title: ID
+          description: 自治体内で一意の施設 ID（元データの ID / NO 列）。付番していない自治体は NULL
+      - name: facility_type
+        meta:
+          title: 種別
+          description: 消火栓・防火水槽・プール・河川など水利の種類。統制語彙が無く自治体ごとに表記が揺れる（防火水槽 / 防火水そう など）ため生値のまま
+      - name: organization_name
+        meta:
+          title: 地方公共団体名
+      - name: address
+        meta:
+          title: 所在地
+          description: 所在地の連結表記（旧形式の「住所」列を含む）
+      - name: prefecture
+        meta:
+          title: 所在地_都道府県
+      - name: city
+        meta:
+          title: 所在地_市区町村
+      - name: town
+        meta:
+          title: 所在地_町字
+      - name: street_number
+        meta:
+          title: 所在地_番地以下
+      - name: building_name
+        meta:
+          title: 建物名等（方書）
+      - name: town_id
+        meta:
+          title: 町字ID
+          description: アドレス・ベース・レジストリの町字ID（記載している自治体のみ）
+      - name: location_municipality_code
+        meta:
+          title: 所在地_全国地方公共団体コード
+          description: 水利の所在地の6桁コード。管轄外にある場合は管理主体のコードと異なる
+      - name: lat
+        meta:
+          title: 緯度
+      - name: lon
+        meta:
+          title: 経度
+      - name: diameter
+        meta:
+          title: 口径
+          description: 対応する口径（ミリメートル）。記載のない水利は NULL
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON）。容量・目標施設など自治体独自の項目
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+
   - name: source_files
     description: |
       自治体標準ODS取り込みの実行結果（1行=1リソース）。どの自治体のどのファイルを
