@@ -14,6 +14,8 @@
 #   どの source にもマッチしないヘッダーは _extras (JSON) に退避する
 # - required_columns: 種別誤判定を弾くための必須マッピング列（省略時は name + address）。
 #   住所列を持たない種別のみ指定する
+# - identity_column: 値が空の行を実体なしとして落とす判定に使う列（省略時は name）。
+#   名称列を持たない種別のみ指定する
 
 datasets:
   - id: evacuation_space
@@ -657,3 +659,44 @@ datasets:
         source: ["特記事項"]
       - key: polygon_file
         source: ["ポリゴン_ファイル名"]
+
+  # 消火栓・防火水槽など水利の一覧で名称列を持たない。実体の判定は種別で行う
+  - id: fire_hydrant
+    title: 消防水利施設一覧
+    slug_patterns: ["fire_hydrant", "fire-hydrant"]
+    title_patterns: ["消防水利", "防火水槽"]
+    required_columns: ["facility_type", "address"]
+    identity_column: facility_type
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: organization_name
+        source: ["地方公共団体名"]
+      - key: facility_type
+        source: ["種別"]
+      - key: location_municipality_code
+        source: ["所在地_全国地方公共団体コード"]
+      - key: town_id
+        source: ["町字ID"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: town
+        source: ["所在地_町字"]
+      - key: street_number
+        source: ["所在地_番地以下"]
+      - key: building_name
+        source: ["建物名等(方書)", "方書"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: diameter
+        source: ["口径"]
+      - key: notes
+        source: ["備考"]
