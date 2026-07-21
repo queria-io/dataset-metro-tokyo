@@ -147,7 +147,7 @@ models:
           title: データセット数
 
   - name: groups
-    description: グループ（分野分類、16分類）の一覧。行財政・くらし・防災・交通など。
+    description: 東京都オープンデータカタログの分野分類（グループ、全16分類）の一覧。行財政・くらし・防災・交通などの区分について、グループコード、名称、説明、所属データセット数を収録する。
     access: public
     config:
       meta:
@@ -186,7 +186,7 @@ models:
           title: タグ
 
   - name: dataset_groups
-    description: データセットとグループ（分野分類）の対応（多対多）。
+    description: 東京都オープンデータカタログにおける、データセットと分野分類（グループ）の対応を表す多対多の関連テーブル。データセットのパッケージIDとグループコードの組で収録する。
     access: public
     config:
       meta:
