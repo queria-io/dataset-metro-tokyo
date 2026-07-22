@@ -700,3 +700,63 @@ datasets:
         source: ["口径"]
       - key: notes
         source: ["備考"]
+
+  - id: care_service
+    title: 介護サービス事業所一覧
+    slug_patterns: ["care_service"]
+    title_patterns: ["介護サービス事業所一覧"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["介護サービス事業所名称", "名称"]
+      - key: name_kana
+        source: ["介護サービス事業所名称_カナ", "名称_カナ"]
+      - key: name_en
+        source: ["介護サービス事業所名称_英字", "名称_英語"]
+      - key: service_type
+        source: ["実施サービス"]
+      - key: location_municipality_code
+        source: ["所在地_全国地方公共団体コード"]
+      - key: town_id
+        source: ["町字ID"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: town
+        source: ["所在地_町字"]
+      - key: street_number
+        source: ["所在地_番地以下"]
+      - key: building_name
+        source: ["建物名等(方書)", "方書"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: phone_number
+        source: ["電話番号"]
+      - key: fax_number
+        source: ["FAX番号"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: corporate_number
+        source: ["法人番号"]
+      - key: corporate_name
+        source: ["法人の名称", "団体名"]
+      - key: business_number
+        source: ["事業所番号"]
+      - key: available_days
+        source: ["利用可能曜日"]
+      - key: available_notes
+        source: ["利用可能曜日特記事項", "利用可能日時特記事項"]
+      - key: capacity
+        source: ["定員"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]

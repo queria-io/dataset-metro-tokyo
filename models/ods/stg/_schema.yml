@@ -25,5 +25,7 @@ models:
     description: 小中学校通学区域のステージング。登録日・廃止日を DATE に正規化、POIコードから学校種別を導出。
   - name: stg_fire_hydrant
     description: 消防水利施設のステージング。緯度経度・口径を数値に変換。
+  - name: stg_care_service
+    description: 介護サービス事業所のステージング。緯度経度・定員を数値に変換。
   - name: stg_ods_source_files
     description: ODS 取り込み結果のステージング。行数・取得日時を型変換。
