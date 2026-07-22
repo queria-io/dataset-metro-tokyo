@@ -1406,6 +1406,132 @@ models:
         meta:
           title: 取得元URL
 
+  - name: care_service
+    description: |
+      都内区市町村が公開する「介護サービス事業所一覧」（自治体標準オープンデータセット）を
+      横断統合したテーブル。1行=1事業所で、訪問介護・特別養護老人ホーム・通所介護などの
+      介護保険サービス事業所の名称・実施サービス・所在地・定員・運営法人を持つ。
+      全国網羅の類似データとして mhlw.kaigo.establishment（介護サービス情報公表システム）が
+      あり、こちらは区市町村が独自に公開する分。公開しているのは一部の自治体のみ
+      （カバレッジは ods.source_files を参照）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "介護サービス事業所"
+        tags: ["東京都", "介護", "高齢者", "福祉", "自治体標準オープンデータセット", "GIS"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 情報の管理主体の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+      - name: facility_id
+        meta:
+          title: ID
+          description: 自治体内で一意の事業所 ID（元データの ID / NO 列）
+      - name: name
+        meta:
+          title: 介護サービス事業所名称
+      - name: name_kana
+        meta:
+          title: 名称カナ
+      - name: name_en
+        meta:
+          title: 名称英字
+      - name: service_type
+        meta:
+          title: 実施サービス
+          description: 訪問介護・介護老人福祉施設（特別養護老人ホーム）など提供する介護サービス。統制語彙が無く自治体ごとに表記が揺れるため生値のまま
+      - name: address
+        meta:
+          title: 所在地
+          description: 所在地の連結表記（旧形式の「住所」列を含む）
+      - name: prefecture
+        meta:
+          title: 都道府県
+      - name: city
+        meta:
+          title: 市区町村
+      - name: town
+        meta:
+          title: 所在地_町字
+      - name: street_number
+        meta:
+          title: 所在地_番地以下
+      - name: building_name
+        meta:
+          title: 建物名等（方書）
+      - name: town_id
+        meta:
+          title: 町字ID
+          description: アドレス・ベース・レジストリの町字ID（記載している自治体のみ）
+      - name: location_municipality_code
+        meta:
+          title: 所在地_全国地方公共団体コード
+          description: 事業所の所在地の全国地方公共団体コード。管轄外にある場合は管理主体のコードと異なる
+      - name: postal_code
+        meta:
+          title: 郵便番号
+      - name: phone_number
+        meta:
+          title: 電話番号
+      - name: fax_number
+        meta:
+          title: FAX番号
+      - name: lat
+        meta:
+          title: 緯度
+          description: 十進度
+      - name: lon
+        meta:
+          title: 経度
+          description: 十進度
+      - name: corporate_number
+        meta:
+          title: 法人番号
+          description: 運営主体の法人番号（記載している自治体のみ）。houjin_bangou と結合可能
+      - name: corporate_name
+        meta:
+          title: 法人の名称
+      - name: business_number
+        meta:
+          title: 事業所番号
+          description: 介護保険事業所番号（記載している自治体のみ）
+      - name: available_days
+        meta:
+          title: 利用可能曜日
+      - name: available_notes
+        meta:
+          title: 利用可能曜日特記事項
+      - name: capacity
+        meta:
+          title: 定員
+          description: サービスの定員。記載のない事業所は NULL
+      - name: url
+        meta:
+          title: URL
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON）
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+
   - name: source_files
     description: |
       自治体標準ODS取り込みの実行結果（1行=1リソース）。どの自治体のどのファイルを
