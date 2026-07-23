@@ -2645,6 +2645,240 @@ models:
       - name: source_url
         meta:
           title: 取得元URL
+  - name: population
+    description: |
+      都内区市町村が公開する「地域・年齢別人口」（自治体標準オープンデータセット）を
+      横断統合したテーブル。1行 = 地域 × 調査年月日で、総人口・男女別人口に加えて
+      5歳階級×男女の人口（0-4歳〜85歳以上）と世帯数をワイドに持つ。町丁字単位で
+      公開する自治体（区部・練馬区など）と、自治体全体の1行のみで公開する自治体が混在する。
+      同一ファイル内に複数の調査年月日を追記する方式のため、時系列比較は survey_date で行う。
+      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+      年齢階級を縦持ちで扱いたい場合は補助ビュー population_by_age を利用できる。
+      独自形式（1歳刻み・性別を行持ちするクロス集計など）で公開する自治体は
+      標準形式ではないため収録していない。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "地域・年齢別人口"
+        tags: ["東京都", "人口", "年齢別人口", "自治体標準オープンデータセット"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 情報の管理主体の全国地方公共団体コード（元データの表記のまま。6桁）
+      - name: area_code
+        meta:
+          title: 地域コード
+          description: 自治体が管理する地域コード（元データの表記のまま。付番済の自治体のみ）
+      - name: organization_name
+        meta:
+          title: 地方公共団体名
+          description: 新形式のファイルのみ（都道府県名+市区町村名を連結した名称）
+      - name: prefecture
+        meta:
+          title: 都道府県名
+          description: 旧推奨形式のファイルのみ
+      - name: city
+        meta:
+          title: 市区町村名
+          description: 旧推奨形式のファイルのみ
+      - name: survey_date
+        meta:
+          title: 調査年月日
+          description: 人口の基準日
+      - name: area_name
+        meta:
+          title: 地域名
+          description: 対象地域（町丁字名。自治体全体で公開する場合は市区町村名または空欄）
+      - name: total_population
+        meta:
+          title: 総人口
+          description: 対象地域に居住する住民の総数
+      - name: male
+        meta:
+          title: 男性
+          description: 対象地域の男性総数
+      - name: female
+        meta:
+          title: 女性
+          description: 対象地域の女性総数
+      - name: age_0_4_male
+        meta:
+          title: 0-4歳 男性
+          description: 以下、5歳階級×男女の人口。旧形式で90歳以上を細分する等の階級外の値は追加列(extras)へ退避
+      - name: age_0_4_female
+        meta:
+          title: 0-4歳 女性
+      - name: age_5_9_male
+        meta:
+          title: 5-9歳 男性
+      - name: age_5_9_female
+        meta:
+          title: 5-9歳 女性
+      - name: age_10_14_male
+        meta:
+          title: 10-14歳 男性
+      - name: age_10_14_female
+        meta:
+          title: 10-14歳 女性
+      - name: age_15_19_male
+        meta:
+          title: 15-19歳 男性
+      - name: age_15_19_female
+        meta:
+          title: 15-19歳 女性
+      - name: age_20_24_male
+        meta:
+          title: 20-24歳 男性
+      - name: age_20_24_female
+        meta:
+          title: 20-24歳 女性
+      - name: age_25_29_male
+        meta:
+          title: 25-29歳 男性
+      - name: age_25_29_female
+        meta:
+          title: 25-29歳 女性
+      - name: age_30_34_male
+        meta:
+          title: 30-34歳 男性
+      - name: age_30_34_female
+        meta:
+          title: 30-34歳 女性
+      - name: age_35_39_male
+        meta:
+          title: 35-39歳 男性
+      - name: age_35_39_female
+        meta:
+          title: 35-39歳 女性
+      - name: age_40_44_male
+        meta:
+          title: 40-44歳 男性
+      - name: age_40_44_female
+        meta:
+          title: 40-44歳 女性
+      - name: age_45_49_male
+        meta:
+          title: 45-49歳 男性
+      - name: age_45_49_female
+        meta:
+          title: 45-49歳 女性
+      - name: age_50_54_male
+        meta:
+          title: 50-54歳 男性
+      - name: age_50_54_female
+        meta:
+          title: 50-54歳 女性
+      - name: age_55_59_male
+        meta:
+          title: 55-59歳 男性
+      - name: age_55_59_female
+        meta:
+          title: 55-59歳 女性
+      - name: age_60_64_male
+        meta:
+          title: 60-64歳 男性
+      - name: age_60_64_female
+        meta:
+          title: 60-64歳 女性
+      - name: age_65_69_male
+        meta:
+          title: 65-69歳 男性
+      - name: age_65_69_female
+        meta:
+          title: 65-69歳 女性
+      - name: age_70_74_male
+        meta:
+          title: 70-74歳 男性
+      - name: age_70_74_female
+        meta:
+          title: 70-74歳 女性
+      - name: age_75_79_male
+        meta:
+          title: 75-79歳 男性
+      - name: age_75_79_female
+        meta:
+          title: 75-79歳 女性
+      - name: age_80_84_male
+        meta:
+          title: 80-84歳 男性
+      - name: age_80_84_female
+        meta:
+          title: 80-84歳 女性
+      - name: age_85over_male
+        meta:
+          title: 85歳以上 男性
+          description: 85歳以上を細分して公開する自治体では NULL（内訳は追加列 extras 参照）
+      - name: age_85over_female
+        meta:
+          title: 85歳以上 女性
+          description: 85歳以上を細分して公開する自治体では NULL（内訳は追加列 extras 参照）
+      - name: households
+        meta:
+          title: 世帯数
+          description: 対象地域の世帯数（公開する自治体のみ）
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON、ヘッダー名→値）。90歳以上の細分・年齢不詳・KEY_CODE 等
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+      - name: source_url
+        meta:
+          title: 取得元URL
+  - name: population_by_age
+    description: |
+      地域・年齢別人口（ods.population）を年齢階級×性別で縦持ちにした補助ビュー。
+      1行 = 地域 × 調査年月日 × 年齢階級 × 性別 → 人口。人口ピラミッドや高齢化率など
+      年齢階級別の集計・可視化を容易にするために提供する。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "地域・年齢別人口（年齢階級ロング）"
+        tags: ["東京都", "人口", "年齢別人口", "自治体標準オープンデータセット"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+      - name: prefecture
+        meta:
+          title: 都道府県名
+      - name: city
+        meta:
+          title: 市区町村名
+      - name: organization_name
+        meta:
+          title: 地方公共団体名
+      - name: survey_date
+        meta:
+          title: 調査年月日
+      - name: area_name
+        meta:
+          title: 地域名
+      - name: age_band
+        meta:
+          title: 年齢階級
+          description: 5歳階級（0-4 〜 80-84、85歳以上は 85+）
+      - name: sex
+        meta:
+          title: 性別
+          description: 男性 / 女性
+      - name: population
+        meta:
+          title: 人口
   - name: source_files
     description: |
       自治体標準ODS取り込みの実行結果（1行=1リソース）。どの自治体のどのファイルを
