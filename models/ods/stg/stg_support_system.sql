@@ -1,0 +1,41 @@
+{# 支援制度情報のステージング。受付・公開日を DATE に正規化する。
+   金額・条件などの数値項目や統制語彙のタグコードは _extras に退避しており、
+   ここでは公開列のみを整形する。 #}
+
+select
+    municipality_code,
+    organization_name,
+    system_org,
+    system_id,
+    system_type,
+    title,
+    subtitle,
+    target_person,
+    target_area,
+    summary,
+    content,
+    application_method,
+    application_period,
+    {{ ods_date('acceptance_start_date') }} as acceptance_start_date,
+    {{ ods_date('acceptance_end_date') }} as acceptance_end_date,
+    legal_basis,
+    reference_url,
+    related_systems,
+    contact,
+    online_application_url,
+    keyword,
+    {{ ods_date('published_date') }} as published_date,
+    contact_name,
+    contact_phone,
+    contact_email,
+    contact_form_url,
+    postal_code,
+    contact_address,
+    url,
+    _extras as extras,
+    _package_id as package_id,
+    _resource_id as resource_id,
+    _org_code as org_code,
+    _org_title as org_title,
+    _source_url as source_url
+from {{ ref('raw_support_system') }}
