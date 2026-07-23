@@ -1679,6 +1679,1206 @@ models:
         meta:
           title: 取得元URL
 
+  - name: educational_institution
+    description: |
+      都内区市町村が公開する「教育機関一覧」（自治体標準オープンデータセット）を
+      横断統合したテーブル。幼稚園・小学校・中学校・義務教育学校等の学校種、設置区分、
+      所在地（市区町村・町字・番地以下）、緯度経度、連絡先を持つ。所在地は連結表記の列を
+      持たず市区町村/町字/番地以下に分かれる。学校種は統制コード（A1・B1 等）と日本語
+      ラベルが自治体ごとに混在するため生値のまま保持する。
+      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "教育機関一覧"
+        tags: ["東京都", "教育", "学校", "自治体標準オープンデータセット", "GIS"]
+    columns:
+      - name: school_code
+        meta:
+          title: 学校コード
+      - name: school_type
+        meta:
+          title: 学校種
+          description: 幼稚園・小学校・中学校等の種別。統制コード（A1・B1 等）と日本語ラベルが混在
+      - name: prefecture_code
+        meta:
+          title: 都道府県番号
+      - name: establishment_category
+        meta:
+          title: 設置区分
+          description: 国立・公立・私立等の区分
+      - name: establisher
+        meta:
+          title: 設置者情報
+      - name: branch_type
+        meta:
+          title: 本分校
+          description: 本校・分校の区別
+      - name: main_school_code
+        meta:
+          title: 本校学校コード
+      - name: main_school_name
+        meta:
+          title: 本校学校名
+      - name: name
+        meta:
+          title: 名称
+          description: 学校・教育機関の名称
+      - name: name_kana
+        meta:
+          title: 名称カナ
+      - name: name_alias
+        meta:
+          title: 略称
+      - name: city
+        meta:
+          title: 市区町村
+          description: 所在地の市区町村
+      - name: town
+        meta:
+          title: 町字
+          description: 所在地の町字
+      - name: street_number
+        meta:
+          title: 番地以下
+          description: 所在地の番地以下
+      - name: postal_code
+        meta:
+          title: 郵便番号
+      - name: lat
+        meta:
+          title: 緯度
+      - name: lon
+        meta:
+          title: 経度
+      - name: contact_name
+        meta:
+          title: 連絡先名称
+      - name: phone_number
+        meta:
+          title: 電話番号
+      - name: attribute_set_date
+        meta:
+          title: 属性情報設定年月日
+      - name: attribute_abolished_date
+        meta:
+          title: 属性情報廃止年月日
+      - name: old_survey_number
+        meta:
+          title: 旧学校調査番号
+      - name: new_school_code
+        meta:
+          title: 移行後の学校コード
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON）
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+  - name: garbage_separation
+    description: |
+      都内区市町村が公開する「ごみの分別方法一覧」（自治体標準オープンデータセット）を
+      横断統合したテーブル。1行=1（自治体×品目）で、家庭ごみの品目ごとに分別区分（燃やす
+      ごみ・不燃ごみ・資源・粗大ごみ等）・出し方の注意点・手数料を持つ。施設一覧ではなく
+      品目マスタのため名称・所在地・緯度経度の列は持たず、品目名で実体を識別する。
+      分別区分は統制語彙が無く自治体ごとに表記が揺れる（燃やすごみ / 可燃ごみ など）ため
+      生値のまま保持する。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "ごみの分別方法"
+        tags: ["東京都", "ごみ", "分別", "リサイクル", "環境", "自治体標準オープンデータセット"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+      - name: item_id
+        meta:
+          title: ID
+          description: 自治体内で一意の品目 ID（元データの ID / NO 列）。付番していない自治体は NULL
+      - name: organization_name
+        meta:
+          title: 地方公共団体名
+      - name: item_name
+        meta:
+          title: ゴミの品目
+          description: 分別を案内する品目名（例：アイロン、生ごみ）。一部の自治体では元データで分別区分と値が入れ替わったまま公開されている
+      - name: item_name_kana
+        meta:
+          title: ゴミの品目_カナ
+          description: 品目名のカナ表記（記載している自治体のみ）
+      - name: item_name_en
+        meta:
+          title: ゴミの品目_英字
+          description: 品目名の英語表記（記載している自治体のみ）
+      - name: separation_category
+        meta:
+          title: 分別区分
+          description: 品目の分別区分（燃やすごみ・不燃ごみ・資源・粗大ごみ・収集しない等）。統制語彙が無く自治体ごとに表記が揺れるため生値のまま
+      - name: caution
+        meta:
+          title: 注意点
+          description: 出し方の注意点
+      - name: fee_type
+        meta:
+          title: 料金種別
+          description: 有料・無料の別（記載している自治体のみ）
+      - name: fee
+        meta:
+          title: 料金
+          description: 手数料。金額のほか自由記述が混在するため文字列のまま
+      - name: bulky_fee
+        meta:
+          title: 粗大ごみ回収料金
+          description: 粗大ごみとして出す場合の回収料金。金額・「計量」・申込案内など自由記述が混在するため文字列のまま
+      - name: fee_notes
+        meta:
+          title: 料金備考
+      - name: collection_area
+        meta:
+          title: 地区名
+          description: 分別ルールが適用される地区（多くは「全域」。地区で分別が異なる自治体のみ細分）
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON）。連絡先など自治体独自の項目
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+  - name: bicycle_parking
+    description: |
+      都内区市町村が公開する「自転車駐車場一覧」（自治体標準オープンデータセット）を
+      横断統合したテーブル。駐輪場ごとの名称・位置・収容台数・屋内外区分・利用時間・料金を持つ。
+      新標準（データセット定義書A）の分割形式では位置・住所が対の施設情報ファイル側に
+      分かれるため、当テーブルでは住所が空で緯度経度のみを持つ自治体がある。
+      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "自転車駐車場"
+        tags: ["東京都", "自転車駐車場", "駐輪場", "交通", "自治体標準オープンデータセット", "GIS"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+      - name: facility_id
+        meta:
+          title: ID
+      - name: organization_name
+        meta:
+          title: 地方公共団体名
+      - name: name
+        meta:
+          title: 名称
+          description: 駐輪場の名称
+      - name: name_kana
+        meta:
+          title: 名称カナ
+      - name: name_en
+        meta:
+          title: 名称英字
+      - name: name_alias
+        meta:
+          title: 名称通称
+      - name: poi_code
+        meta:
+          title: POIコード
+      - name: address
+        meta:
+          title: 所在地
+          description: 分割形式の自治体では空になり緯度経度のみを持つ場合がある
+      - name: prefecture
+        meta:
+          title: 都道府県
+      - name: city
+        meta:
+          title: 市区町村
+      - name: building_name
+        meta:
+          title: 建物名等（方書）
+      - name: postal_code
+        meta:
+          title: 郵便番号
+      - name: phone_number
+        meta:
+          title: 電話番号
+      - name: lat
+        meta:
+          title: 緯度
+      - name: lon
+        meta:
+          title: 経度
+      - name: indoor_outdoor
+        meta:
+          title: 屋内外
+          description: 「屋内」「屋外」等の区分（元データの表記のまま）
+      - name: capacity
+        meta:
+          title: 最大駐輪台数
+          description: 自転車の収容台数
+      - name: nearest_station
+        meta:
+          title: 最寄駅
+      - name: available_days
+        meta:
+          title: 利用可能曜日
+      - name: start_time
+        meta:
+          title: 開始時間
+      - name: end_time
+        meta:
+          title: 終了時間
+      - name: available_notes
+        meta:
+          title: 利用可能日時特記事項
+      - name: fee_type
+        meta:
+          title: 料金種別
+      - name: fee
+        meta:
+          title: 料金
+      - name: fee_details
+        meta:
+          title: 料金備考
+      - name: payment_type
+        meta:
+          title: 決済種別
+      - name: opened_date
+        meta:
+          title: 開設日
+      - name: description
+        meta:
+          title: 説明
+          description: 構造・利用区分・種別ごとの収容台数などの補足（自治体により内容が異なる）
+      - name: url
+        meta:
+          title: URL
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON）
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+  - name: polling_place
+    description: |
+      都内区市町村が公開する「投票所一覧」（自治体標準オープンデータセット）を
+      横断統合したテーブル。選挙の投票所に加え、期日前投票所も投票所区分で区別して
+      収録する（polling_place_type を参照）。名称・投票区名を軸に、緯度経度や
+      住所を持つ自治体もある。標準フォーマットは名称・投票区名・緯度経度が中心で、
+      住所や座標を欠く自治体も多い。
+      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "投票所"
+        tags: ["東京都", "選挙", "投票所", "自治体標準オープンデータセット", "GIS"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+      - name: organization_name
+        meta:
+          title: 地方公共団体名
+      - name: facility_id
+        meta:
+          title: 施設ID
+      - name: polling_place_id
+        meta:
+          title: 投票所ID
+      - name: voting_district_number
+        meta:
+          title: 投票区番号
+      - name: name
+        meta:
+          title: 名称
+          description: 投票所（期日前投票所）の名称
+      - name: name_kana
+        meta:
+          title: 名称カナ
+      - name: name_en
+        meta:
+          title: 名称英字
+      - name: description
+        meta:
+          title: 説明
+      - name: address
+        meta:
+          title: 所在地
+      - name: prefecture
+        meta:
+          title: 都道府県
+      - name: city
+        meta:
+          title: 市区町村
+      - name: ward
+        meta:
+          title: 行政区
+      - name: town
+        meta:
+          title: 町字
+      - name: town_id
+        meta:
+          title: 町字ID
+      - name: street_number
+        meta:
+          title: 番地以下
+      - name: building_name
+        meta:
+          title: 建物名等（方書）
+      - name: postal_code
+        meta:
+          title: 郵便番号
+      - name: phone_number
+        meta:
+          title: 電話番号
+      - name: lat
+        meta:
+          title: 緯度
+      - name: lon
+        meta:
+          title: 経度
+      - name: crs
+        meta:
+          title: 座標参照系
+      - name: crs_code
+        meta:
+          title: 座標参照系コード
+      - name: polling_place_type
+        meta:
+          title: 投票所区分
+          description: 「投票所」「期日前投票所」等の区分
+      - name: voting_district
+        meta:
+          title: 投票区名
+      - name: election_type
+        meta:
+          title: 選挙区分
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON）
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+  - name: support_system
+    description: |
+      都内区市町村が公開する「支援制度情報」（自治体標準オープンデータセット）を
+      横断統合したテーブル。1行=1制度で、補助金・助成・手当などの支援制度の
+      名称・対象者・制度概要・申請方法・問い合わせ先を持つ。施設ではなく制度の
+      カタログのため名称列を持たず、制度名（title）で識別する。金額・条件などの
+      数値項目や産業分類・ライフステージ等の統制語彙タグは extras (JSON) に退避。
+      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "支援制度情報"
+        tags: ["東京都", "支援制度", "補助金", "福祉", "自治体標準オープンデータセット"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 6桁の全国地方公共団体コード（記載している自治体のみ）
+      - name: organization_name
+        meta:
+          title: 地方公共団体名
+      - name: system_org
+        meta:
+          title: 制度所管組織
+          description: 所管組織の13桁の法人番号。多くの自治体で未入力
+      - name: system_id
+        meta:
+          title: 支援制度ID
+          description: 自治体が付与する10桁の支援制度ID（付番していない自治体は NULL）
+      - name: system_type
+        meta:
+          title: 支援制度種別
+          description: 1=個人、2=事業者、3=自治体
+      - name: title
+        meta:
+          title: タイトル（制度名）
+          description: 支援制度の名称。この列で制度を識別する
+      - name: subtitle
+        meta:
+          title: サブタイトル（通称等）
+      - name: target_person
+        meta:
+          title: 対象者
+      - name: target_area
+        meta:
+          title: 対象地域
+          description: 対象となる地方公共団体コード（セミコロン区切り。記載のある自治体のみ）
+      - name: summary
+        meta:
+          title: 制度概要
+      - name: content
+        meta:
+          title: 内容
+      - name: application_method
+        meta:
+          title: 利用・申請方法
+      - name: application_period
+        meta:
+          title: 募集時期
+      - name: acceptance_start_date
+        meta:
+          title: 受付開始日
+      - name: acceptance_end_date
+        meta:
+          title: 受付終了日
+          description: 常時受付の制度は NULL
+      - name: legal_basis
+        meta:
+          title: 根拠法令
+      - name: reference_url
+        meta:
+          title: 詳細参照先
+          description: タイトル:URL 形式（セミコロン区切りで複数）
+      - name: related_systems
+        meta:
+          title: 関連制度
+          description: タイトル:URL 形式（セミコロン区切りで複数）
+      - name: contact
+        meta:
+          title: お問い合わせ先
+      - name: online_application_url
+        meta:
+          title: 電子申請URL
+      - name: keyword
+        meta:
+          title: キーワード
+          description: セミコロン区切りの検索キーワード
+      - name: published_date
+        meta:
+          title: 公開日
+      - name: contact_name
+        meta:
+          title: 連絡先名称
+      - name: contact_phone
+        meta:
+          title: 連絡先電話番号
+      - name: contact_email
+        meta:
+          title: 連絡先メールアドレス
+      - name: contact_form_url
+        meta:
+          title: 連絡先FormURL
+      - name: postal_code
+        meta:
+          title: 郵便番号
+      - name: contact_address
+        meta:
+          title: 連絡先住所
+      - name: url
+        meta:
+          title: URL
+          description: 制度の参照 URL（拡張様式の自治体のみ）
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON）。企業規模・給付上限額・各種条件・産業分類やライフステージ等のタグコードなど
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+  - name: school_lunch
+    description: |
+      都内区市町村が公開する「学校給食献立情報」（自治体標準オープンデータセット）を
+      横断統合したテーブル。1行=学校×提供年月日×料理（さらに食材単位まで分かれる場合あり）で、
+      献立の料理名・食品・栄養価・アレルゲンを持つ。施設一覧ではないため所在地・緯度経度の
+      列は持たない（学校の位置は nlftp.facility.school を参照）。
+      栄養価・アレルゲン・食品成分表の列は定義上は用意されているが、料理名だけを公開し
+      栄養価を空欄とする自治体が多く、埋まり具合は自治体ごとに大きく異なる。
+      学校ID を空欄にしたまま学校名称で運用している自治体があるため、実体の判定は学校名称で行う。
+      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "学校給食献立情報"
+        tags: ["東京都", "教育", "給食", "食育", "自治体標準オープンデータセット"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 情報の管理主体の全国地方公共団体コード
+      - name: school_id
+        meta:
+          title: 学校ID
+          description: 自治体内で一意の学校 ID。ods.school_district と共通の ID を想定。空欄の自治体もある
+      - name: school_code
+        meta:
+          title: 学校コード
+          description: 文部科学省が定める学校コード（付番済の自治体のみ）
+      - name: school_name
+        meta:
+          title: 学校名称
+      - name: school_name_kana
+        meta:
+          title: 学校名称カナ
+      - name: target_grade
+        meta:
+          title: 対象学年
+          description: 献立の提供対象学年。複数学年はセミコロン区切り
+      - name: prefecture
+        meta:
+          title: 学校所在地_都道府県名
+      - name: district
+        meta:
+          title: 学校所在地_郡名
+      - name: city
+        meta:
+          title: 学校所在地_市区町村名
+      - name: ward
+        meta:
+          title: 学校所在地_行政区名
+          description: 政令指定都市の場合のみ
+      - name: school_municipality_code
+        meta:
+          title: 学校所在地_全国地方公共団体コード
+      - name: provided_date
+        meta:
+          title: 提供年月日
+          description: 献立を提供した年月日
+      - name: record_id
+        meta:
+          title: レコードID
+          description: 1つの表の中で一意の行 ID
+      - name: menu_id
+        meta:
+          title: 献立ID
+          description: 同じ献立（主食・主菜・副菜のセット）に属する料理に共通で振られる ID
+      - name: dish_id
+        meta:
+          title: 料理ID
+          description: 日ごとのメニュー別番号
+      - name: dish_name
+        meta:
+          title: 料理名称
+          description: 「カレーライス」「牛乳」など料理・食品の名称
+      - name: ingredient_seq
+        meta:
+          title: 同一料理内通し番号
+          description: 同一料理内の食材別の通し番号
+      - name: food_id
+        meta:
+          title: 食品ID
+          description: 日本食品標準成分表の食品番号
+      - name: food_name_standard
+        meta:
+          title: 食品名称（成分表）
+          description: 日本食品標準成分表の食品名称
+      - name: food_name_local
+        meta:
+          title: 食品名称（独自）
+          description: 産地・原材料など独自に付与した食品名称
+      - name: food_group_6
+        meta:
+          title: 食品群（6群）
+          description: 6つの基礎食品群（1～6）
+      - name: food_group_3
+        meta:
+          title: 食品群（3群）
+          description: 3色食品群（赤・緑・黄）
+      - name: amount_g
+        meta:
+          title: 分量
+          description: 食材の分量（g）
+      - name: energy_kcal
+        meta:
+          title: エネルギー
+          description: 日本食品標準成分表に準拠（kcal）
+      - name: protein_g
+        meta:
+          title: たんぱく質
+          description: 日本食品標準成分表に準拠（g）
+      - name: protein_energy_ratio
+        meta:
+          title: たんぱく質エネルギー比
+          description: たんぱく質由来エネルギー比（%E）
+      - name: fat_g
+        meta:
+          title: 脂質
+          description: 日本食品標準成分表に準拠（g）
+      - name: fat_energy_ratio
+        meta:
+          title: 脂質エネルギー比
+          description: 脂質由来エネルギー比（%E）
+      - name: salt_g
+        meta:
+          title: 食塩相当量
+          description: 日本食品標準成分表に準拠（g）
+      - name: calcium_mg
+        meta:
+          title: カルシウム
+          description: 日本食品標準成分表に準拠（mg）
+      - name: magnesium_mg
+        meta:
+          title: マグネシウム
+          description: 日本食品標準成分表に準拠（mg）
+      - name: iron_mg
+        meta:
+          title: 鉄
+          description: 日本食品標準成分表に準拠（mg）
+      - name: vitamin_a_ug
+        meta:
+          title: ビタミンA_ug
+          description: 日本食品標準成分表に準拠（μg。特殊文字回避のため列名は ug）
+      - name: vitamin_a_ugrae
+        meta:
+          title: ビタミンA_ugRAE
+          description: 学校給食実施基準に準拠（μgRAE）
+      - name: vitamin_a_iu
+        meta:
+          title: ビタミンA_IU
+          description: 改定前の学校給食実施基準に準拠（IU）
+      - name: vitamin_b1_mg
+        meta:
+          title: ビタミンB1
+          description: 日本食品標準成分表に準拠（mg）
+      - name: vitamin_b2_mg
+        meta:
+          title: ビタミンB2
+          description: 日本食品標準成分表に準拠（mg）
+      - name: vitamin_c_mg
+        meta:
+          title: ビタミンC
+          description: 日本食品標準成分表に準拠（mg）
+      - name: dietary_fiber_g
+        meta:
+          title: 食物繊維
+          description: 日本食品標準成分表に準拠（g）
+      - name: zinc_mg
+        meta:
+          title: 亜鉛
+          description: 日本食品標準成分表に準拠（mg）
+      - name: carbohydrate_g
+        meta:
+          title: 炭水化物
+          description: 日本食品標準成分表に準拠（g）
+      - name: sugar_g
+        meta:
+          title: 糖質量
+          description: 日本食品標準成分表に準拠（g）
+      - name: allergen_disclosure
+        meta:
+          title: アレルゲン情報公開・非公開
+          description: アレルゲン情報を公開している場合 true（元データの 1=公開 / 0=非公開）
+      - name: allergen_items
+        meta:
+          title: アレルゲン品目
+          description: 「小麦;卵;乳…」とセミコロン区切りで列記。公開の場合のみ
+      - name: cooking_method_dish
+        meta:
+          title: 調理方法（料理単位）
+      - name: cooking_method_ingredient
+        meta:
+          title: 調理方法（食材単位）
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON）
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+  - name: open_data_list
+    description: |
+      都内区市町村・東京都が公開する「オープンデータ一覧」（自治体標準オープンデータセット）を
+      横断統合したテーブル。1行=1データセット（またはデータセット×ファイル）のメタデータで、
+      各自治体が自ら公開している「どんなオープンデータを出しているか」の目録。施設一覧ではない
+      ため所在地・緯度経度の列は持たない。
+      これは自治体が申告した目録であり、CKAN カタログを横断集計した catalog スキーマ
+      （データセット・組織・リソースのメタデータ）とは別物。catalog は運営基盤側が全件を機械的に
+      集約したメタデータ、本テーブルは各自治体が ODS 様式で手作業に近い形で公開した申告目録で、
+      収録範囲・粒度・鮮度が自治体ごとに異なる。
+      新標準（データセット定義書A、42列）と旧推奨データセット形式（15列）の両方の様式を統合して
+      いる。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "オープンデータ一覧"
+        tags: ["東京都", "オープンデータ", "メタデータ", "カタログ", "自治体標準オープンデータセット", "ODS"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 情報の管理主体の全国地方公共団体コード（旧様式では都道府県コード又は市区町村コード）
+      - name: dataset_id
+        meta:
+          title: データセットID
+          description: 自治体内で一意のデータセットID。旧様式の連番（NO）を含む
+      - name: organization_name
+        meta:
+          title: 地方公共団体名
+      - name: dataset_title
+        meta:
+          title: データセットタイトル
+          description: データセットの名称（旧様式の「データ名称」を含む）
+      - name: dataset_subtitle
+        meta:
+          title: データセットサブタイトル
+      - name: dataset_description
+        meta:
+          title: データセット概要
+      - name: keywords
+        meta:
+          title: キーワード
+          description: 検索タグ（; 区切り）
+      - name: category
+        meta:
+          title: 分類
+      - name: universal_menu
+        meta:
+          title: ユニバーサルメニュー
+          description: ユニバーサルメニューによる分類（; 区切り）
+      - name: published_date
+        meta:
+          title: データセット公開日
+          description: 登録日。解釈できない表記は NULL
+      - name: dataset_updated
+        meta:
+          title: データセット最終更新日
+          description: 解釈できない表記は NULL
+      - name: version
+        meta:
+          title: データセットバージョン
+      - name: language
+        meta:
+          title: データセット言語
+          description: ISO 639-1 の2文字コード（ja 等）
+      - name: dataset_url
+        meta:
+          title: データセットURL
+          description: データセットが公開されている Web ページ
+      - name: update_frequency
+        meta:
+          title: 更新頻度
+      - name: conforms_to
+        meta:
+          title: 準拠する標準
+      - name: related_documents
+        meta:
+          title: 関連ドキュメント
+      - name: provenance
+        meta:
+          title: 来歴情報
+      - name: spatial_coverage
+        meta:
+          title: 対象地域
+      - name: temporal_coverage
+        meta:
+          title: 対象期間
+      - name: contact_name
+        meta:
+          title: 連絡先名称
+      - name: contact_email
+        meta:
+          title: 連絡先メールアドレス
+      - name: contact_phone
+        meta:
+          title: 連絡先電話番号
+      - name: contact_extension
+        meta:
+          title: 連絡先内線番号
+      - name: contact_form_url
+        meta:
+          title: 連絡先FormURL
+      - name: contact_notes
+        meta:
+          title: 連絡先備考
+      - name: dataset_notes
+        meta:
+          title: データセット備考
+      - name: file_title
+        meta:
+          title: ファイルタイトル
+      - name: file_access_url
+        meta:
+          title: ファイルアクセスURL
+          description: ファイルが掲載されている Web ページ
+      - name: file_download_url
+        meta:
+          title: ファイルダウンロードURL
+          description: ファイルを直接ダウンロードできる URL
+      - name: file_description
+        meta:
+          title: ファイル説明
+      - name: file_format
+        meta:
+          title: ファイル形式
+          description: メディアタイプ（csv 等。旧様式の「データ形式」を含む）
+      - name: file_license
+        meta:
+          title: ファイルライセンス
+      - name: file_status
+        meta:
+          title: ファイルステータス
+          description: 配信中／配信準備中／配信停止中
+      - name: file_size
+        meta:
+          title: ファイルサイズ
+          description: バイト単位。数値化できない表記は NULL
+      - name: file_published_date
+        meta:
+          title: ファイル公開日
+          description: 解釈できない表記は NULL
+      - name: file_updated
+        meta:
+          title: ファイル最終更新日
+          description: 解釈できない表記は NULL
+      - name: file_terms
+        meta:
+          title: ファイル利用規約
+      - name: file_related_documents
+        meta:
+          title: ファイル関連ドキュメント
+      - name: file_language
+        meta:
+          title: ファイル言語
+      - name: file_conforms_to
+        meta:
+          title: ファイル準拠する標準
+      - name: api_available
+        meta:
+          title: API対応有無
+          description: 有=true、無=false、不明=NULL
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON、ヘッダー名→値）
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+          description: catalog.datasets との結合キー
+      - name: source_url
+        meta:
+          title: 取得元URL
+  - name: population
+    description: |
+      都内区市町村が公開する「地域・年齢別人口」（自治体標準オープンデータセット）を
+      横断統合したテーブル。1行 = 地域 × 調査年月日で、総人口・男女別人口に加えて
+      5歳階級×男女の人口（0-4歳〜85歳以上）と世帯数をワイドに持つ。町丁字単位で
+      公開する自治体（区部・練馬区など）と、自治体全体の1行のみで公開する自治体が混在する。
+      同一ファイル内に複数の調査年月日を追記する方式のため、時系列比較は survey_date で行う。
+      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+      年齢階級を縦持ちで扱いたい場合は補助ビュー population_by_age を利用できる。
+      独自形式（1歳刻み・性別を行持ちするクロス集計など）で公開する自治体は
+      標準形式ではないため収録していない。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "地域・年齢別人口"
+        tags: ["東京都", "人口", "年齢別人口", "自治体標準オープンデータセット"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+          description: 情報の管理主体の全国地方公共団体コード（元データの表記のまま。6桁）
+      - name: area_code
+        meta:
+          title: 地域コード
+          description: 自治体が管理する地域コード（元データの表記のまま。付番済の自治体のみ）
+      - name: organization_name
+        meta:
+          title: 地方公共団体名
+          description: 新形式のファイルのみ（都道府県名+市区町村名を連結した名称）
+      - name: prefecture
+        meta:
+          title: 都道府県名
+          description: 旧推奨形式のファイルのみ
+      - name: city
+        meta:
+          title: 市区町村名
+          description: 旧推奨形式のファイルのみ
+      - name: survey_date
+        meta:
+          title: 調査年月日
+          description: 人口の基準日
+      - name: area_name
+        meta:
+          title: 地域名
+          description: 対象地域（町丁字名。自治体全体で公開する場合は市区町村名または空欄）
+      - name: total_population
+        meta:
+          title: 総人口
+          description: 対象地域に居住する住民の総数
+      - name: male
+        meta:
+          title: 男性
+          description: 対象地域の男性総数
+      - name: female
+        meta:
+          title: 女性
+          description: 対象地域の女性総数
+      - name: age_0_4_male
+        meta:
+          title: 0-4歳 男性
+          description: 以下、5歳階級×男女の人口。旧形式で90歳以上を細分する等の階級外の値は追加列(extras)へ退避
+      - name: age_0_4_female
+        meta:
+          title: 0-4歳 女性
+      - name: age_5_9_male
+        meta:
+          title: 5-9歳 男性
+      - name: age_5_9_female
+        meta:
+          title: 5-9歳 女性
+      - name: age_10_14_male
+        meta:
+          title: 10-14歳 男性
+      - name: age_10_14_female
+        meta:
+          title: 10-14歳 女性
+      - name: age_15_19_male
+        meta:
+          title: 15-19歳 男性
+      - name: age_15_19_female
+        meta:
+          title: 15-19歳 女性
+      - name: age_20_24_male
+        meta:
+          title: 20-24歳 男性
+      - name: age_20_24_female
+        meta:
+          title: 20-24歳 女性
+      - name: age_25_29_male
+        meta:
+          title: 25-29歳 男性
+      - name: age_25_29_female
+        meta:
+          title: 25-29歳 女性
+      - name: age_30_34_male
+        meta:
+          title: 30-34歳 男性
+      - name: age_30_34_female
+        meta:
+          title: 30-34歳 女性
+      - name: age_35_39_male
+        meta:
+          title: 35-39歳 男性
+      - name: age_35_39_female
+        meta:
+          title: 35-39歳 女性
+      - name: age_40_44_male
+        meta:
+          title: 40-44歳 男性
+      - name: age_40_44_female
+        meta:
+          title: 40-44歳 女性
+      - name: age_45_49_male
+        meta:
+          title: 45-49歳 男性
+      - name: age_45_49_female
+        meta:
+          title: 45-49歳 女性
+      - name: age_50_54_male
+        meta:
+          title: 50-54歳 男性
+      - name: age_50_54_female
+        meta:
+          title: 50-54歳 女性
+      - name: age_55_59_male
+        meta:
+          title: 55-59歳 男性
+      - name: age_55_59_female
+        meta:
+          title: 55-59歳 女性
+      - name: age_60_64_male
+        meta:
+          title: 60-64歳 男性
+      - name: age_60_64_female
+        meta:
+          title: 60-64歳 女性
+      - name: age_65_69_male
+        meta:
+          title: 65-69歳 男性
+      - name: age_65_69_female
+        meta:
+          title: 65-69歳 女性
+      - name: age_70_74_male
+        meta:
+          title: 70-74歳 男性
+      - name: age_70_74_female
+        meta:
+          title: 70-74歳 女性
+      - name: age_75_79_male
+        meta:
+          title: 75-79歳 男性
+      - name: age_75_79_female
+        meta:
+          title: 75-79歳 女性
+      - name: age_80_84_male
+        meta:
+          title: 80-84歳 男性
+      - name: age_80_84_female
+        meta:
+          title: 80-84歳 女性
+      - name: age_85over_male
+        meta:
+          title: 85歳以上 男性
+          description: 85歳以上を細分して公開する自治体では NULL（内訳は追加列 extras 参照）
+      - name: age_85over_female
+        meta:
+          title: 85歳以上 女性
+          description: 85歳以上を細分して公開する自治体では NULL（内訳は追加列 extras 参照）
+      - name: households
+        meta:
+          title: 世帯数
+          description: 対象地域の世帯数（公開する自治体のみ）
+      - name: notes
+        meta:
+          title: 備考
+      - name: extras
+        meta:
+          title: 追加列
+          description: 標準列にマッピングできなかった元データの列（JSON、ヘッダー名→値）。90歳以上の細分・年齢不詳・KEY_CODE 等
+      - name: org_code
+        meta:
+          title: 提供組織コード
+          description: catalog.organizations との結合キー
+      - name: org_title
+        meta:
+          title: 提供組織名
+      - name: package_id
+        meta:
+          title: データセットID
+      - name: source_url
+        meta:
+          title: 取得元URL
+  - name: population_by_age
+    description: |
+      地域・年齢別人口（ods.population）を年齢階級×性別で縦持ちにした補助ビュー。
+      1行 = 地域 × 調査年月日 × 年齢階級 × 性別 → 人口。人口ピラミッドや高齢化率など
+      年齢階級別の集計・可視化を容易にするために提供する。
+    access: public
+    config:
+      meta:
+        <<: *meta
+        title: "地域・年齢別人口（年齢階級ロング）"
+        tags: ["東京都", "人口", "年齢別人口", "自治体標準オープンデータセット"]
+    columns:
+      - name: municipality_code
+        meta:
+          title: 全国地方公共団体コード
+      - name: prefecture
+        meta:
+          title: 都道府県名
+      - name: city
+        meta:
+          title: 市区町村名
+      - name: organization_name
+        meta:
+          title: 地方公共団体名
+      - name: survey_date
+        meta:
+          title: 調査年月日
+      - name: area_name
+        meta:
+          title: 地域名
+      - name: age_band
+        meta:
+          title: 年齢階級
+          description: 5歳階級（0-4 〜 80-84、85歳以上は 85+）
+      - name: sex
+        meta:
+          title: 性別
+          description: 男性 / 女性
+      - name: population
+        meta:
+          title: 人口
   - name: source_files
     description: |
       自治体標準ODS取り込みの実行結果（1行=1リソース）。どの自治体のどのファイルを
