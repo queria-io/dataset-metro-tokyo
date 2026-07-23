@@ -29,5 +29,13 @@ models:
     description: 自治体標準ODS「介護サービス事業所一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
   - name: raw_food_business
     description: 自治体標準ODS「食品等営業許可・届出一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+  - name: raw_educational_institution
+    description: 自治体標準ODS「教育機関一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+  - name: raw_garbage_separation
+    description: 自治体標準ODS「ごみの分別方法一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+  - name: raw_bicycle_parking
+    description: 自治体標準ODS「自転車駐車場一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+  - name: raw_polling_place
+    description: 自治体標準ODS「投票所一覧」（期日前投票所を含む）の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
   - name: raw_ods_source_files
     description: ODS 取り込みの実行結果（1行=1リソース、成功/失敗/スキップと理由）。

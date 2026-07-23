@@ -832,3 +832,234 @@ datasets:
         source: ["許可条件"]
       - key: notes
         source: ["備考"]
+
+  # 教育機関一覧。所在地は市区町村/町字/番地以下に分かれ連結表記の列を持たないため
+  # 必須列を name + city にする。ファイル名スラッグが数字直後（例 24educational_institution）で
+  # 主判定に載らない自治体や、kyouikukikan/学校一覧など別スラッグの自治体があるため title 判定を併用する
+  - id: educational_institution
+    title: 教育機関一覧
+    slug_patterns: ["educational_institution"]
+    title_patterns: ["教育機関一覧"]
+    required_columns: ["name", "city"]
+    columns:
+      - key: school_code
+        source: ["教育機関_学校コード", "学校コード"]
+      - key: school_type
+        source: ["教育機関_学校種", "学校種", "分類"]
+      - key: prefecture_code
+        source: ["教育機関_都道府県番号", "都道府県番号"]
+      - key: establishment_category
+        source: ["教育機関_設置区分", "設置区分"]
+      - key: establisher
+        source: ["教育機関_設置者情報", "設置者情報"]
+      - key: branch_type
+        source: ["教育機関_本分校", "本分校"]
+      - key: main_school_code
+        source: ["教育機関_本校学校コード", "本校学校コード"]
+      - key: main_school_name
+        source: ["教育機関_本校学校名", "本校学校名"]
+      - key: name
+        source: ["教育機関_学校名", "学校名", "施設名称"]
+      - key: name_kana
+        source: ["教育機関_学校名カナ表記", "学校名カナ表記"]
+      - key: name_alias
+        source: ["教育機関_学校略称", "学校略称"]
+      - key: city
+        source: ["教育機関_学校所在地（市区町村）", "教育機関_学校所在地_市区町村", "区"]
+      - key: town
+        source: ["教育機関_学校所在地（町字）", "教育機関_学校所在地_町字", "町名以降"]
+      - key: street_number
+        source: ["教育機関_学校所在地（番地以下）", "教育機関_学校所在地_番地以下"]
+      - key: postal_code
+        source: ["教育機関_郵便番号", "郵便番号"]
+      - key: lat
+        source: ["教育機関_緯度", "緯度"]
+      - key: lon
+        source: ["教育機関_経度", "経度"]
+      - key: contact_name
+        source: ["教育機関_連絡先名称", "連絡先名称"]
+      - key: phone_number
+        source: ["教育機関_連絡先電話番号", "連絡先電話番号", "電話番号"]
+      - key: attribute_set_date
+        source: ["教育機関_属性情報設定年月日", "属性情報設定年月日"]
+      - key: attribute_abolished_date
+        source: ["教育機関_属性情報廃止年月日", "属性情報廃止年月日"]
+      - key: old_survey_number
+        source: ["教育機関_旧学校調査番号", "旧学校調査番号"]
+      - key: new_school_code
+        source: ["教育機関_移行後の学校コード", "移行後の学校コード"]
+
+  # ごみの品目→分別区分の一覧で、名称/住所を持たない品目マスタ型。実体の判定は品目名で行う
+  - id: garbage_separation
+    title: ごみの分別方法一覧
+    slug_patterns: ["garbage_separation"]
+    title_patterns: ["分別方法一覧"]
+    required_columns: ["item_name", "separation_category"]
+    identity_column: item_name
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "ゴミの分別方法_全国地方公共団体コード", "ごみの分別方法_全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: item_id
+        source: ["ID", "ゴミの分別方法_ID", "ごみの分別方法_ID", "NO"]
+      - key: organization_name
+        source: ["地方公共団体名", "ゴミの分別方法_地方公共団体名", "ごみの分別方法_地方公共団体名"]
+      - key: collection_area
+        source: ["地区名"]
+      - key: item_name
+        source: ["ゴミの品目", "ごみの品目", "品目", "ゴミの分別方法_品目", "ごみの分別方法_品目"]
+      - key: item_name_kana
+        source: ["ゴミの品目_カナ", "ごみの品目_カナ", "品目_カナ"]
+      - key: item_name_en
+        source: ["ゴミの品目_英字", "ごみの品目_英字", "品目_英字"]
+      - key: separation_category
+        source: ["分別区分", "ゴミの分別方法_分別区分", "ごみの分別方法_分別区分"]
+      - key: caution
+        source: ["注意点", "ゴミの分別方法_注意点", "ごみの分別方法_注意点"]
+      - key: fee_type
+        source: ["料金種別", "ゴミの分別方法_料金種別", "ごみの分別方法_料金種別"]
+      - key: fee
+        source: ["料金", "ゴミの分別方法_料金", "ごみの分別方法_料金"]
+      - key: bulky_fee
+        source: ["粗大ごみ回収料金", "粗大ごみ料金"]
+      - key: fee_notes
+        source: ["料金備考", "ゴミの分別方法_料金備考", "ごみの分別方法_料金備考"]
+      - key: notes
+        source: ["備考", "ゴミの分別方法_備考", "ごみの分別方法_備考"]
+
+  # 自転車駐車場（駐輪場）一覧。新標準（データセット定義書A）の分割形式では
+  # ドメインファイル <code>_bicycle_parking.csv に名称・座標・収容台数が入り、
+  # 住所は対の <code>_facility.csv 側に分かれる（名称は「施設_名称」で始まるため
+  # 下記 name の source と一致せず、companion ファイルはヘッダー検査で自然に落ちる）。
+  # ドメインファイルは住所列を持たないため required_columns を name のみに上書きする。
+  - id: bicycle_parking
+    title: 自転車駐車場一覧
+    slug_patterns: ["bicycle_parking", "bicycleparking", "bicycle-parking", "bicycle_park"]
+    title_patterns: ["駐輪場", "自転車駐車場"]
+    required_columns: ["name"]
+    columns:
+      - key: municipality_code
+        source: ["公営駐輪場_全国地方公共団体コード", "全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["施設_ID", "公営駐輪場_ID", "ID", "NO"]
+      - key: organization_name
+        source: ["地方公共団体名"]
+      - key: name
+        source: ["公営駐輪場_名称", "名称"]
+      - key: name_kana
+        source: ["公営駐輪場_名称（カナ）", "名称_カナ", "名称（カナ）"]
+      - key: name_en
+        source: ["公営駐輪場_名称（英字）", "名称_英字", "名称（英字）"]
+      - key: name_alias
+        source: ["名称_通称", "施設通称"]
+      - key: poi_code
+        source: ["POIコード"]
+      - key: address
+        source: ["所在地_連結表記", "住所", "所在地", "位置"]
+      - key: prefecture
+        source: ["所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["所在地_市区町村", "市区町村名"]
+      - key: building_name
+        source: ["建物名等(方書)", "建物名等_方書", "方書"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: phone_number
+        source: ["連絡先電話番号", "電話番号"]
+      - key: lat
+        source: ["公営駐輪場_緯度", "緯度"]
+      - key: lon
+        source: ["公営駐輪場_経度", "経度"]
+      - key: indoor_outdoor
+        source: ["公営駐輪場_屋内外", "屋内外"]
+      - key: capacity
+        source: ["公営駐輪場_最大駐輪台数", "最大駐輪台数", "収容台数_自転車", "台数（台）", "収容台数", "台数"]
+      - key: nearest_station
+        source: ["最寄駅"]
+      - key: available_days
+        source: ["サービス曜日", "利用可能曜日"]
+      - key: start_time
+        source: ["開始時刻", "開始時間"]
+      - key: end_time
+        source: ["終了時刻", "終了時間"]
+      - key: available_notes
+        source: ["日時備考", "利用可能時間特記事項", "利用可能日時特記事項"]
+      - key: fee_type
+        source: ["料金種別"]
+      - key: fee
+        source: ["料金", "料金(基本)"]
+      - key: fee_details
+        source: ["料金備考", "料金(詳細)"]
+      - key: payment_type
+        source: ["決済種別"]
+      - key: opened_date
+        source: ["開設日"]
+      - key: description
+        source: ["公営駐輪場_説明", "説明", "概要"]
+      - key: url
+        source: ["URL"]
+      - key: notes
+        source: ["備考"]
+
+  # 投票所（期日前投票所を含む）一覧。標準フォーマット（データセット定義書A）は
+  # 名称・緯度経度・投票区名が中心で住所列を持たない自治体が多いため、誤判定防止の
+  # 必須列は name + voting_district で判定する（投票区名は投票所リストに固有）。
+  - id: polling_place
+    title: 投票所一覧
+    slug_patterns: ["polling_place", "polling-place"]
+    title_patterns: ["投票所"]
+    required_columns: ["name", "voting_district"]
+    columns:
+      - key: municipality_code
+        source: ["投票所_全国地方公共団体コード", "全国地方公共団体コード"]
+      - key: organization_name
+        source: ["地方公共団体名"]
+      - key: facility_id
+        source: ["施設_ID"]
+      - key: polling_place_id
+        source: ["投票所_ID", "ID"]
+      - key: voting_district_number
+        source: ["投票区番号"]
+      - key: name
+        source: ["投票所_名称", "名称", "場所名"]
+      - key: name_kana
+        source: ["投票所_名称（カナ）", "名称（カナ）", "名称_カナ", "名称かな"]
+      - key: name_en
+        source: ["投票所_名称（英字）", "名称（英字）", "名称_英字", "場所名(英語)"]
+      - key: description
+        source: ["投票所_説明", "説明", "説明(日本語)"]
+      - key: address
+        source: ["連結表記", "所在地_連結表記", "住所", "所在地"]
+      - key: prefecture
+        source: ["都道府県", "都道府県名"]
+      - key: city
+        source: ["市区町村", "市区町村名"]
+      - key: ward
+        source: ["行政区名"]
+      - key: town
+        source: ["町字"]
+      - key: town_id
+        source: ["町字ID"]
+      - key: street_number
+        source: ["番地以下"]
+      - key: building_name
+        source: ["建物名等_方書", "建物名等(方書)", "方書"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: phone_number
+        source: ["連絡先電話番号", "電話番号"]
+      - key: lat
+        source: ["投票所_緯度", "緯度"]
+      - key: lon
+        source: ["投票所_経度", "経度"]
+      - key: crs
+        source: ["投票所_座標参照系", "座標参照系"]
+      - key: crs_code
+        source: ["投票所_座標参照系コード", "座標参照系コード"]
+      - key: polling_place_type
+        source: ["投票所_投票所区分", "投票所区分"]
+      - key: voting_district
+        source: ["投票所_投票区名", "投票区名"]
+      - key: election_type
+        source: ["選挙区分"]
+      - key: notes
+        source: ["備考"]

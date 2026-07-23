@@ -29,5 +29,13 @@ models:
     description: 介護サービス事業所のステージング。緯度経度・定員を数値に変換。
   - name: stg_food_business
     description: 食品等営業許可・届出のステージング。緯度経度を数値化、許可関連の日付を DATE に正規化。営業の種類・業態は生値のまま保持。
+  - name: stg_educational_institution
+    description: 教育機関一覧のステージング。緯度経度を数値化、属性情報の設定日・廃止日を DATE に正規化。学校種・設置区分は生値を保持。
+  - name: stg_garbage_separation
+    description: ごみの分別方法一覧のステージング。数値・日付列を持たない品目マスタのため生値を保持し、_メタ列のみ改名。
+  - name: stg_bicycle_parking
+    description: 自転車駐車場のステージング。緯度経度・収容台数を数値化、開設日を DATE に正規化。屋内外・料金は生値のまま保持。
+  - name: stg_polling_place
+    description: 投票所（期日前投票所を含む）のステージング。緯度経度を数値化。
   - name: stg_ods_source_files
     description: ODS 取り込み結果のステージング。行数・取得日時を型変換。
