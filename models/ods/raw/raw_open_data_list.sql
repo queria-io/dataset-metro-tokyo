@@ -1,0 +1,61 @@
+{# 自治体標準ODS「オープンデータ一覧」の生データ。
+   pipelines/ods.py が対象 CSV を標準キーに正規化して data/ods/open_data_list.ndjson に保存する。 #}
+
+{{ config(materialized='table') }}
+
+select *
+from read_json(
+    'data/ods/open_data_list.ndjson',
+    format='newline_delimited',
+    columns={
+        'municipality_code': 'VARCHAR',
+        'dataset_id': 'VARCHAR',
+        'organization_name': 'VARCHAR',
+        'dataset_title': 'VARCHAR',
+        'dataset_subtitle': 'VARCHAR',
+        'dataset_description': 'VARCHAR',
+        'keywords': 'VARCHAR',
+        'category': 'VARCHAR',
+        'universal_menu': 'VARCHAR',
+        'published_date': 'VARCHAR',
+        'dataset_updated': 'VARCHAR',
+        'version': 'VARCHAR',
+        'language': 'VARCHAR',
+        'dataset_url': 'VARCHAR',
+        'update_frequency': 'VARCHAR',
+        'conforms_to': 'VARCHAR',
+        'related_documents': 'VARCHAR',
+        'provenance': 'VARCHAR',
+        'spatial_coverage': 'VARCHAR',
+        'temporal_coverage': 'VARCHAR',
+        'contact_name': 'VARCHAR',
+        'contact_email': 'VARCHAR',
+        'contact_phone': 'VARCHAR',
+        'contact_extension': 'VARCHAR',
+        'contact_form_url': 'VARCHAR',
+        'contact_notes': 'VARCHAR',
+        'dataset_notes': 'VARCHAR',
+        'file_title': 'VARCHAR',
+        'file_access_url': 'VARCHAR',
+        'file_download_url': 'VARCHAR',
+        'file_description': 'VARCHAR',
+        'file_format': 'VARCHAR',
+        'file_license': 'VARCHAR',
+        'file_status': 'VARCHAR',
+        'file_size': 'VARCHAR',
+        'file_published_date': 'VARCHAR',
+        'file_updated': 'VARCHAR',
+        'file_terms': 'VARCHAR',
+        'file_related_documents': 'VARCHAR',
+        'file_language': 'VARCHAR',
+        'file_conforms_to': 'VARCHAR',
+        'api_available': 'VARCHAR',
+        '_extras': 'JSON',
+        '_package_id': 'VARCHAR',
+        '_resource_id': 'VARCHAR',
+        '_org_code': 'VARCHAR',
+        '_org_title': 'VARCHAR',
+        '_source_url': 'VARCHAR',
+        '_fetched_at': 'VARCHAR'
+    }
+)

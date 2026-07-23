@@ -1063,3 +1063,381 @@ datasets:
         source: ["選挙区分"]
       - key: notes
         source: ["備考"]
+
+# 非施設型（制度カタログ）: 名称=title(制度名) を identity にし、
+# required は org(制度所管組織)+title。デフォルトの name+address は住所列を持たないため通らない。
+# title 判定は使わない: 「生活困窮者自立支援制度」「支援制度_給付金_情報(地図出力)」など
+# 別様式の CSV に誤爆するため、ファイル名スラッグのみで判定する。
+  - id: support_system
+    title: 支援制度情報
+    slug_patterns: ["support_system", "support-system"]
+    title_patterns: []
+    required_columns: ["system_org", "title"]
+    identity_column: title
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: organization_name
+        source: ["地方公共団体名"]
+      - key: system_org
+        source: ["制度所管組織"]
+      - key: system_id
+        source: ["支援制度ID"]
+      - key: system_type
+        source: ["支援制度種別"]
+      - key: title
+        source: ["タイトル（制度名）", "タイトル(制度名)", "制度名"]
+      - key: subtitle
+        source: ["サブタイトル（通称等）", "サブタイトル(通称等)"]
+      - key: target_person
+        source: ["対象者"]
+      - key: target_area
+        source: ["対象地域"]
+      - key: summary
+        source: ["制度概要"]
+      - key: content
+        source: ["内容"]
+      - key: application_method
+        source: ["利用・申請方法", "申請方法"]
+      - key: application_period
+        source: ["募集時期"]
+      - key: acceptance_start_date
+        source: ["受付開始日"]
+      - key: acceptance_end_date
+        source: ["受付終了日"]
+      - key: legal_basis
+        source: ["根拠法令"]
+      - key: reference_url
+        source: ["詳細参照先"]
+      - key: related_systems
+        source: ["関連制度"]
+      - key: contact
+        source: ["お問い合わせ先"]
+      - key: online_application_url
+        source: ["電子申請URL"]
+      - key: keyword
+        source: ["キーワード"]
+      - key: published_date
+        source: ["公開日"]
+      - key: contact_name
+        source: ["連絡先名称"]
+      - key: contact_phone
+        source: ["連絡先電話番号"]
+      - key: contact_email
+        source: ["連絡先メールアドレス"]
+      - key: contact_form_url
+        source: ["連絡先FormURL"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: contact_address
+        source: ["連絡先住所"]
+      - key: url
+        source: ["URL"]
+
+  # 学校×提供日×料理を主キーとする献立表。所在地・名称は学校単位のメタで
+  # 施設一覧ではない。名称列（学校名称）で実体を判定し、必須列で誤判定を弾く
+  - id: school_lunch
+    title: 学校給食献立情報
+    slug_patterns: ["school_lunch", "school-lunch"]
+    title_patterns: ["学校給食献立", "給食献立"]
+    required_columns: ["school_id", "school_name"]
+    identity_column: school_name
+    columns:
+      - key: municipality_code
+        source: ["情報の管理主体_全国地方公共団体コード", "全国地方公共団体コード"]
+      - key: school_id
+        source: ["学校ID"]
+      - key: school_code
+        source: ["学校コード"]
+      - key: prefecture
+        source: ["学校所在地_都道府県名"]
+      - key: district
+        source: ["学校所在地_郡名"]
+      - key: city
+        source: ["学校所在地_市区町村名"]
+      - key: ward
+        source: ["学校所在地_行政区名"]
+      - key: school_municipality_code
+        source: ["学校所在地_全国地方公共団体コード"]
+      - key: school_name
+        source: ["学校名称"]
+      - key: school_name_kana
+        source: ["学校名称_カナ"]
+      - key: target_grade
+        source: ["対象学年"]
+      - key: record_id
+        source: ["レコードID"]
+      - key: provided_date
+        source: ["提供年月日"]
+      - key: menu_id
+        source: ["献立ID"]
+      - key: dish_id
+        source: ["料理ID"]
+      - key: dish_name
+        source: ["料理名称"]
+      - key: ingredient_seq
+        source: ["同一料理内通し番号"]
+      - key: food_id
+        source: ["食品ID"]
+      - key: food_name_standard
+        source: ["食品名称（成分表）"]
+      - key: food_name_local
+        source: ["食品名称（独自）"]
+      - key: food_group_6
+        source: ["食品群（6群）"]
+      - key: food_group_3
+        source: ["食品群（3群）"]
+      - key: amount_g
+        source: ["分量"]
+      - key: energy_kcal
+        source: ["エネルギー"]
+      - key: protein_g
+        source: ["たんぱく質"]
+      - key: protein_energy_ratio
+        source: ["たんぱく質エネルギー比"]
+      - key: fat_g
+        source: ["脂質"]
+      - key: fat_energy_ratio
+        source: ["脂質エネルギー比"]
+      - key: salt_g
+        source: ["食塩相当量"]
+      - key: calcium_mg
+        source: ["カルシウム"]
+      - key: magnesium_mg
+        source: ["マグネシウム"]
+      - key: iron_mg
+        source: ["鉄"]
+      - key: vitamin_a_ug
+        source: ["ビタミンA_ug"]
+      - key: vitamin_a_ugrae
+        source: ["ビタミンA_ugRAE"]
+      - key: vitamin_a_iu
+        source: ["ビタミンA_IU"]
+      - key: vitamin_b1_mg
+        source: ["ビタミンB1"]
+      - key: vitamin_b2_mg
+        source: ["ビタミンB2"]
+      - key: vitamin_c_mg
+        source: ["ビタミンC"]
+      - key: dietary_fiber_g
+        source: ["食物繊維"]
+      - key: zinc_mg
+        source: ["亜鉛"]
+      - key: carbohydrate_g
+        source: ["炭水化物"]
+      - key: sugar_g
+        source: ["糖質量"]
+      - key: allergen_disclosure
+        source: ["アレルゲン情報公開・非公開"]
+      - key: allergen_items
+        source: ["アレルゲン品目"]
+      - key: cooking_method_dish
+        source: ["調理方法（料理単位）"]
+      - key: cooking_method_ingredient
+        source: ["調理方法（食材単位）"]
+      - key: notes
+        source: ["備考"]
+
+  # データセットのメタデータ目録（施設一覧ではない）。名称・住所の列を持たず、
+  # 判定は「データセット_タイトル」で行う。required_columns / identity_column を上書きする。
+  # 自治体が自ら公開する目録であり、CKAN 由来の catalog スキーマ（カタログ横断メタデータ）とは別物。
+  - id: open_data_list
+    title: オープンデータ一覧
+    slug_patterns: ["open_data_list"]
+    title_patterns: []
+    required_columns: ["dataset_title"]
+    identity_column: dataset_title
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: dataset_id
+        source: ["データセット_ID", "NO"]
+      - key: organization_name
+        source: ["地方公共団体名", "市区町村名"]
+      - key: dataset_title
+        source: ["データセット_タイトル", "データ名称"]
+      - key: dataset_subtitle
+        source: ["データセット_サブタイトル"]
+      - key: dataset_description
+        source: ["データセット_概要", "データ概要"]
+      - key: keywords
+        source: ["データセット_キーワード"]
+      - key: category
+        source: ["データセット_分類", "分類"]
+      - key: universal_menu
+        source: ["データセット_ユニバーサルメニュー"]
+      - key: published_date
+        source: ["データセット_公開日", "登録日"]
+      - key: dataset_updated
+        source: ["データセット_最終更新日", "最終更新日"]
+      - key: version
+        source: ["データセット_バージョン"]
+      - key: language
+        source: ["データセット_言語"]
+      - key: dataset_url
+        source: ["データセット_URL", "URL"]
+      - key: update_frequency
+        source: ["データセット_更新頻度", "更新頻度"]
+      - key: conforms_to
+        source: ["データセット_準拠する標準"]
+      - key: related_documents
+        source: ["データセット_関連ドキュメント"]
+      - key: provenance
+        source: ["データセット_来歴情報"]
+      - key: spatial_coverage
+        source: ["データセット_対象地域"]
+      - key: temporal_coverage
+        source: ["データセット_対象期間"]
+      - key: contact_name
+        source: ["データセット_連絡先名称"]
+      - key: contact_email
+        source: ["データセット_連絡先メールアドレス"]
+      - key: contact_phone
+        source: ["データセット_連絡先電話番号"]
+      - key: contact_extension
+        source: ["データセット_連絡先内線番号"]
+      - key: contact_form_url
+        source: ["データセット_連絡先FormURL"]
+      - key: contact_notes
+        source: ["データセット_連絡先備考（その他、SNSなど）"]
+      - key: dataset_notes
+        source: ["データセット_備考", "備考"]
+      - key: file_title
+        source: ["ファイル_タイトル", "ファイルタイトル"]
+      - key: file_access_url
+        source: ["ファイル_アクセスURL"]
+      - key: file_download_url
+        source: ["ファイル_ダウンロードURL"]
+      - key: file_description
+        source: ["ファイル_説明"]
+      - key: file_format
+        source: ["ファイル形式", "データ形式"]
+      - key: file_license
+        source: ["ファイル_ライセンス", "ライセンス"]
+      - key: file_status
+        source: ["ファイル_ステータス"]
+      - key: file_size
+        source: ["ファイル_サイズ"]
+      - key: file_published_date
+        source: ["ファイル_公開日"]
+      - key: file_updated
+        source: ["ファイル_最終更新日"]
+      - key: file_terms
+        source: ["ファイル_利用規約"]
+      - key: file_related_documents
+        source: ["ファイル_関連ドキュメント"]
+      - key: file_language
+        source: ["ファイル_言語"]
+      - key: file_conforms_to
+        source: ["ファイル_準拠する標準"]
+      - key: api_available
+        source: ["ファイル_API対応有無", "API対応有無"]
+
+  # 地域・年齢別人口（自治体標準ODS、データセット定義書A）。5歳階級×男女のワイド構造。
+  # 施設一覧ではなく地域×調査年月日の人口表のため、住所・名称の列を持たない。
+  # required_columns / identity_column を上書きする（DEFAULT の name+address は不成立）。
+  # 国立市の月次「_by_street_by_age」や江東区の「_detail_chouchoubetu」は列構造が
+  # 異なり required_columns が揃わないため自動的に棄却される。
+  - id: population
+    title: 地域・年齢別人口
+    slug_patterns: ["population"]
+    title_patterns: ["地域・年齢別人口"]
+    required_columns: ["survey_date", "area_name", "total_population"]
+    identity_column: total_population
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: area_code
+        source: ["地域コード"]
+      - key: organization_name
+        source: ["地方公共団体名"]
+      - key: prefecture
+        source: ["都道府県名"]
+      - key: city
+        source: ["市区町村名"]
+      - key: survey_date
+        source: ["調査年月日"]
+      - key: area_name
+        source: ["地域名"]
+      - key: total_population
+        source: ["総人口"]
+      - key: male
+        source: ["男性"]
+      - key: female
+        source: ["女性"]
+      - key: age_0_4_male
+        source: ["0-4歳の男性"]
+      - key: age_0_4_female
+        source: ["0-4歳の女性"]
+      - key: age_5_9_male
+        source: ["5-9歳の男性"]
+      - key: age_5_9_female
+        source: ["5-9歳の女性"]
+      - key: age_10_14_male
+        source: ["10-14歳の男性"]
+      - key: age_10_14_female
+        source: ["10-14歳の女性"]
+      - key: age_15_19_male
+        source: ["15-19歳の男性"]
+      - key: age_15_19_female
+        source: ["15-19歳の女性"]
+      - key: age_20_24_male
+        source: ["20-24歳の男性"]
+      - key: age_20_24_female
+        source: ["20-24歳の女性"]
+      - key: age_25_29_male
+        source: ["25-29歳の男性"]
+      - key: age_25_29_female
+        source: ["25-29歳の女性"]
+      - key: age_30_34_male
+        source: ["30-34歳の男性"]
+      - key: age_30_34_female
+        source: ["30-34歳の女性"]
+      - key: age_35_39_male
+        source: ["35-39歳の男性"]
+      - key: age_35_39_female
+        source: ["35-39歳の女性"]
+      - key: age_40_44_male
+        source: ["40-44歳の男性"]
+      - key: age_40_44_female
+        source: ["40-44歳の女性"]
+      - key: age_45_49_male
+        source: ["45-49歳の男性"]
+      - key: age_45_49_female
+        source: ["45-49歳の女性"]
+      - key: age_50_54_male
+        source: ["50-54歳の男性"]
+      - key: age_50_54_female
+        source: ["50-54歳の女性"]
+      - key: age_55_59_male
+        source: ["55-59歳の男性"]
+      - key: age_55_59_female
+        source: ["55-59歳の女性"]
+      - key: age_60_64_male
+        source: ["60-64歳の男性"]
+      - key: age_60_64_female
+        source: ["60-64歳の女性"]
+      - key: age_65_69_male
+        source: ["65-69歳の男性"]
+      - key: age_65_69_female
+        source: ["65-69歳の女性"]
+      - key: age_70_74_male
+        source: ["70-74歳の男性"]
+      - key: age_70_74_female
+        source: ["70-74歳の女性"]
+      - key: age_75_79_male
+        source: ["75-79歳の男性"]
+      - key: age_75_79_female
+        source: ["75-79歳の女性"]
+      - key: age_80_84_male
+        source: ["80-84歳の男性"]
+      - key: age_80_84_female
+        source: ["80-84歳の女性"]
+      - key: age_85over_male
+        source: ["85歳以上の男性"]
+      - key: age_85over_female
+        source: ["85歳以上の女性"]
+      - key: households
+        source: ["世帯数"]
+      - key: notes
+        source: ["備考"]
