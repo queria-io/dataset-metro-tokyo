@@ -43,5 +43,7 @@ models:
     description: 学校給食献立情報のステージング。提供年月日を DATE に正規化、分量・栄養価を数値化、アレルゲン情報公開区分を BOOLEAN 化。
   - name: stg_open_data_list
     description: オープンデータ一覧のステージング。公開日・最終更新日を DATE に、ファイルサイズを数値に、API対応有無を BOOLEAN に正規化。
+  - name: stg_population
+    description: 地域・年齢別人口のステージング。総人口・男女別・5歳階級×男女の人口・世帯数を数値化、調査年月日を DATE に正規化（YYYYMMDD 表記も許容）。
   - name: stg_ods_source_files
     description: ODS 取り込み結果のステージング。行数・取得日時を型変換。

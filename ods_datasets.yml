@@ -1332,3 +1332,112 @@ datasets:
         source: ["ファイル_準拠する標準"]
       - key: api_available
         source: ["ファイル_API対応有無", "API対応有無"]
+
+  # 地域・年齢別人口（自治体標準ODS、データセット定義書A）。5歳階級×男女のワイド構造。
+  # 施設一覧ではなく地域×調査年月日の人口表のため、住所・名称の列を持たない。
+  # required_columns / identity_column を上書きする（DEFAULT の name+address は不成立）。
+  # 国立市の月次「_by_street_by_age」や江東区の「_detail_chouchoubetu」は列構造が
+  # 異なり required_columns が揃わないため自動的に棄却される。
+  - id: population
+    title: 地域・年齢別人口
+    slug_patterns: ["population"]
+    title_patterns: ["地域・年齢別人口"]
+    required_columns: ["survey_date", "area_name", "total_population"]
+    identity_column: total_population
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: area_code
+        source: ["地域コード"]
+      - key: organization_name
+        source: ["地方公共団体名"]
+      - key: prefecture
+        source: ["都道府県名"]
+      - key: city
+        source: ["市区町村名"]
+      - key: survey_date
+        source: ["調査年月日"]
+      - key: area_name
+        source: ["地域名"]
+      - key: total_population
+        source: ["総人口"]
+      - key: male
+        source: ["男性"]
+      - key: female
+        source: ["女性"]
+      - key: age_0_4_male
+        source: ["0-4歳の男性"]
+      - key: age_0_4_female
+        source: ["0-4歳の女性"]
+      - key: age_5_9_male
+        source: ["5-9歳の男性"]
+      - key: age_5_9_female
+        source: ["5-9歳の女性"]
+      - key: age_10_14_male
+        source: ["10-14歳の男性"]
+      - key: age_10_14_female
+        source: ["10-14歳の女性"]
+      - key: age_15_19_male
+        source: ["15-19歳の男性"]
+      - key: age_15_19_female
+        source: ["15-19歳の女性"]
+      - key: age_20_24_male
+        source: ["20-24歳の男性"]
+      - key: age_20_24_female
+        source: ["20-24歳の女性"]
+      - key: age_25_29_male
+        source: ["25-29歳の男性"]
+      - key: age_25_29_female
+        source: ["25-29歳の女性"]
+      - key: age_30_34_male
+        source: ["30-34歳の男性"]
+      - key: age_30_34_female
+        source: ["30-34歳の女性"]
+      - key: age_35_39_male
+        source: ["35-39歳の男性"]
+      - key: age_35_39_female
+        source: ["35-39歳の女性"]
+      - key: age_40_44_male
+        source: ["40-44歳の男性"]
+      - key: age_40_44_female
+        source: ["40-44歳の女性"]
+      - key: age_45_49_male
+        source: ["45-49歳の男性"]
+      - key: age_45_49_female
+        source: ["45-49歳の女性"]
+      - key: age_50_54_male
+        source: ["50-54歳の男性"]
+      - key: age_50_54_female
+        source: ["50-54歳の女性"]
+      - key: age_55_59_male
+        source: ["55-59歳の男性"]
+      - key: age_55_59_female
+        source: ["55-59歳の女性"]
+      - key: age_60_64_male
+        source: ["60-64歳の男性"]
+      - key: age_60_64_female
+        source: ["60-64歳の女性"]
+      - key: age_65_69_male
+        source: ["65-69歳の男性"]
+      - key: age_65_69_female
+        source: ["65-69歳の女性"]
+      - key: age_70_74_male
+        source: ["70-74歳の男性"]
+      - key: age_70_74_female
+        source: ["70-74歳の女性"]
+      - key: age_75_79_male
+        source: ["75-79歳の男性"]
+      - key: age_75_79_female
+        source: ["75-79歳の女性"]
+      - key: age_80_84_male
+        source: ["80-84歳の男性"]
+      - key: age_80_84_female
+        source: ["80-84歳の女性"]
+      - key: age_85over_male
+        source: ["85歳以上の男性"]
+      - key: age_85over_female
+        source: ["85歳以上の女性"]
+      - key: households
+        source: ["世帯数"]
+      - key: notes
+        source: ["備考"]
