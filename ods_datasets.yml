@@ -760,3 +760,75 @@ datasets:
         source: ["URL"]
       - key: notes
         source: ["備考"]
+
+  - id: food_business
+    title: 食品等営業許可・届出一覧
+    slug_patterns: ["food_business"]
+    title_patterns: ["食品等営業許可", "食品営業許可"]
+    columns:
+      - key: municipality_code
+        source: ["全国地方公共団体コード", "都道府県コード又は市区町村コード", "市区町村コード"]
+      - key: facility_id
+        source: ["ID", "NO"]
+      - key: name
+        source: ["施設名称", "名称"]
+      - key: name_kana
+        source: ["施設名称_カナ", "名称_カナ"]
+      - key: name_en
+        source: ["施設名称_英字", "名称_英語"]
+      - key: business_type
+        source: ["営業の種類"]
+      - key: business_category
+        source: ["業態"]
+      - key: location_municipality_code
+        source: ["所在地_全国地方公共団体コード"]
+      - key: town_id
+        source: ["町字ID"]
+      - key: address
+        source: ["所在地_連結表記", "住所"]
+      - key: prefecture
+        source: ["施設所在地_都道府県", "所在地_都道府県", "都道府県名"]
+      - key: city
+        source: ["施設所在地_市区町村", "所在地_市区町村", "市区町村名"]
+      - key: town
+        source: ["施設所在地_町字", "所在地_町字"]
+      - key: street_number
+        source: ["施設所在地_番地以下", "所在地_番地以下"]
+      - key: building_name
+        source: ["施設方書", "方書"]
+      - key: lat
+        source: ["緯度"]
+      - key: lon
+        source: ["経度"]
+      - key: phone_number
+        source: ["施設電話番号", "電話番号"]
+      - key: email
+        source: ["連絡先メールアドレス"]
+      - key: contact_form_url
+        source: ["連絡先FormURL"]
+      - key: contact_notes
+        source: ["連絡先備考（その他、SNSなど）"]
+      - key: postal_code
+        source: ["郵便番号"]
+      - key: corporate_name
+        source: ["法人名", "法人の名称"]
+      - key: corporate_number
+        source: ["法人番号"]
+      - key: permit_number
+        source: ["許可番号"]
+      - key: first_permit_date
+        source: ["初回許可年月日"]
+      - key: permit_date
+        source: ["許可年月日"]
+      - key: permit_start_date
+        source: ["許可開始日"]
+      - key: permit_expiry_date
+        source: ["許可満了日"]
+      - key: closure_date
+        source: ["廃業年月日"]
+      - key: application_type
+        source: ["申請区分"]
+      - key: permit_condition
+        source: ["許可条件"]
+      - key: notes
+        source: ["備考"]
