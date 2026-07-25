@@ -1,0 +1,21 @@
+schema: catalog
+name: groups
+title: 分野分類
+description: 東京都オープンデータカタログの分野分類（グループ、全16分類）の一覧。行財政・くらし・防災・交通などの区分について、グループコード、名称、説明、所属データセット数を収録する。
+keywords:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: group_code
+    title: グループコード
+  - name: title
+    title: 分野名
+  - name: description
+    title: 説明
+  - name: dataset_count
+    title: データセット数

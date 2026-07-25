@@ -1,0 +1,4 @@
+schema: catalog
+name: raw_packages
+description: CKAN API package_search の生データ（1行=1データセット）。スカラーは VARCHAR、ネスト構造は JSON 型で保持。
+published: false

@@ -1,0 +1,28 @@
+schema: catalog
+name: organizations
+title: 提供組織
+description: 'データ提供組織の一覧（約100組織）。東京都の各局と都内62区市町村。
+
+  組織コードは JIS 全国地方公共団体コード準拠（t000xxx=都庁各局、
+
+  t131xxx=特別区、t132xxx=市、t133xxx=町村）。'
+keywords:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: organization_code
+    title: 組織コード
+  - name: title
+    title: 組織名
+  - name: organization_type
+    title: 組織種別
+    description: 都庁各局 / 特別区 / 市 / 町村
+  - name: description
+    title: 説明
+  - name: dataset_count
+    title: データセット数

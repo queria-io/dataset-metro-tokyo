@@ -1,0 +1,88 @@
+schema: ods
+name: preschool
+title: 子育て施設
+description: '都内区市町村が公開する「子育て施設一覧」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。施設種別・収容定員・受入年齢・一時預かり/病児保育の有無を持つ。
+
+  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+
+  都全域の認可保育所・児童館は childcare スキーマ（東京都福祉局）にもある。'
+keywords:
+  - 東京都
+  - 子育て
+  - 保育所
+  - 自治体標準オープンデータセット
+  - GIS
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+  - name: facility_id
+    title: ID
+  - name: name
+    title: 名称
+  - name: name_kana
+    title: 名称カナ
+  - name: facility_type
+    title: 種別
+    description: 施設の種別（認可保育所・認定こども園・幼稚園等、元データの表記のまま）
+  - name: address
+    title: 所在地
+  - name: prefecture
+    title: 都道府県
+  - name: city
+    title: 市区町村
+  - name: postal_code
+    title: 郵便番号
+  - name: phone_number
+    title: 電話番号
+  - name: lat
+    title: 緯度
+  - name: lon
+    title: 経度
+  - name: access
+    title: アクセス方法
+  - name: parking
+    title: 駐車場情報
+  - name: corporate_name
+    title: 団体名
+    description: 運営法人名
+  - name: capacity
+    title: 収容定員
+    description: 人。数値化できない表記は NULL
+  - name: age_range
+    title: 受入年齢
+  - name: available_days
+    title: 利用可能曜日
+  - name: start_time
+    title: 開始時間
+  - name: end_time
+    title: 終了時間
+  - name: available_notes
+    title: 利用可能日時特記事項
+  - name: temporary_care
+    title: 一時預かり
+    description: 有=true、無=false、不明=NULL
+  - name: sick_care
+    title: 病児保育
+    description: 有=true、無=false、不明=NULL
+  - name: url
+    title: URL
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

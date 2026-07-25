@@ -1,0 +1,4 @@
+schema: ods
+name: stg_tourism
+description: 観光施設のステージング。緯度経度・基本料金を数値化。
+published: false

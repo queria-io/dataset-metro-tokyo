@@ -1,0 +1,4 @@
+schema: ods
+name: stg_population
+description: 地域・年齢別人口のステージング。総人口・男女別・5歳階級×男女の人口・世帯数を数値化、調査年月日を DATE に正規化（YYYYMMDD 表記も許容）。
+published: false

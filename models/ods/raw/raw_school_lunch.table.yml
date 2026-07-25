@@ -1,0 +1,4 @@
+schema: ods
+name: raw_school_lunch
+description: 自治体標準ODS「学校給食献立情報」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+published: false

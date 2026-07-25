@@ -1,0 +1,4 @@
+schema: catalog
+name: stg_datasets
+description: データセットメタデータのステージング。列名を英語化し、extras から更新頻度を抽出、日時を TIMESTAMP 化。
+published: false

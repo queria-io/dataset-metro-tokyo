@@ -1,0 +1,4 @@
+schema: catalog
+name: stg_dataset_tags
+description: データセットとタグの対応のステージング。
+published: false

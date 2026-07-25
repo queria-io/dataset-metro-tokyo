@@ -1,0 +1,4 @@
+schema: ods
+name: raw_aed
+description: 自治体標準ODS「AED設置箇所一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+published: false

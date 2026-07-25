@@ -1,0 +1,147 @@
+schema: ods
+name: open_data_list
+title: オープンデータ一覧
+description: '都内区市町村・東京都が公開する「オープンデータ一覧」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。1行=1データセット（またはデータセット×ファイル）のメタデータで、
+
+  各自治体が自ら公開している「どんなオープンデータを出しているか」の目録。施設一覧ではない
+
+  ため所在地・緯度経度の列は持たない。
+
+  これは自治体が申告した目録であり、CKAN カタログを横断集計した catalog スキーマ
+
+  （データセット・組織・リソースのメタデータ）とは別物。catalog は運営基盤側が全件を機械的に
+
+  集約したメタデータ、本テーブルは各自治体が ODS 様式で手作業に近い形で公開した申告目録で、
+
+  収録範囲・粒度・鮮度が自治体ごとに異なる。
+
+  新標準（データセット定義書A、42列）と旧推奨データセット形式（15列）の両方の様式を統合して
+
+  いる。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+keywords:
+  - 東京都
+  - オープンデータ
+  - メタデータ
+  - カタログ
+  - 自治体標準オープンデータセット
+  - ODS
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    description: 情報の管理主体の全国地方公共団体コード（旧様式では都道府県コード又は市区町村コード）
+  - name: dataset_id
+    title: データセットID
+    description: 自治体内で一意のデータセットID。旧様式の連番（NO）を含む
+  - name: organization_name
+    title: 地方公共団体名
+  - name: dataset_title
+    title: データセットタイトル
+    description: データセットの名称（旧様式の「データ名称」を含む）
+  - name: dataset_subtitle
+    title: データセットサブタイトル
+  - name: dataset_description
+    title: データセット概要
+  - name: keywords
+    title: キーワード
+    description: 検索タグ（; 区切り）
+  - name: category
+    title: 分類
+  - name: universal_menu
+    title: ユニバーサルメニュー
+    description: ユニバーサルメニューによる分類（; 区切り）
+  - name: published_date
+    title: データセット公開日
+    description: 登録日。解釈できない表記は NULL
+  - name: dataset_updated
+    title: データセット最終更新日
+    description: 解釈できない表記は NULL
+  - name: version
+    title: データセットバージョン
+  - name: language
+    title: データセット言語
+    description: ISO 639-1 の2文字コード（ja 等）
+  - name: dataset_url
+    title: データセットURL
+    description: データセットが公開されている Web ページ
+  - name: update_frequency
+    title: 更新頻度
+  - name: conforms_to
+    title: 準拠する標準
+  - name: related_documents
+    title: 関連ドキュメント
+  - name: provenance
+    title: 来歴情報
+  - name: spatial_coverage
+    title: 対象地域
+  - name: temporal_coverage
+    title: 対象期間
+  - name: contact_name
+    title: 連絡先名称
+  - name: contact_email
+    title: 連絡先メールアドレス
+  - name: contact_phone
+    title: 連絡先電話番号
+  - name: contact_extension
+    title: 連絡先内線番号
+  - name: contact_form_url
+    title: 連絡先FormURL
+  - name: contact_notes
+    title: 連絡先備考
+  - name: dataset_notes
+    title: データセット備考
+  - name: file_title
+    title: ファイルタイトル
+  - name: file_access_url
+    title: ファイルアクセスURL
+    description: ファイルが掲載されている Web ページ
+  - name: file_download_url
+    title: ファイルダウンロードURL
+    description: ファイルを直接ダウンロードできる URL
+  - name: file_description
+    title: ファイル説明
+  - name: file_format
+    title: ファイル形式
+    description: メディアタイプ（csv 等。旧様式の「データ形式」を含む）
+  - name: file_license
+    title: ファイルライセンス
+  - name: file_status
+    title: ファイルステータス
+    description: 配信中／配信準備中／配信停止中
+  - name: file_size
+    title: ファイルサイズ
+    description: バイト単位。数値化できない表記は NULL
+  - name: file_published_date
+    title: ファイル公開日
+    description: 解釈できない表記は NULL
+  - name: file_updated
+    title: ファイル最終更新日
+    description: 解釈できない表記は NULL
+  - name: file_terms
+    title: ファイル利用規約
+  - name: file_related_documents
+    title: ファイル関連ドキュメント
+  - name: file_language
+    title: ファイル言語
+  - name: file_conforms_to
+    title: ファイル準拠する標準
+  - name: api_available
+    title: API対応有無
+    description: 有=true、無=false、不明=NULL
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON、ヘッダー名→値）
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

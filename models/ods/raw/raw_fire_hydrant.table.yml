@@ -1,0 +1,4 @@
+schema: ods
+name: raw_fire_hydrant
+description: 自治体標準ODS「消防水利施設一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+published: false

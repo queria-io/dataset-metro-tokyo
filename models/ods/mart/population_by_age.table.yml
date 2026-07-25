@@ -1,0 +1,37 @@
+schema: ods
+name: population_by_age
+title: 地域・年齢別人口（年齢階級ロング）
+description: '地域・年齢別人口（ods.population）を年齢階級×性別で縦持ちにした補助ビュー。
+
+  1行 = 地域 × 調査年月日 × 年齢階級 × 性別 → 人口。人口ピラミッドや高齢化率など
+
+  年齢階級別の集計・可視化を容易にするために提供する。'
+keywords:
+  - 東京都
+  - 人口
+  - 年齢別人口
+  - 自治体標準オープンデータセット
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+  - name: prefecture
+    title: 都道府県名
+  - name: city
+    title: 市区町村名
+  - name: organization_name
+    title: 地方公共団体名
+  - name: survey_date
+    title: 調査年月日
+  - name: area_name
+    title: 地域名
+  - name: age_band
+    title: 年齢階級
+    description: 5歳階級（0-4 〜 80-84、85歳以上は 85+）
+  - name: sex
+    title: 性別
+    description: 男性 / 女性
+  - name: population
+    title: 人口

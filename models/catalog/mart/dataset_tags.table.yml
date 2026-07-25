@@ -1,0 +1,20 @@
+schema: catalog
+name: dataset_tags
+title: データセットタグ
+description: 'データセットとタグの対応（多対多）。「自治体標準オープンデータセット」
+
+  「都知事杯ハッカソン」などのタグでデータセットを絞り込める。'
+keywords:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: package_id
+    title: データセットID
+    description: datasets との結合キー
+  - name: tag
+    title: タグ

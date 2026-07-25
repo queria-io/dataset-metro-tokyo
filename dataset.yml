@@ -1,0 +1,71 @@
+spec_version: "0.1"
+name: metro_tokyo
+title: 東京都オープンデータカタログ
+description: |-
+  東京都オープンデータカタログ (catalog.data.metro.tokyo.lg.jp) から取得した東京都のオープンデータ。
+  全データセットのメタデータ（カタログ台帳）と、東京都福祉局「社会福祉施設等一覧」の
+  認可保育所・児童館など、都内の施設情報を提供。
+keywords:
+  - 東京都
+  - 子育て
+  - 保育所
+  - 児童館
+  - 施設
+  - GIS
+  - カタログ
+  - メタデータ
+homepage: https://github.com/queria-io/dataset-metro-tokyo
+language: ja
+
+licenses:
+  - CC-BY-4.0
+
+sources:
+  - title: 東京都オープンデータカタログサイト
+    path: https://catalog.data.metro.tokyo.lg.jp/
+  - title: 社会福祉施設等一覧（東京都福祉局）
+    path: https://www.opendata.metro.tokyo.lg.jp/
+
+contributors:
+  - title: 東京都
+    path: https://www.metro.tokyo.lg.jp/
+    roles: [rightsHolder]
+  - title: 東京都内の区市町村
+    roles: [rightsHolder]
+
+spatial_coverage: [JP]
+update_frequency: monthly
+cover: 🗼
+
+ai_context:
+  instructions: |
+    東京都と都内区市町村のオープンデータを横断で引くのに使う。3つのスキーマは性格が違う。
+    catalog はカタログ台帳（データセット9646件・提供組織98）で、東京都のポータルに
+    何が登録されているかのメタデータ。データの中身ではない。
+    リソースの URL はファイル更新で変わるので、常にこの表の最新 URL を見る。
+    ods は区市町村が公開する自治体標準オープンデータセットを種別ごとに横断統合したもの。
+    **公開している自治体は種別ごとに一部だけ**で、全62区市町村が揃っているわけではない。
+    どの自治体が入っているかは ods.source_files（取り込みの実行結果・753行）で確認できる。
+    件数を自治体間で比べるときは、まず収録の有無を確認する。
+    childcare は東京都福祉局の認可保育所・児童館で、こちらは都全域。
+    元データの値は補正せず原典のまま入れている。ods.cultural_property には緯度と経度が
+    入れ替わったまま公開されている自治体（豊島区の全行）があり、ods.event にも
+    緯度経度の入れ替わりや経度の小数点欠落がある。地図に出す前に値域を確認する。
+    日付は自治体ごとに表記が違うため DATE に正規化しているが、「4月頃」のような
+    自由記述は推測せず NULL にしている。
+    標準列にマッピングできない自治体独自の列は extras（JSON）に退避してある。
+    ods.school_district は施設一覧ではなく学校×通学区域で、所在地・緯度経度を持たない。
+    介護事業所を全国で見るなら mhlw.kaigo.establishment、学校の位置は nlftp.facility.school。
+  synonyms: [東京都オープンデータ, 自治体標準オープンデータセット, ODS, CKAN, 区市町村]
+  examples:
+    - 区市町村別のAED設置数を出したい
+    - 保育所を地図に出して定員で色分けしたい
+    - 東京都のカタログにどんなデータセットがあるか探したい
+
+schemas:
+  - name: catalog
+    title: カタログ
+  - name: childcare
+    title: 子育て施設
+  - name: ods
+    title: 自治体標準データセット

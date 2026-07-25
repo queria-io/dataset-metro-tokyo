@@ -1,0 +1,4 @@
+schema: ods
+name: stg_public_wireless_lan
+description: 公衆無線LANアクセスポイントのステージング。緯度経度を数値化。
+published: false

@@ -1,0 +1,4 @@
+schema: ods
+name: raw_food_business
+description: 自治体標準ODS「食品等営業許可・届出一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+published: false

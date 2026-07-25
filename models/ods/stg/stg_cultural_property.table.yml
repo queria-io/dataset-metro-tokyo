@@ -1,0 +1,4 @@
+schema: ods
+name: stg_cultural_property
+description: 文化財のステージング。緯度経度・員数を数値化。文化財指定日は日不明表記があるため文字列のまま保持。
+published: false

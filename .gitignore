@@ -20,3 +20,4 @@ package-lock.yml
 # Data
 data/
 *.duckdb
+dist/

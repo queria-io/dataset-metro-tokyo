@@ -1,0 +1,4 @@
+schema: ods
+name: raw_evacuation_space
+description: 自治体標準ODS「指定緊急避難場所一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+published: false

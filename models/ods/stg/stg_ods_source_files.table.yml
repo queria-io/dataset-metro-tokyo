@@ -1,0 +1,4 @@
+schema: ods
+name: stg_ods_source_files
+description: ODS 取り込み結果のステージング。行数・取得日時を型変換。
+published: false

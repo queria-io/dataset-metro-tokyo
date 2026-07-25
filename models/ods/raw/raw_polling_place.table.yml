@@ -1,0 +1,4 @@
+schema: ods
+name: raw_polling_place
+description: 自治体標準ODS「投票所一覧」（期日前投票所を含む）の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+published: false

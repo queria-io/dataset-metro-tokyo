@@ -1,0 +1,4 @@
+schema: ods
+name: stg_public_facility
+description: 公共施設のステージング。緯度経度を数値化。
+published: false

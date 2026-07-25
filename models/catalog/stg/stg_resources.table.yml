@@ -1,0 +1,4 @@
+schema: catalog
+name: stg_resources
+description: リソースのステージング。resources JSON 配列を1行=1リソースに展開して型変換。
+published: false

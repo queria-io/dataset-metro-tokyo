@@ -1,0 +1,4 @@
+schema: ods
+name: stg_school_lunch
+description: 学校給食献立情報のステージング。提供年月日を DATE に正規化、分量・栄養価を数値化、アレルゲン情報公開区分を BOOLEAN 化。
+published: false

@@ -1,0 +1,4 @@
+schema: catalog
+name: stg_organizations
+description: 提供組織のステージング。組織コードから組織種別を導出。
+published: false

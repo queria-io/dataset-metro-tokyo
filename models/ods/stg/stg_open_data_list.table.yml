@@ -1,0 +1,4 @@
+schema: ods
+name: stg_open_data_list
+description: オープンデータ一覧のステージング。公開日・最終更新日を DATE に、ファイルサイズを数値に、API対応有無を BOOLEAN に正規化。
+published: false

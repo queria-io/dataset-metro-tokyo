@@ -1,0 +1,82 @@
+schema: ods
+name: school_district
+title: 小中学校通学区域
+description: '都内区市町村が公開する「小中学校通学区域情報」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。1行=1学校の通学区域で、区域に含まれる住所をセミコロン区切りの
+
+  文字列で持つ。施設一覧ではないため所在地・緯度経度の列は持たない（学校の位置は
+
+  nlftp.facility.school を参照）。公開しているのは一部の自治体のみ
+
+  （カバレッジは ods.source_files を参照）。
+
+  独自形式で通学区域を公開している自治体（町丁目ごとに学校名を並べる形式など）は
+
+  標準形式ではないため収録していない。'
+keywords:
+  - 東京都
+  - 教育
+  - 学区
+  - 自治体標準オープンデータセット
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    description: 情報の管理主体の6桁の全国地方公共団体コード
+  - name: school_id
+    title: 学校ID
+    description: 自治体内で一意の学校 ID
+  - name: school_code
+    title: 学校コード
+    description: 文部科学省が定める学校コード（付番済の自治体のみ）
+  - name: name
+    title: 学校名称
+  - name: name_kana
+    title: 学校名称カナ
+  - name: school_type
+    title: 学校種別
+    description: POIコードから導出（1503=小学校、1504=中学校）。定義外のコードは NULL
+  - name: poi_code
+    title: 行政サービス拠点種別
+    description: 共通語彙基盤の POI コード（統制語彙）
+  - name: prefecture
+    title: 学校所在地_都道府県名
+  - name: district
+    title: 学校所在地_郡名
+  - name: city
+    title: 学校所在地_市区町村名
+  - name: ward
+    title: 学校所在地_行政区名
+    description: 政令指定都市の場合のみ
+  - name: school_municipality_code
+    title: 学校所在地_全国地方公共団体コード
+  - name: district_addresses
+    title: 通学区域の住所
+    description: 通学区域に含まれる住所をセミコロン区切りで列挙。「〇丁目全域」「〇番地～〇番地」など粒度は自治体ごとに異なる
+  - name: registered_date
+    title: 通学区域_登録年月日
+  - name: abolished_date
+    title: 通学区域_廃止日
+    description: 学区の履歴を残している自治体のみ。現行の区域は NULL
+  - name: polygon_file
+    title: ポリゴン_ファイル名
+    description: 学区の境界ポリゴンファイルを併せて公開している場合のファイル名
+  - name: notes
+    title: 特記事項
+    description: 選択学区など特殊な取り扱いの説明
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

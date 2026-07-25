@@ -1,0 +1,77 @@
+schema: ods
+name: garbage_separation
+title: ごみの分別方法
+description: '都内区市町村が公開する「ごみの分別方法一覧」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。1行=1（自治体×品目）で、家庭ごみの品目ごとに分別区分（燃やす
+
+  ごみ・不燃ごみ・資源・粗大ごみ等）・出し方の注意点・手数料を持つ。施設一覧ではなく
+
+  品目マスタのため名称・所在地・緯度経度の列は持たず、品目名で実体を識別する。
+
+  分別区分は統制語彙が無く自治体ごとに表記が揺れる（燃やすごみ / 可燃ごみ など）ため
+
+  生値のまま保持する。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+keywords:
+  - 東京都
+  - ごみ
+  - 分別
+  - リサイクル
+  - 環境
+  - 自治体標準オープンデータセット
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+  - name: item_id
+    title: ID
+    description: 自治体内で一意の品目 ID（元データの ID / NO 列）。付番していない自治体は NULL
+  - name: organization_name
+    title: 地方公共団体名
+  - name: item_name
+    title: ゴミの品目
+    description: 分別を案内する品目名（例：アイロン、生ごみ）。一部の自治体では元データで分別区分と値が入れ替わったまま公開されている
+  - name: item_name_kana
+    title: ゴミの品目_カナ
+    description: 品目名のカナ表記（記載している自治体のみ）
+  - name: item_name_en
+    title: ゴミの品目_英字
+    description: 品目名の英語表記（記載している自治体のみ）
+  - name: separation_category
+    title: 分別区分
+    description: 品目の分別区分（燃やすごみ・不燃ごみ・資源・粗大ごみ・収集しない等）。統制語彙が無く自治体ごとに表記が揺れるため生値のまま
+  - name: caution
+    title: 注意点
+    description: 出し方の注意点
+  - name: fee_type
+    title: 料金種別
+    description: 有料・無料の別（記載している自治体のみ）
+  - name: fee
+    title: 料金
+    description: 手数料。金額のほか自由記述が混在するため文字列のまま
+  - name: bulky_fee
+    title: 粗大ごみ回収料金
+    description: 粗大ごみとして出す場合の回収料金。金額・「計量」・申込案内など自由記述が混在するため文字列のまま
+  - name: fee_notes
+    title: 料金備考
+  - name: collection_area
+    title: 地区名
+    description: 分別ルールが適用される地区（多くは「全域」。地区で分別が異なる自治体のみ細分）
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）。連絡先など自治体独自の項目
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

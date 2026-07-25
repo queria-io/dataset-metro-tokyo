@@ -1,0 +1,4 @@
+schema: ods
+name: stg_food_business
+description: 食品等営業許可・届出のステージング。緯度経度を数値化、許可関連の日付を DATE に正規化。営業の種類・業態は生値のまま保持。
+published: false

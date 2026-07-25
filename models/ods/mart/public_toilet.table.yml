@@ -1,0 +1,89 @@
+schema: ods
+name: public_toilet
+title: 公衆トイレ
+description: '都内区市町村が公開する「公衆トイレ一覧」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。設置位置・便器数（男性/女性/男女共用/バリアフリー）・
+
+  車椅子使用者用/乳幼児用設備/オストメイト設置の有無・利用可能時間を持つ。
+
+  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+
+  和式/洋式/小便器の内訳等の詳細列は extras（JSON）に退避する。'
+keywords:
+  - 東京都
+  - 公衆トイレ
+  - バリアフリー
+  - 自治体標準オープンデータセット
+  - GIS
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+  - name: facility_id
+    title: ID
+  - name: name
+    title: 名称
+    description: 設置施設・建物等の名称
+  - name: name_kana
+    title: 名称カナ
+  - name: address
+    title: 所在地
+  - name: prefecture
+    title: 都道府県
+  - name: city
+    title: 市区町村
+  - name: install_position
+    title: 設置位置
+    description: 施設内のどこに設置されているか
+  - name: lat
+    title: 緯度
+  - name: lon
+    title: 経度
+  - name: male_total
+    title: 男性トイレ総数
+    description: 便座単位。数値化できない表記は NULL
+  - name: female_total
+    title: 女性トイレ総数
+    description: 便座単位。数値化できない表記は NULL
+  - name: unisex_total
+    title: 男女共用トイレ総数
+    description: 便座単位。数値化できない表記は NULL
+  - name: barrier_free_total
+    title: バリアフリートイレ数
+    description: 便座単位。数値化できない表記は NULL
+  - name: wheelchair
+    title: 車椅子使用者用トイレ
+    description: 有=true、無=false、不明=NULL
+  - name: baby_facility
+    title: 乳幼児用設備設置トイレ
+    description: 有=true、無=false、不明=NULL
+  - name: ostomate
+    title: オストメイト設置トイレ
+    description: 有=true、無=false、不明=NULL
+  - name: start_time
+    title: 利用開始時間
+  - name: end_time
+    title: 利用終了時間
+  - name: available_notes
+    title: 利用可能時間特記事項
+  - name: image
+    title: 画像
+    description: 画像の格納先 URL
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）。和式/洋式/小便器の内訳等
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL
