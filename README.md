@@ -6,9 +6,10 @@
 
 - 東京都オープンデータカタログ: https://catalog.data.metro.tokyo.lg.jp/
   - catalog スキーマ: CKAN API（package_search / organization_list / group_list）から取得したメタデータ
-- 東京都福祉局「社会福祉施設等一覧（令和7年5月1日時点）」のうち、認可保育所と児童館の CSV。緯度経度は十進度、座標系は JGD2011
-  - 認可保育所: https://www.opendata.metro.tokyo.lg.jp/fukushi/202505-2-1-hoikusyo.csv
-  - 児童館: https://www.opendata.metro.tokyo.lg.jp/fukushi/202505-2-2_06-zidoukan.csv
+- 東京都福祉局「社会福祉施設等一覧」のうち、認可保育所と児童館の CSV。緯度経度は十進度、座標系は JGD2011
+  - 一覧は年2回（5月時点・10月時点）新しいデータセットとして公開され、その都度
+    パッケージも配布ファイル名も変わる。URL は固定せず catalog のメタデータから最新版を解決する
+  - 提供組織: 東京都福祉局 https://catalog.data.metro.tokyo.lg.jp/organization/t000054
 
 ## スキーマ: catalog（カタログメタデータ）
 
@@ -98,8 +99,9 @@ ods.food_business は食品衛生法に基づき保健所が許可・届出を�
 
 ## テーブル: childcare.nursery_school
 
-東京都内の認可保育所の一覧（3,581施設、令和7年5月1日時点）。
+東京都内の認可保育所の一覧（3,579施設、2025-10 版時点）。取り込む版は自動で最新に追随する。
 
+- source_edition: 取込時点（取り込んだ「社会福祉施設等一覧」の時点。YYYY-MM）
 - establisher_type: 設置（設置主体の区分。区市町村立・私立等）
 - name: 施設名
 - postal_code: 郵便番号
@@ -112,8 +114,9 @@ ods.food_business は食品衛生法に基づき保健所が許可・届出を�
 
 ## テーブル: childcare.children_center
 
-東京都内の児童館の一覧（590施設、令和7年5月1日時点）。
+東京都内の児童館の一覧（590施設、2025-10 版時点）。取り込む版は自動で最新に追随する。
 
+- source_edition: 取込時点（取り込んだ「社会福祉施設等一覧」の時点。YYYY-MM）
 - establisher_type: 設置（設置主体の区分。区市町村立・私立等）
 - name: 施設名
 - postal_code: 郵便番号
@@ -122,18 +125,20 @@ ods.food_business は食品衛生法に基づき保健所が許可・届出を�
 - lat: 緯度（十進度、JGD2011）
 - crs: 座標系（元データに記載された座標系。JGD2011）
 - phone_number: 電話番号
-- capacity: 定員（人。元データの '-' や空欄は NULL）
+- capacity: 定員（人。元データの '-' や空欄は NULL。元データは全施設が '-' で公開されており全行 NULL）
 
 ### データ更新手順
 
 パイプライン実行時に以下を行う。ビルドは `bash scripts/build.sh local` で実行する。
 
 - pipelines/ckan.py: CKAN API からカタログメタデータ全量を取得し NDJSON で data/catalog/ に保存（毎回洗い替え）
-- pipelines/childcare.py: 認可保育所・児童館の CSV をダウンロードし、cp932 から UTF-8 に変換して data/childcare/ に保存
+- pipelines/childcare.py: catalog のメタデータから「社会福祉施設等一覧」の最新版を解決し、
+  認可保育所・児童館の CSV をダウンロードして cp932 から UTF-8 に変換し data/childcare/ に保存。
+  取り込んだ版・パッケージ・URL は data/childcare/source.ndjson に記録する（catalog の後に実行する）
 
 ## ライセンス
 
 クリエイティブ・コモンズ 表示 4.0 国際（CC BY 4.0）に従う。出典データは加工して利用している。
 
-- 出典: 東京都福祉局「社会福祉施設等一覧（令和7年5月1日時点）」（東京都オープンデータカタログ）
+- 出典: 東京都福祉局「社会福祉施設等一覧」（東京都オープンデータカタログ）
 - ライセンス: https://creativecommons.org/licenses/by/4.0/deed.ja

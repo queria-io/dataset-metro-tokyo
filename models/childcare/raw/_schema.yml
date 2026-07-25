@@ -2,6 +2,8 @@ version: 2
 
 models:
   - name: raw_nursery_school
-    description: 東京都福祉局「社会福祉施設等一覧（令和7年5月1日時点）」の認可保育所の生データ。全列 VARCHAR で取り込む。
+    description: 東京都福祉局「社会福祉施設等一覧」の認可保育所の生データ。全列 VARCHAR で取り込む。
   - name: raw_children_center
-    description: 東京都福祉局「社会福祉施設等一覧（令和7年5月1日時点）」の児童館の生データ。全列 VARCHAR で取り込む。
+    description: 東京都福祉局「社会福祉施設等一覧」の児童館の生データ。全列 VARCHAR で取り込む。
+  - name: raw_childcare_source
+    description: 子育て施設データの取得元（1行=1ファイル）。取り込んだ一覧の版・パッケージ・URL を記録する。

@@ -2,7 +2,7 @@
 
 1. catalog:   カタログメタデータ取得（CKAN API、全データセット・組織・グループ）
 2. ods:       自治体標準オープンデータセット取得（ods_datasets.yml 定義の種別）
-3. childcare: 子育て施設データ取得（認可保育所・児童館）
+3. childcare: 子育て施設データ取得（認可保育所・児童館。catalog の後に実行する）
 4. dbt:       dbt ビルド
 """
 
@@ -43,7 +43,7 @@ def main():
     logger.info("2/4: ods (自治体標準オープンデータセット)")
     download_and_normalize()
 
-    # 3. 子育て施設データ（東京都福祉局 社会福祉施設等一覧）
+    # 3. 子育て施設データ（catalog のメタデータから最新版の一覧を解決）
     logger.info("3/4: childcare (子育て施設データ)")
     download_childcare("data/childcare")
 

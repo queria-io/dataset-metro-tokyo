@@ -1,5 +1,6 @@
--- 児童館（令和7年5月1日時点）
+-- 児童館（東京都福祉局が公開する最新版。時点は source_edition）
 select
+    source_edition,
     establisher_type,
     name,
     postal_code,
