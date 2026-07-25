@@ -9,16 +9,21 @@ models:
   - name: nursery_school
     description: |
       東京都内の認可保育所の一覧（ポイント）。設置主体・施設名・所在地・緯度経度・
-      認可定員を持つ。東京都福祉局「社会福祉施設等一覧（令和7年5月1日時点）」。
+      認可定員を持つ。東京都福祉局「社会福祉施設等一覧」。一覧は年2回（5月時点・
+      10月時点）更新され、常に最新版を取り込む。どの時点かは source_edition を見る。
       座標系は JGD2011。所在地は都道府県名を含まない（「千代田区外神田…」形式）。
     access: public
     config:
       meta:
         <<: *meta
-        source_url: "https://www.opendata.metro.tokyo.lg.jp/fukushi/202505-2-1-hoikusyo.csv"
+        source_url: "https://catalog.data.metro.tokyo.lg.jp/organization/t000054"
         tags: ["東京都", "子育て", "保育所", "施設", "GIS"]
         title: "認可保育所"
     columns:
+      - name: source_edition
+        meta:
+          title: 取込時点
+          description: 取り込んだ「社会福祉施設等一覧」の時点（YYYY-MM）
       - name: establisher_type
         meta:
           title: 設置
@@ -56,16 +61,21 @@ models:
   - name: children_center
     description: |
       東京都内の児童館の一覧（ポイント）。設置主体・施設名・所在地・緯度経度・
-      定員を持つ。東京都福祉局「社会福祉施設等一覧（令和7年5月1日時点）」。
+      定員を持つ。東京都福祉局「社会福祉施設等一覧」。一覧は年2回（5月時点・
+      10月時点）更新され、常に最新版を取り込む。どの時点かは source_edition を見る。
       座標系は JGD2011。所在地は都道府県名を含まない（「千代田区外神田…」形式）。
     access: public
     config:
       meta:
         <<: *meta
-        source_url: "https://www.opendata.metro.tokyo.lg.jp/fukushi/202505-2-2_06-zidoukan.csv"
+        source_url: "https://catalog.data.metro.tokyo.lg.jp/organization/t000054"
         tags: ["東京都", "子育て", "児童館", "施設", "GIS"]
         title: "児童館"
     columns:
+      - name: source_edition
+        meta:
+          title: 取込時点
+          description: 取り込んだ「社会福祉施設等一覧」の時点（YYYY-MM）
       - name: establisher_type
         meta:
           title: 設置
@@ -98,4 +108,4 @@ models:
       - name: capacity
         meta:
           title: 定員
-          description: 定員（人）。元データの '-' や空欄は NULL。令和7年5月版では全施設が '-' のため全行 NULL
+          description: 定員（人）。元データの '-' や空欄は NULL。元データは全施設が '-' で公開されており全行 NULL（2025-10 版時点）

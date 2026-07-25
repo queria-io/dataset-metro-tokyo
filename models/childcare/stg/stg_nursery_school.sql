@@ -1,7 +1,9 @@
 {# 認可保育所のステージング。列名を英語化し、経度・緯度を DOUBLE、
-   認可定員を INTEGER に型変換する（'-' や空欄は NULL）。 #}
+   認可定員を INTEGER に型変換する（'-' や空欄は NULL）。
+   取り込んだ一覧の版（YYYY-MM）を source_edition として付与する。 #}
 
 select
+    source.edition as source_edition,
     "設置" as establisher_type,
     "施設名" as name,
     "郵便番号" as postal_code,
@@ -12,3 +14,8 @@ select
     "電話番号" as phone_number,
     try_cast(nullif(nullif(trim("認可定員"), ''), '-') as integer) as capacity
 from {{ ref('raw_nursery_school') }}
+cross join (
+    select edition
+    from {{ ref('raw_childcare_source') }}
+    where file = 'nursery_school.csv'
+) as source

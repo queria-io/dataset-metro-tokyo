@@ -3,7 +3,9 @@ name: nursery_school
 title: 認可保育所
 description: '東京都内の認可保育所の一覧（ポイント）。設置主体・施設名・所在地・緯度経度・
 
-  認可定員を持つ。東京都福祉局「社会福祉施設等一覧（令和7年5月1日時点）」。
+  認可定員を持つ。東京都福祉局「社会福祉施設等一覧」。一覧は年2回（5月時点・10月時点）
+
+  更新され、常に最新版を取り込む。どの時点かは source_edition を見る。
 
   座標系は JGD2011。所在地は都道府県名を含まない（「千代田区外神田…」形式）。'
 keywords:
@@ -14,8 +16,11 @@ keywords:
   - GIS
 published: true
 sources:
-  - path: https://www.opendata.metro.tokyo.lg.jp/fukushi/202505-2-1-hoikusyo.csv
+  - path: https://catalog.data.metro.tokyo.lg.jp/organization/t000054
 fields:
+  - name: source_edition
+    title: 取込時点
+    description: 取り込んだ「社会福祉施設等一覧」の時点（YYYY-MM）
   - name: establisher_type
     title: 設置
     description: 設置主体の区分（区市町村立・私立等）
