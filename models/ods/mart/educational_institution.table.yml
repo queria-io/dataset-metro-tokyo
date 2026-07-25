@@ -1,0 +1,90 @@
+schema: ods
+name: educational_institution
+title: 教育機関一覧
+description: '都内区市町村が公開する「教育機関一覧」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。幼稚園・小学校・中学校・義務教育学校等の学校種、設置区分、
+
+  所在地（市区町村・町字・番地以下）、緯度経度、連絡先を持つ。所在地は連結表記の列を
+
+  持たず市区町村/町字/番地以下に分かれる。学校種は統制コード（A1・B1 等）と日本語
+
+  ラベルが自治体ごとに混在するため生値のまま保持する。
+
+  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+keywords:
+  - 東京都
+  - 教育
+  - 学校
+  - 自治体標準オープンデータセット
+  - GIS
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: school_code
+    title: 学校コード
+  - name: school_type
+    title: 学校種
+    description: 幼稚園・小学校・中学校等の種別。統制コード（A1・B1 等）と日本語ラベルが混在
+  - name: prefecture_code
+    title: 都道府県番号
+  - name: establishment_category
+    title: 設置区分
+    description: 国立・公立・私立等の区分
+  - name: establisher
+    title: 設置者情報
+  - name: branch_type
+    title: 本分校
+    description: 本校・分校の区別
+  - name: main_school_code
+    title: 本校学校コード
+  - name: main_school_name
+    title: 本校学校名
+  - name: name
+    title: 名称
+    description: 学校・教育機関の名称
+  - name: name_kana
+    title: 名称カナ
+  - name: name_alias
+    title: 略称
+  - name: city
+    title: 市区町村
+    description: 所在地の市区町村
+  - name: town
+    title: 町字
+    description: 所在地の町字
+  - name: street_number
+    title: 番地以下
+    description: 所在地の番地以下
+  - name: postal_code
+    title: 郵便番号
+  - name: lat
+    title: 緯度
+  - name: lon
+    title: 経度
+  - name: contact_name
+    title: 連絡先名称
+  - name: phone_number
+    title: 電話番号
+  - name: attribute_set_date
+    title: 属性情報設定年月日
+  - name: attribute_abolished_date
+    title: 属性情報廃止年月日
+  - name: old_survey_number
+    title: 旧学校調査番号
+  - name: new_school_code
+    title: 移行後の学校コード
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

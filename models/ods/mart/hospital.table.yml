@@ -1,0 +1,86 @@
+schema: ods
+name: hospital
+title: 医療機関
+description: '「医療機関一覧」（自治体標準オープンデータセット）を横断統合したテーブル。
+
+  東京都保健医療局が公開する都全域の医療機関データを含むため、区市町村独自公開分と
+
+  同一機関が重複しうる（medical_institution_code や名称+所在地で識別可能）。
+
+  診療科目・病床数・診療日時・災害拠点分類を持つ。'
+keywords:
+  - 東京都
+  - 医療
+  - 病院
+  - 自治体標準オープンデータセット
+  - GIS
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+  - name: facility_id
+    title: ID
+  - name: name
+    title: 名称
+  - name: name_kana
+    title: 名称カナ
+  - name: institution_type
+    title: 医療機関の種類
+    description: 病院・診療所・歯科診療所等（元データの表記のまま）
+  - name: address
+    title: 所在地
+  - name: prefecture
+    title: 都道府県
+  - name: city
+    title: 市区町村
+  - name: postal_code
+    title: 郵便番号
+  - name: phone_number
+    title: 電話番号
+  - name: lat
+    title: 緯度
+  - name: lon
+    title: 経度
+  - name: corporate_name
+    title: 法人の名称
+  - name: medical_institution_code
+    title: 医療機関コード
+  - name: consultation_days
+    title: 診療曜日
+  - name: start_time
+    title: 診療開始時間
+  - name: end_time
+    title: 診療終了時間
+  - name: consultation_notes
+    title: 診療日時特記事項
+  - name: after_hours
+    title: 時間外対応
+  - name: departments
+    title: 診療科目
+    description: 複数値は ; 区切り
+  - name: beds
+    title: 病床数
+    description: 床。数値化できない表記は NULL
+  - name: disaster_base
+    title: 災害拠点分類
+  - name: status
+    title: 状況
+  - name: url
+    title: URL
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

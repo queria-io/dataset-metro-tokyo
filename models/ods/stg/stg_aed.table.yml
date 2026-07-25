@@ -1,0 +1,4 @@
+schema: ods
+name: stg_aed
+description: AED設置箇所のステージング。緯度経度を数値化、小児対応設備を BOOLEAN に正規化。
+published: false

@@ -1,0 +1,106 @@
+schema: ods
+name: support_system
+title: 支援制度情報
+description: '都内区市町村が公開する「支援制度情報」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。1行=1制度で、補助金・助成・手当などの支援制度の
+
+  名称・対象者・制度概要・申請方法・問い合わせ先を持つ。施設ではなく制度の
+
+  カタログのため名称列を持たず、制度名（title）で識別する。金額・条件などの
+
+  数値項目や産業分類・ライフステージ等の統制語彙タグは extras (JSON) に退避。
+
+  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+keywords:
+  - 東京都
+  - 支援制度
+  - 補助金
+  - 福祉
+  - 自治体標準オープンデータセット
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    description: 6桁の全国地方公共団体コード（記載している自治体のみ）
+  - name: organization_name
+    title: 地方公共団体名
+  - name: system_org
+    title: 制度所管組織
+    description: 所管組織の13桁の法人番号。多くの自治体で未入力
+  - name: system_id
+    title: 支援制度ID
+    description: 自治体が付与する10桁の支援制度ID（付番していない自治体は NULL）
+  - name: system_type
+    title: 支援制度種別
+    description: 1=個人、2=事業者、3=自治体
+  - name: title
+    title: タイトル（制度名）
+    description: 支援制度の名称。この列で制度を識別する
+  - name: subtitle
+    title: サブタイトル（通称等）
+  - name: target_person
+    title: 対象者
+  - name: target_area
+    title: 対象地域
+    description: 対象となる地方公共団体コード（セミコロン区切り。記載のある自治体のみ）
+  - name: summary
+    title: 制度概要
+  - name: content
+    title: 内容
+  - name: application_method
+    title: 利用・申請方法
+  - name: application_period
+    title: 募集時期
+  - name: acceptance_start_date
+    title: 受付開始日
+  - name: acceptance_end_date
+    title: 受付終了日
+    description: 常時受付の制度は NULL
+  - name: legal_basis
+    title: 根拠法令
+  - name: reference_url
+    title: 詳細参照先
+    description: タイトル:URL 形式（セミコロン区切りで複数）
+  - name: related_systems
+    title: 関連制度
+    description: タイトル:URL 形式（セミコロン区切りで複数）
+  - name: contact
+    title: お問い合わせ先
+  - name: online_application_url
+    title: 電子申請URL
+  - name: keyword
+    title: キーワード
+    description: セミコロン区切りの検索キーワード
+  - name: published_date
+    title: 公開日
+  - name: contact_name
+    title: 連絡先名称
+  - name: contact_phone
+    title: 連絡先電話番号
+  - name: contact_email
+    title: 連絡先メールアドレス
+  - name: contact_form_url
+    title: 連絡先FormURL
+  - name: postal_code
+    title: 郵便番号
+  - name: contact_address
+    title: 連絡先住所
+  - name: url
+    title: URL
+    description: 制度の参照 URL（拡張様式の自治体のみ）
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）。企業規模・給付上限額・各種条件・産業分類やライフステージ等のタグコードなど
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

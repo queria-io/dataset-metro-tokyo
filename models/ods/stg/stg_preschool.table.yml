@@ -1,0 +1,4 @@
+schema: ods
+name: stg_preschool
+description: 子育て施設のステージング。緯度経度・収容定員を数値化、一時預かり・病児保育を BOOLEAN に正規化。
+published: false

@@ -1,0 +1,4 @@
+schema: ods
+name: stg_hospital
+description: 医療機関のステージング。緯度経度・病床数を数値化。
+published: false

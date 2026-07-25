@@ -1,0 +1,65 @@
+schema: ods
+name: public_wireless_lan
+title: 公衆無線LAN
+description: '都内区市町村が公開する「公衆無線LANアクセスポイント一覧」（自治体標準オープン
+
+  データセット）を横断統合したテーブル。SSID・提供エリア・設置者を持つ。
+
+  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+keywords:
+  - 東京都
+  - Wi-Fi
+  - 公衆無線LAN
+  - 自治体標準オープンデータセット
+  - GIS
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+  - name: facility_id
+    title: ID
+  - name: name
+    title: 名称
+    description: アクセスポイント（設置施設）の名称
+  - name: name_kana
+    title: 名称カナ
+  - name: address
+    title: 所在地
+  - name: prefecture
+    title: 都道府県
+  - name: city
+    title: 市区町村
+  - name: postal_code
+    title: 郵便番号
+  - name: phone_number
+    title: 電話番号
+  - name: lat
+    title: 緯度
+  - name: lon
+    title: 経度
+  - name: installer
+    title: 設置者
+  - name: ssid
+    title: SSID
+    description: 複数値は ; 区切り
+  - name: coverage_area
+    title: 提供エリア
+  - name: url
+    title: URL
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

@@ -1,0 +1,48 @@
+schema: ods
+name: source_files
+title: ODS取り込み結果
+description: '自治体標準ODS取り込みの実行結果（1行=1リソース）。どの自治体のどのファイルを
+
+  取り込んだか・スキップや失敗の理由・エンコーディング・行数を記録する。
+
+  種別ごとの自治体カバレッジの把握に使う。'
+keywords:
+  - 東京都
+  - 自治体標準オープンデータセット
+  - ODS
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: dataset_id
+    title: 種別ID
+    description: ODS のデータセット種別（evacuation_space 等）
+  - name: org_code
+    title: 提供組織コード
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: package_title
+    title: データセット名
+  - name: resource_id
+    title: リソースID
+  - name: resource_name
+    title: リソース名
+  - name: url
+    title: 取得元URL
+  - name: status
+    title: 取得結果
+    description: ok / failed（取得エラー）/ skipped（ヘッダー不一致等）
+  - name: reason
+    title: 理由
+    description: failed / skipped の理由
+  - name: encoding
+    title: エンコーディング
+    description: 判定されたエンコーディング（utf-8-sig / cp932 等）
+  - name: row_count
+    title: 行数
+    description: 取り込んだデータ行数（status=ok のみ）
+  - name: fetched_at
+    title: 取得日時

@@ -1,0 +1,4 @@
+schema: ods
+name: stg_fire_hydrant
+description: 消防水利施設のステージング。緯度経度・口径を数値に変換。
+published: false

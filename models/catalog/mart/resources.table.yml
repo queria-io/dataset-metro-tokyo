@@ -1,0 +1,43 @@
+schema: catalog
+name: resources
+title: リソース一覧
+description: '全データセットのリソース（配布ファイル）一覧。ファイル名・フォーマット・
+
+  ダウンロード URL を持つ。URL は都の共有ストレージや各自治体サイトに分散しており、
+
+  ファイル更新で URL が変わることがあるため、常に本テーブルの最新 URL を参照する。'
+keywords:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: resource_id
+    title: リソースID
+  - name: package_id
+    title: データセットID
+    description: datasets との結合キー
+  - name: name
+    title: リソース名
+  - name: description
+    title: 説明
+  - name: format
+    title: フォーマット
+    description: CSV / XLS / XLSX / PDF / GeoJSON 等
+  - name: url
+    title: ダウンロードURL
+  - name: mimetype
+    title: MIMEタイプ
+  - name: size_bytes
+    title: サイズ
+    description: バイト数（未記載は NULL）
+  - name: created
+    title: 作成日時
+  - name: last_modified
+    title: 最終更新日時
+  - name: resource_position
+    title: 表示順
+    description: データセット内での表示順（0始まり）

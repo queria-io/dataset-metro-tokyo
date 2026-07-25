@@ -1,0 +1,42 @@
+schema: childcare
+name: children_center
+title: 児童館
+description: '東京都内の児童館の一覧（ポイント）。設置主体・施設名・所在地・緯度経度・
+
+  定員を持つ。東京都福祉局「社会福祉施設等一覧（令和7年5月1日時点）」。
+
+  座標系は JGD2011。所在地は都道府県名を含まない（「千代田区外神田…」形式）。'
+keywords:
+  - 東京都
+  - 子育て
+  - 児童館
+  - 施設
+  - GIS
+published: true
+sources:
+  - path: https://www.opendata.metro.tokyo.lg.jp/fukushi/202505-2-2_06-zidoukan.csv
+fields:
+  - name: establisher_type
+    title: 設置
+    description: 設置主体の区分（区市町村立・私立等）
+  - name: name
+    title: 施設名
+  - name: postal_code
+    title: 郵便番号
+  - name: address
+    title: 所在地
+    description: 都道府県名を含まない所在地（「千代田区外神田…」形式）
+  - name: lon
+    title: 経度
+    description: 十進度（JGD2011）
+  - name: lat
+    title: 緯度
+    description: 十進度（JGD2011）
+  - name: crs
+    title: 座標系
+    description: 元データに記載された座標系（JGD2011）
+  - name: phone_number
+    title: 電話番号
+  - name: capacity
+    title: 定員
+    description: 定員（人）。元データの '-' や空欄は NULL。令和7年5月版では全施設が '-' のため全行 NULL

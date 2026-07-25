@@ -1,0 +1,4 @@
+schema: ods
+name: raw_population
+description: 自治体標準ODS「地域・年齢別人口」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+published: false

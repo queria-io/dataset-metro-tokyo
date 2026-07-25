@@ -1,0 +1,4 @@
+schema: catalog
+name: stg_groups
+description: グループ（分野分類）のステージング。
+published: false

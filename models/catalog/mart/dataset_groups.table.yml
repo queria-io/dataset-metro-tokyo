@@ -1,0 +1,19 @@
+schema: catalog
+name: dataset_groups
+title: データセット分野
+description: 東京都オープンデータカタログにおける、データセットと分野分類（グループ）の対応を表す多対多の関連テーブル。データセットのパッケージIDとグループコードの組で収録する。
+keywords:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: package_id
+    title: データセットID
+    description: datasets との結合キー
+  - name: group_code
+    title: グループコード
+    description: groups との結合キー

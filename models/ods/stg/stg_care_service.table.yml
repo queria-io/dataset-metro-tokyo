@@ -1,0 +1,4 @@
+schema: ods
+name: stg_care_service
+description: 介護サービス事業所のステージング。緯度経度・定員を数値に変換。
+published: false

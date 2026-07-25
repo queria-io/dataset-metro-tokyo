@@ -1,0 +1,93 @@
+schema: ods
+name: polling_place
+title: 投票所
+description: '都内区市町村が公開する「投票所一覧」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。選挙の投票所に加え、期日前投票所も投票所区分で区別して
+
+  収録する（polling_place_type を参照）。名称・投票区名を軸に、緯度経度や
+
+  住所を持つ自治体もある。標準フォーマットは名称・投票区名・緯度経度が中心で、
+
+  住所や座標を欠く自治体も多い。
+
+  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+keywords:
+  - 東京都
+  - 選挙
+  - 投票所
+  - 自治体標準オープンデータセット
+  - GIS
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+  - name: organization_name
+    title: 地方公共団体名
+  - name: facility_id
+    title: 施設ID
+  - name: polling_place_id
+    title: 投票所ID
+  - name: voting_district_number
+    title: 投票区番号
+  - name: name
+    title: 名称
+    description: 投票所（期日前投票所）の名称
+  - name: name_kana
+    title: 名称カナ
+  - name: name_en
+    title: 名称英字
+  - name: description
+    title: 説明
+  - name: address
+    title: 所在地
+  - name: prefecture
+    title: 都道府県
+  - name: city
+    title: 市区町村
+  - name: ward
+    title: 行政区
+  - name: town
+    title: 町字
+  - name: town_id
+    title: 町字ID
+  - name: street_number
+    title: 番地以下
+  - name: building_name
+    title: 建物名等（方書）
+  - name: postal_code
+    title: 郵便番号
+  - name: phone_number
+    title: 電話番号
+  - name: lat
+    title: 緯度
+  - name: lon
+    title: 経度
+  - name: crs
+    title: 座標参照系
+  - name: crs_code
+    title: 座標参照系コード
+  - name: polling_place_type
+    title: 投票所区分
+    description: 「投票所」「期日前投票所」等の区分
+  - name: voting_district
+    title: 投票区名
+  - name: election_type
+    title: 選挙区分
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

@@ -1,0 +1,173 @@
+schema: ods
+name: school_lunch
+title: 学校給食献立情報
+description: '都内区市町村が公開する「学校給食献立情報」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。1行=学校×提供年月日×料理（さらに食材単位まで分かれる場合あり）で、
+
+  献立の料理名・食品・栄養価・アレルゲンを持つ。施設一覧ではないため所在地・緯度経度の
+
+  列は持たない（学校の位置は nlftp.facility.school を参照）。
+
+  栄養価・アレルゲン・食品成分表の列は定義上は用意されているが、料理名だけを公開し
+
+  栄養価を空欄とする自治体が多く、埋まり具合は自治体ごとに大きく異なる。
+
+  学校ID を空欄にしたまま学校名称で運用している自治体があるため、実体の判定は学校名称で行う。
+
+  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+keywords:
+  - 東京都
+  - 教育
+  - 給食
+  - 食育
+  - 自治体標準オープンデータセット
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    description: 情報の管理主体の全国地方公共団体コード
+  - name: school_id
+    title: 学校ID
+    description: 自治体内で一意の学校 ID。ods.school_district と共通の ID を想定。空欄の自治体もある
+  - name: school_code
+    title: 学校コード
+    description: 文部科学省が定める学校コード（付番済の自治体のみ）
+  - name: school_name
+    title: 学校名称
+  - name: school_name_kana
+    title: 学校名称カナ
+  - name: target_grade
+    title: 対象学年
+    description: 献立の提供対象学年。複数学年はセミコロン区切り
+  - name: prefecture
+    title: 学校所在地_都道府県名
+  - name: district
+    title: 学校所在地_郡名
+  - name: city
+    title: 学校所在地_市区町村名
+  - name: ward
+    title: 学校所在地_行政区名
+    description: 政令指定都市の場合のみ
+  - name: school_municipality_code
+    title: 学校所在地_全国地方公共団体コード
+  - name: provided_date
+    title: 提供年月日
+    description: 献立を提供した年月日
+  - name: record_id
+    title: レコードID
+    description: 1つの表の中で一意の行 ID
+  - name: menu_id
+    title: 献立ID
+    description: 同じ献立（主食・主菜・副菜のセット）に属する料理に共通で振られる ID
+  - name: dish_id
+    title: 料理ID
+    description: 日ごとのメニュー別番号
+  - name: dish_name
+    title: 料理名称
+    description: 「カレーライス」「牛乳」など料理・食品の名称
+  - name: ingredient_seq
+    title: 同一料理内通し番号
+    description: 同一料理内の食材別の通し番号
+  - name: food_id
+    title: 食品ID
+    description: 日本食品標準成分表の食品番号
+  - name: food_name_standard
+    title: 食品名称（成分表）
+    description: 日本食品標準成分表の食品名称
+  - name: food_name_local
+    title: 食品名称（独自）
+    description: 産地・原材料など独自に付与した食品名称
+  - name: food_group_6
+    title: 食品群（6群）
+    description: 6つの基礎食品群（1～6）
+  - name: food_group_3
+    title: 食品群（3群）
+    description: 3色食品群（赤・緑・黄）
+  - name: amount_g
+    title: 分量
+    description: 食材の分量（g）
+  - name: energy_kcal
+    title: エネルギー
+    description: 日本食品標準成分表に準拠（kcal）
+  - name: protein_g
+    title: たんぱく質
+    description: 日本食品標準成分表に準拠（g）
+  - name: protein_energy_ratio
+    title: たんぱく質エネルギー比
+    description: たんぱく質由来エネルギー比（%E）
+  - name: fat_g
+    title: 脂質
+    description: 日本食品標準成分表に準拠（g）
+  - name: fat_energy_ratio
+    title: 脂質エネルギー比
+    description: 脂質由来エネルギー比（%E）
+  - name: salt_g
+    title: 食塩相当量
+    description: 日本食品標準成分表に準拠（g）
+  - name: calcium_mg
+    title: カルシウム
+    description: 日本食品標準成分表に準拠（mg）
+  - name: magnesium_mg
+    title: マグネシウム
+    description: 日本食品標準成分表に準拠（mg）
+  - name: iron_mg
+    title: 鉄
+    description: 日本食品標準成分表に準拠（mg）
+  - name: vitamin_a_ug
+    title: ビタミンA_ug
+    description: 日本食品標準成分表に準拠（μg。特殊文字回避のため列名は ug）
+  - name: vitamin_a_ugrae
+    title: ビタミンA_ugRAE
+    description: 学校給食実施基準に準拠（μgRAE）
+  - name: vitamin_a_iu
+    title: ビタミンA_IU
+    description: 改定前の学校給食実施基準に準拠（IU）
+  - name: vitamin_b1_mg
+    title: ビタミンB1
+    description: 日本食品標準成分表に準拠（mg）
+  - name: vitamin_b2_mg
+    title: ビタミンB2
+    description: 日本食品標準成分表に準拠（mg）
+  - name: vitamin_c_mg
+    title: ビタミンC
+    description: 日本食品標準成分表に準拠（mg）
+  - name: dietary_fiber_g
+    title: 食物繊維
+    description: 日本食品標準成分表に準拠（g）
+  - name: zinc_mg
+    title: 亜鉛
+    description: 日本食品標準成分表に準拠（mg）
+  - name: carbohydrate_g
+    title: 炭水化物
+    description: 日本食品標準成分表に準拠（g）
+  - name: sugar_g
+    title: 糖質量
+    description: 日本食品標準成分表に準拠（g）
+  - name: allergen_disclosure
+    title: アレルゲン情報公開・非公開
+    description: アレルゲン情報を公開している場合 true（元データの 1=公開 / 0=非公開）
+  - name: allergen_items
+    title: アレルゲン品目
+    description: 「小麦;卵;乳…」とセミコロン区切りで列記。公開の場合のみ
+  - name: cooking_method_dish
+    title: 調理方法（料理単位）
+  - name: cooking_method_ingredient
+    title: 調理方法（食材単位）
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

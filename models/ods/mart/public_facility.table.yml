@@ -1,0 +1,88 @@
+schema: ods
+name: public_facility
+title: 公共施設
+description: '都内区市町村が公開する「公共施設一覧」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。公民館・図書館・体育館・区民施設等の名称・所在地・連絡先・
+
+  利用可能時間・アクセス方法を持つ。公開しているのは一部の自治体のみ
+
+  （カバレッジは ods.source_files を参照）。バリアフリー設備等の標準外・自治体独自の
+
+  詳細列は extras（JSON）に退避する。'
+keywords:
+  - 東京都
+  - 公共施設
+  - 自治体標準オープンデータセット
+  - GIS
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+  - name: facility_id
+    title: ID
+    description: 自治体内で一意の施設 ID（元データの ID / NO 列）
+  - name: name
+    title: 名称
+  - name: name_kana
+    title: 名称カナ
+  - name: name_alias
+    title: 名称通称
+  - name: poi_code
+    title: POIコード
+  - name: address
+    title: 所在地
+    description: 所在地の連結表記（旧形式の「住所」列を含む）
+  - name: prefecture
+    title: 都道府県
+  - name: city
+    title: 市区町村
+  - name: postal_code
+    title: 郵便番号
+  - name: phone_number
+    title: 電話番号
+  - name: lat
+    title: 緯度
+    description: 十進度
+  - name: lon
+    title: 経度
+    description: 十進度
+  - name: corporate_number
+    title: 法人番号
+  - name: corporate_name
+    title: 団体名
+    description: 運営主体（指定管理者等）の名称
+  - name: available_days
+    title: 利用可能曜日
+  - name: start_time
+    title: 開始時間
+  - name: end_time
+    title: 終了時間
+  - name: available_notes
+    title: 利用可能日時特記事項
+  - name: access
+    title: アクセス方法
+  - name: parking
+    title: 駐車場情報
+  - name: description
+    title: 説明
+  - name: url
+    title: URL
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON、ヘッダー名→値）。バリアフリー設備等
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

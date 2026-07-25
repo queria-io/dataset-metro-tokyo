@@ -1,0 +1,4 @@
+schema: ods
+name: stg_polling_place
+description: 投票所（期日前投票所を含む）のステージング。緯度経度を数値化。
+published: false

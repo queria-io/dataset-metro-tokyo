@@ -1,0 +1,117 @@
+schema: ods
+name: food_business
+title: 食品等営業許可・届出
+description: '都内区市町村が公開する「食品等営業許可・届出一覧」（自治体標準オープンデータセット）を
+
+  横断統合したテーブル。食品衛生法に基づき保健所が許可・届出を受理した飲食店・食品製造・
+
+  販売施設を、営業の種類・業態・所在地・許可年月日・申請区分とともに1行=1施設で収録する。
+
+  施設の位置（緯度経度）を持ち、飲食店の出店動向・エリア別の業態構成・許可の新規/継続分析に
+
+  使える。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+keywords:
+  - 東京都
+  - 食品
+  - 飲食店
+  - 営業許可
+  - 自治体標準オープンデータセット
+  - GIS
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    description: 情報の管理主体の全国地方公共団体コード（元データの表記のまま）
+  - name: facility_id
+    title: ID
+    description: 自治体内で一意の施設 ID（元データの ID / NO 列）。Excel の指数表記のまま公開する自治体があり生値を保持する
+  - name: name
+    title: 施設名称
+  - name: name_kana
+    title: 施設名称カナ
+  - name: name_en
+    title: 施設名称英字
+  - name: business_type
+    title: 営業の種類
+    description: 飲食店営業・菓子製造業など食品衛生法施行令に基づく営業分類。統制語彙だが自治体ごとに表記が揺れるため生値のまま
+  - name: business_category
+    title: 業態
+    description: 居酒屋・食料品販売など営業の種類より詳細な業態。記載している自治体のみ
+  - name: address
+    title: 所在地
+    description: 所在地の連結表記（旧形式の「住所」列を含む）
+  - name: prefecture
+    title: 都道府県
+  - name: city
+    title: 市区町村
+  - name: town
+    title: 所在地_町字
+  - name: street_number
+    title: 所在地_番地以下
+  - name: building_name
+    title: 施設方書（建物名等）
+  - name: town_id
+    title: 町字ID
+    description: アドレス・ベース・レジストリの町字ID（記載している自治体のみ）
+  - name: location_municipality_code
+    title: 所在地_全国地方公共団体コード
+    description: 施設の所在地の全国地方公共団体コード。管轄外にある場合は管理主体のコードと異なる
+  - name: postal_code
+    title: 郵便番号
+  - name: phone_number
+    title: 施設電話番号
+  - name: email
+    title: 連絡先メールアドレス
+  - name: contact_form_url
+    title: 連絡先FormURL
+  - name: contact_notes
+    title: 連絡先備考
+  - name: lat
+    title: 緯度
+    description: 十進度
+  - name: lon
+    title: 経度
+    description: 十進度
+  - name: corporate_name
+    title: 法人名
+    description: 申請主体が法人の場合の法人名（個人事業は空）
+  - name: corporate_number
+    title: 法人番号
+    description: 申請主体が法人の場合の法人番号（記載している自治体のみ）。houjin_bangou と結合可能
+  - name: permit_number
+    title: 許可番号
+  - name: first_permit_date
+    title: 初回許可年月日
+    description: 初回に営業許可を出した年月日
+  - name: permit_date
+    title: 許可年月日
+    description: 直近で営業許可を出した年月日
+  - name: permit_start_date
+    title: 許可開始日
+  - name: permit_expiry_date
+    title: 許可満了日
+  - name: closure_date
+    title: 廃業年月日
+    description: 廃業届を受理した廃業日（廃業していなければ空）
+  - name: application_type
+    title: 申請区分
+    description: 受理した申請の区分（新規・継続・変更・廃業など）。統制語彙だが自治体ごとに表記が揺れるため生値のまま
+  - name: permit_condition
+    title: 許可条件
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

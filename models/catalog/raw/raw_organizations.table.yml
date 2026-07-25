@@ -1,0 +1,4 @@
+schema: catalog
+name: raw_organizations
+description: CKAN API organization_list(all_fields) の生データ。全列 VARCHAR で取り込む。
+published: false

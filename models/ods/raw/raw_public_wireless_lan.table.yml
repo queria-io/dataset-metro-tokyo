@@ -1,0 +1,4 @@
+schema: ods
+name: raw_public_wireless_lan
+description: 自治体標準ODS「公衆無線LANアクセスポイント一覧」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
+published: false

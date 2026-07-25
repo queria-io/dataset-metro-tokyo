@@ -1,0 +1,4 @@
+schema: ods
+name: stg_public_toilet
+description: 公衆トイレのステージング。緯度経度・便器数を数値化、設備の有無を BOOLEAN に正規化。
+published: false

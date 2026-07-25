@@ -1,0 +1,149 @@
+schema: ods
+name: event
+title: イベント
+description: '都内区市町村が公開する「イベント一覧」（自治体標準オープンデータセット）を横断統合した
+
+  テーブル。祭り・講座・展示などの開催日時・会場・料金・申込方法を収録する。
+
+  過去のイベントも含む蓄積データではなく、各自治体が公開している時点のファイルの内容で、
+
+  収録期間は自治体ごとに異なる。公開しているのは一部の自治体のみ
+
+  （カバレッジは ods.source_files を参照）。
+
+  会場の施設情報は ods.public_facility、観光資源は ods.tourism も併せて参照する。'
+keywords:
+  - 東京都
+  - イベント
+  - 観光
+  - 自治体標準オープンデータセット
+published: true
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/
+fields:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+  - name: corporate_number
+    title: 法人番号
+    description: 情報の管理主体が地方公共団体以外の場合の法人番号
+  - name: event_id
+    title: ID
+    description: 自治体内で一意のイベント ID（元データの ID / NO 列）
+  - name: organization_name
+    title: 地方公共団体名
+  - name: name
+    title: イベント名
+  - name: name_kana
+    title: イベント名カナ
+  - name: name_en
+    title: イベント名_英語
+  - name: name_alias
+    title: イベント通称
+  - name: subtitle
+    title: サブタイトル
+  - name: event_type
+    title: イベント種類
+  - name: status
+    title: 状態
+    description: 準備中・開催中などイベントの状態
+  - name: keywords
+    title: キーワード
+    description: 検索用キーワード（セミコロン区切り）
+  - name: tags
+    title: タグ
+    description: 分類用タグ（セミコロン区切り）
+  - name: schedule_pattern
+    title: 開催パターン
+  - name: start_date
+    title: 開始日
+    description: 自治体により表記が異なるため DATE に正規化。解釈できない表記は NULL
+  - name: end_date
+    title: 終了日
+    description: 自治体により表記が異なるため DATE に正規化。解釈できない表記は NULL
+  - name: start_time
+    title: 開始時間
+    description: 元データの表記のまま（hh:mm と hh:mm:ss が混在）
+  - name: end_time
+    title: 終了時間
+    description: 元データの表記のまま（hh:mm と hh:mm:ss が混在）
+  - name: schedule_notes
+    title: 開始日時特記事項
+  - name: summary
+    title: 概要
+  - name: description
+    title: 説明
+  - name: fee
+    title: 料金(基本)
+    description: 日本円。数値化できない表記は NULL
+  - name: fee_details
+    title: 料金(詳細)
+  - name: fee_type
+    title: 料金種別
+    description: 有料・無料の区分（旧形式の「料金_要否」列を含む）
+  - name: organizer
+    title: 主催者
+  - name: co_organizer
+    title: 共催団体
+  - name: target_audience
+    title: 対象者
+  - name: capacity
+    title: 定員
+    description: 「先着30人」などの自由記述が混在するため文字列
+  - name: venue_name
+    title: 場所名称
+    description: 会場名。オンライン開催の場合は「オンライン」等
+  - name: address
+    title: 所在地
+    description: 会場所在地の連結表記（旧形式の「住所」列を含む）
+  - name: prefecture
+    title: 都道府県
+  - name: city
+    title: 市区町村
+  - name: building_name
+    title: 建物名等(方書)
+  - name: lat
+    title: 緯度
+    description: 十進度。元データの生値で、緯度と経度が入れ替わっている自治体・小数点が欠落している自治体がある
+  - name: lon
+    title: 経度
+    description: 十進度。元データの生値で、緯度と経度が入れ替わっている自治体・小数点が欠落している自治体がある
+  - name: access
+    title: アクセス方法
+  - name: parking
+    title: 駐車場情報
+  - name: application_deadline_date
+    title: 参加申込終了日
+    description: DATE に正規化。解釈できない表記は NULL
+  - name: application_deadline_time
+    title: 参加申込終了時間
+  - name: application_method
+    title: 参加申込方法
+  - name: contact_name
+    title: 連絡先名称
+  - name: contact_phone
+    title: 連絡先電話番号
+  - name: contact_extension
+    title: 連絡先内線番号
+  - name: image
+    title: 画像
+    description: 画像の格納先 URL
+  - name: content_url
+    title: コンテンツURL
+  - name: url
+    title: URL
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）。対象年齢別の可否等
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL
