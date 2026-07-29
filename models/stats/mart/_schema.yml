@@ -1,0 +1,88 @@
+version: 2
+
+models:
+  - name: resident_population
+    description: |
+      東京都の住民基本台帳による世帯数と人口の月次時系列。1行 = 月 × 地域で、
+      2001年1月分から毎月1日現在の値を収録する。地域は区市町村（62）に加えて
+      総数・区部・市部・町村部・郡部・島部・支庁の集計行を含むため、区市町村だけを
+      見るときは area_type = '区市町村' で絞る。地域コードは全国地方公共団体コードの
+      上5桁で、census・boundary・lg_code と直結する。
+      外国人人口は2012年7月分までが外国人登録者数、2012年8月分以降が住民基本台帳上の
+      人口で、世帯数もこのとき外国人世帯を含むようになった。7月分と8月分の間の増減は
+      この制度変更を含むため、そのまま人口動態として読まない。
+      外国人の男女別人口と世帯数の国籍別内訳は原典の様式追加により2012年9月分以降のみで、
+      それ以前は NULL。
+    access: public
+    config:
+      meta:
+        source_url: "https://catalog.data.metro.tokyo.lg.jp/organization/t000003"
+        published: true
+        title: "住民基本台帳による世帯と人口"
+        tags: ["東京都", "人口", "世帯", "住民基本台帳", "時系列"]
+    columns:
+      - name: year_month
+        meta:
+          title: 年月
+          description: 対象年月（YYYY-MM）
+      - name: as_of_date
+        meta:
+          title: 現在日
+          description: 集計時点（各月1日）
+      - name: area_code
+        meta:
+          title: 地域コード
+          description: 全国地方公共団体コードの上5桁。集計行は都が付す地域コード（総数13000・区部13100など）
+      - name: area_name
+        meta:
+          title: 地域
+      - name: area_type
+        meta:
+          title: 地域区分
+          description: 総数 / 地域区分（区部・市部・町村部・郡部・島部）/ 支庁 / 区市町村。地域コードから導出
+      - name: population_total
+        meta:
+          title: 人口総数
+          description: 日本人と外国人の合計（人）
+      - name: population_change
+        meta:
+          title: 前月差
+          description: 前月の人口総数との増減（人）。原典が '-' の月は NULL
+      - name: japanese_total
+        meta:
+          title: 日本人人口
+          description: 住民基本台帳に記録された日本人の人口（人）
+      - name: japanese_male
+        meta:
+          title: 日本人人口（男）
+      - name: japanese_female
+        meta:
+          title: 日本人人口（女）
+      - name: foreign_total
+        meta:
+          title: 外国人人口
+          description: 2012年7月分までは外国人登録者数、2012年8月分以降は住民基本台帳上の人口（人）
+      - name: foreign_male
+        meta:
+          title: 外国人人口（男）
+          description: 2012年9月分以降のみ。それ以前は原典に無く NULL
+      - name: foreign_female
+        meta:
+          title: 外国人人口（女）
+          description: 2012年9月分以降のみ。それ以前は原典に無く NULL
+      - name: household_total
+        meta:
+          title: 世帯数
+          description: 住民基本台帳上の世帯数。2012年7月分までは外国人世帯を含まない
+      - name: household_japanese_only
+        meta:
+          title: 日本人のみの世帯数
+          description: 2012年9月分以降のみ。それ以前は原典に無く NULL
+      - name: household_foreign_only
+        meta:
+          title: 外国人のみの世帯数
+          description: 2012年9月分以降のみ。それ以前は原典に無く NULL
+      - name: household_mixed
+        meta:
+          title: 複数国籍世帯数
+          description: 日本人と外国人が同居する世帯数。2012年9月分以降のみ
