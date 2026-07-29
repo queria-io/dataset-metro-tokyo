@@ -4,7 +4,8 @@ title: 東京都オープンデータカタログ
 description: |-
   東京都オープンデータカタログ (catalog.data.metro.tokyo.lg.jp) から取得した東京都のオープンデータ。
   全データセットのメタデータ（カタログ台帳）と、東京都福祉局「社会福祉施設等一覧」の
-  認可保育所・児童館など、都内の施設情報を提供。
+  認可保育所・児童館など都内の施設情報、東京都総務局統計部が公表する
+  住民基本台帳による世帯と人口の月次時系列を提供。
 keywords:
   - 東京都
   - 子育て
@@ -14,6 +15,8 @@ keywords:
   - GIS
   - カタログ
   - メタデータ
+  - 人口
+  - 世帯
 homepage: https://github.com/queria-io/dataset-metro-tokyo
 language: ja
 
@@ -25,6 +28,8 @@ sources:
     path: https://catalog.data.metro.tokyo.lg.jp/
   - title: 社会福祉施設等一覧（東京都福祉局）
     path: https://www.opendata.metro.tokyo.lg.jp/
+  - title: 住民基本台帳による世帯と人口（東京都総務局統計部）
+    path: https://www.toukei.metro.tokyo.lg.jp/juukiv/js-index.htm
 
 contributors:
   - title: 東京都
@@ -48,6 +53,13 @@ ai_context:
     どの自治体が入っているかは ods.source_files（取り込みの実行結果・753行）で確認できる。
     件数を自治体間で比べるときは、まず収録の有無を確認する。
     childcare は東京都福祉局の認可保育所・児童館で、こちらは都全域。
+    stats は東京都総務局統計部が公表する統計で、resident_population は
+    2001年1月からの月次人口・世帯数。都が全区市町村分をまとめて出しているため
+    収録の欠けが無く、区市町村を横に比べたり長期の推移を見るのはこちらを使う。
+    ods.population は自治体が個別に公開する年齢別人口で、年齢階級が要るときだけ使う。
+    resident_population は集計行（総数・区部・市部など）を含むので、区市町村だけなら
+    area_type = '区市町村' で絞る。外国人人口と世帯数は2012年7月分と8月分の間に
+    制度変更の段差がある。
     元データの値は補正せず原典のまま入れている。ods.cultural_property には緯度と経度が
     入れ替わったまま公開されている自治体（豊島区の全行）があり、ods.event にも
     緯度経度の入れ替わりや経度の小数点欠落がある。地図に出す前に値域を確認する。
@@ -69,3 +81,5 @@ schemas:
     title: 子育て施設
   - name: ods
     title: 自治体標準データセット
+  - name: stats
+    title: 都の統計

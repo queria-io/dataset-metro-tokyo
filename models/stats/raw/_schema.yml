@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: raw_resident_population
+    description: |
+      東京都「住民基本台帳による世帯と人口」（月次）の生データ。全列 VARCHAR で取り込む。
+      2012年8月分までと2012年9月分以降で原典の様式が違うため、パイプラインが共通キーに
+      割り当てたうえで出力する（旧様式に無い列は NULL）。
+  - name: raw_resident_population_source
+    description: 住民基本台帳による世帯と人口の取得元（1行=1月分）。取り込んだ月・URL・行数を記録する。

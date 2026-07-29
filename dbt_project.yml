@@ -32,3 +32,10 @@ models:
         +materialized: table
       mart:
         +materialized: table
+    stats:
+      raw:
+        +materialized: table
+      stg:
+        +materialized: table
+      mart:
+        +materialized: table
