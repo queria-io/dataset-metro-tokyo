@@ -174,7 +174,7 @@ census・boundary・lg_code と直結する。
 
 ### データ更新手順
 
-パイプライン実行時に以下を行う。ビルドは `bash scripts/build.sh local` で実行する。
+パイプライン実行時に以下を行う。ビルドは `bash scripts/build.sh` で実行する（Queria に公開する）。
 
 - pipelines/ckan.py: CKAN API からカタログメタデータ全量を取得し NDJSON で data/catalog/ に保存（毎回洗い替え）
 - pipelines/childcare.py: catalog のメタデータから「社会福祉施設等一覧」の最新版を解決し、
