@@ -1,10 +1,5 @@
 version: 2
 
-_meta: &meta
-  source_url: "https://catalog.data.metro.tokyo.lg.jp/"
-  published: true
-  tags: ["東京都", "子育て", "施設", "GIS"]
-
 models:
   - name: nursery_school
     description: |
@@ -13,50 +8,17 @@ models:
       10月時点）更新され、常に最新版を取り込む。どの時点かは source_edition を見る。
       座標系は JGD2011。所在地は都道府県名を含まない（「千代田区外神田…」形式）。
     access: public
-    config:
-      meta:
-        <<: *meta
-        source_url: "https://catalog.data.metro.tokyo.lg.jp/organization/t000054"
-        tags: ["東京都", "子育て", "保育所", "施設", "GIS"]
-        title: "認可保育所"
     columns:
       - name: source_edition
-        meta:
-          title: 取込時点
-          description: 取り込んだ「社会福祉施設等一覧」の時点（YYYY-MM）
       - name: establisher_type
-        meta:
-          title: 設置
-          description: 設置主体の区分（区市町村立・私立等）
       - name: name
-        meta:
-          title: 施設名
       - name: postal_code
-        meta:
-          title: 郵便番号
       - name: address
-        meta:
-          title: 所在地
-          description: 都道府県名を含まない所在地（「千代田区外神田…」形式）
       - name: lon
-        meta:
-          title: 経度
-          description: 十進度（JGD2011）
       - name: lat
-        meta:
-          title: 緯度
-          description: 十進度（JGD2011）
       - name: crs
-        meta:
-          title: 座標系
-          description: 元データに記載された座標系（JGD2011）
       - name: phone_number
-        meta:
-          title: 電話番号
       - name: capacity
-        meta:
-          title: 認可定員
-          description: 認可定員（人）。元データの '-' や空欄は NULL
 
   - name: children_center
     description: |
@@ -65,47 +27,14 @@ models:
       10月時点）更新され、常に最新版を取り込む。どの時点かは source_edition を見る。
       座標系は JGD2011。所在地は都道府県名を含まない（「千代田区外神田…」形式）。
     access: public
-    config:
-      meta:
-        <<: *meta
-        source_url: "https://catalog.data.metro.tokyo.lg.jp/organization/t000054"
-        tags: ["東京都", "子育て", "児童館", "施設", "GIS"]
-        title: "児童館"
     columns:
       - name: source_edition
-        meta:
-          title: 取込時点
-          description: 取り込んだ「社会福祉施設等一覧」の時点（YYYY-MM）
       - name: establisher_type
-        meta:
-          title: 設置
-          description: 設置主体の区分（区市町村立・私立等）
       - name: name
-        meta:
-          title: 施設名
       - name: postal_code
-        meta:
-          title: 郵便番号
       - name: address
-        meta:
-          title: 所在地
-          description: 都道府県名を含まない所在地（「千代田区外神田…」形式）
       - name: lon
-        meta:
-          title: 経度
-          description: 十進度（JGD2011）
       - name: lat
-        meta:
-          title: 緯度
-          description: 十進度（JGD2011）
       - name: crs
-        meta:
-          title: 座標系
-          description: 元データに記載された座標系（JGD2011）
       - name: phone_number
-        meta:
-          title: 電話番号
       - name: capacity
-        meta:
-          title: 定員
-          description: 定員（人）。元データの '-' や空欄は NULL。元データは全施設が '-' で公開されており全行 NULL（2025-10 版時点）
