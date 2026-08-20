@@ -1,5 +1,6 @@
 {# 観光施設のステージング。緯度経度・基本料金を数値化する。 #}
 
+{{ ods_geocoded_source('raw_tourism') }}
 select
     municipality_code,
     facility_id,
@@ -14,7 +15,7 @@ select
     postal_code,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     corporate_number,
     available_days,
     start_time,
@@ -40,4 +41,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_tourism') }}
+from geocoded

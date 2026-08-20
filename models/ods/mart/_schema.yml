@@ -12,6 +12,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -58,6 +59,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -99,6 +101,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -146,6 +149,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -192,6 +196,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -231,6 +236,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -278,6 +284,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -323,6 +330,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -379,6 +387,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -435,6 +444,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: corporate_number
@@ -539,6 +549,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -579,6 +590,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -629,6 +641,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -686,6 +699,12 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage:
+          arguments:
+            address: "concat_ws('', trim(coalesce(city, '')), trim(coalesce(town, '')), trim(coalesce(street_number, '')))"
+            # 住所キーを連結で作る唯一の種別。既定の 0.90 だと原典のみの充足率
+            # 0.961 を下回り、結合が全件外れても素通りする。実測は 1.000
+            min_ratio: 0.98
     columns:
       - name: school_code
       - name: school_type
@@ -760,6 +779,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -814,6 +834,7 @@ models:
     data_tests:
       - ods_geo_consistent
       - ods_geo_coverage
+      - ods_geocode_coverage
     columns:
       - name: municipality_code
       - name: organization_name

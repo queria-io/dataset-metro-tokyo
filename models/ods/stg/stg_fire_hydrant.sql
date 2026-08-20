@@ -2,6 +2,7 @@
    種別は自治体ごとに表記が揺れる（防火水槽 / 防火水そう など）が、
    定義書に統制語彙が無いため生値を保持する。 #}
 
+{{ ods_geocoded_source('raw_fire_hydrant') }}
 select
     municipality_code,
     facility_id,
@@ -17,7 +18,7 @@ select
     building_name,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     try_cast(diameter as integer) as diameter,
     notes,
     _extras as extras,
@@ -26,4 +27,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_fire_hydrant') }}
+from geocoded

@@ -1,6 +1,7 @@
 {# 介護サービス事業所のステージング。緯度経度・定員を数値化する。
    実施サービスは自治体ごとに表記が揺れる（統制語彙が定義書側にないため）が生値を保持する。 #}
 
+{{ ods_geocoded_source('raw_care_service') }}
 select
     municipality_code,
     facility_id,
@@ -21,7 +22,7 @@ select
     fax_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     corporate_number,
     corporate_name,
     business_number,
@@ -36,4 +37,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_care_service') }}
+from geocoded

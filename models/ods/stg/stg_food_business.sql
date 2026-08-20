@@ -1,6 +1,7 @@
 {# 食品等営業許可・届出のステージング。緯度経度を数値化し、許可関連の日付を DATE に正規化する。
    営業の種類・業態・申請区分は統制語彙が自治体ごとに揺れるため生値を保持する。 #}
 
+{{ ods_geocoded_source('raw_food_business') }}
 select
     municipality_code,
     facility_id,
@@ -19,7 +20,7 @@ select
     building_name,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     phone_number,
     email,
     contact_form_url,
@@ -42,4 +43,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_food_business') }}
+from geocoded

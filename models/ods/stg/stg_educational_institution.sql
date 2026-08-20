@@ -2,6 +2,7 @@
    学校種・設置区分は自治体ごとに統制コード（A1/B1 等）と日本語ラベルが混在するため生値を保持する。
    所在地は市区町村/町字/番地以下に分かれ、連結表記の列を持たない。 #}
 
+{{ ods_geocoded_source('raw_educational_institution', parts=["city", "town", "street_number"]) }}
 select
     school_code,
     school_type,
@@ -20,7 +21,7 @@ select
     postal_code,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     contact_name,
     phone_number,
     {{ ods_date('attribute_set_date') }} as attribute_set_date,
@@ -33,4 +34,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_educational_institution') }}
+from geocoded

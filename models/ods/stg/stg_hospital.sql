@@ -1,5 +1,6 @@
 {# 医療機関のステージング。緯度経度・病床数を数値化する。 #}
 
+{{ ods_geocoded_source('raw_hospital') }}
 select
     municipality_code,
     facility_id,
@@ -13,7 +14,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     corporate_name,
     medical_institution_code,
     consultation_days,
@@ -33,4 +34,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_hospital') }}
+from geocoded

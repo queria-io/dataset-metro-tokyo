@@ -47,3 +47,5 @@ models:
     description: 自治体標準ODS「地域・年齢別人口」の生データ。標準キーに正規化済み、全列 VARCHAR + _extras JSON。
   - name: raw_ods_source_files
     description: ODS 取り込みの実行結果（1行=1リソース、成功/失敗/スキップと理由）。
+  - name: raw_geocode
+    description: ODS の住所をジオコーディングした結果の生データ。pipelines/geocode.py が abr-geocoder の出力をまとめる。

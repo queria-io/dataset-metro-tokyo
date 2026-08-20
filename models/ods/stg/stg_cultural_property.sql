@@ -2,6 +2,7 @@
    文化財指定日は自治体により日付不明部分を 99 で埋める表記（例 1982-04-99）があり、
    DATE に落とすと情報が欠けるため原典の文字列のまま保持する。 #}
 
+{{ ods_geocoded_source('raw_cultural_property') }}
 select
     municipality_code,
     facility_id,
@@ -20,7 +21,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     try_cast(quantity as integer) as quantity,
     quantity_unit,
     corporate_number,
@@ -44,4 +45,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_cultural_property') }}
+from geocoded

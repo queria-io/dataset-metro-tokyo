@@ -47,3 +47,11 @@ models:
     description: 地域・年齢別人口のステージング。総人口・男女別・5歳階級×男女の人口・世帯数を数値化、調査年月日を DATE に正規化（YYYYMMDD 表記も許容）。
   - name: stg_ods_source_files
     description: ODS 取り込み結果のステージング。行数・取得日時を型変換。
+  - name: stg_geocode
+    description: ジオコーディング結果のステージング。採用できる座標が入った行だけを (org_code, address) 単位で持つ。
+    data_tests:
+      # ods の16モデルがこのキーで左結合する。重複すると結合先の行が黙って倍増し、
+      # 値の整合性を見る検査は全部 PASS したまま公開まで進む
+      - unique_key:
+          arguments:
+            columns: [org_code, address]

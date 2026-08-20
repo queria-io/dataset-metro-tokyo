@@ -65,9 +65,12 @@ ai_context:
     ods.public_wireless_lan の世田谷区など）や、経度の小数点が欠落している行がある。
     **地図に出すときは lat / lon ではなく geo_lat / geo_lon / geometry を使う。**
     これは Queria が付与した列で、値域に収まらない座標を落とし、緯度と経度が
-    入れ替わっている行は入れ替えて採用してある。採用した値の由来は geo_source
-    （source / source_swapped）、粒度は geo_level で引ける。geometry は
-    geo_lat / geo_lon から作った POINT で、座標の無い行は NULL。
+    入れ替わっている行は入れ替えて採用してある。さらに、原典に使える座標が無い行は
+    住所を ABR（アドレス・ベース・レジストリ）でジオコーディングして補ってある。
+    採用した値の由来は geo_source（source / source_swapped / abr）、粒度は geo_level
+    で引ける。ABR 由来の粒度は residential_detail（住居番号）/ residential_block（街区）/
+    machiaza_detail（丁目）/ machiaza（町字）。市区町村の代表点は採用していない。
+    geometry は geo_lat / geo_lon から作った POINT で、座標の無い行は NULL。
     日付は自治体ごとに表記が違うため DATE に正規化しているが、「4月頃」のような
     自由記述は推測せず NULL にしている。
     標準列にマッピングできない自治体独自の列は extras（JSON）に退避してある。
