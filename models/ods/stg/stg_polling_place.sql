@@ -1,5 +1,6 @@
 {# 投票所（期日前投票所を含む）のステージング。緯度経度を数値化する。 #}
 
+{{ ods_geocoded_source('raw_polling_place') }}
 select
     municipality_code,
     organization_name,
@@ -22,7 +23,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     crs,
     crs_code,
     polling_place_type,
@@ -35,4 +36,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_polling_place') }}
+from geocoded

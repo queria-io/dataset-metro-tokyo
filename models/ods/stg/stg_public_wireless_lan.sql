@@ -1,5 +1,6 @@
 {# 公衆無線LANアクセスポイントのステージング。緯度経度を数値化する。 #}
 
+{{ ods_geocoded_source('raw_public_wireless_lan') }}
 select
     municipality_code,
     facility_id,
@@ -12,7 +13,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     installer,
     ssid,
     coverage_area,
@@ -24,4 +25,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_public_wireless_lan') }}
+from geocoded

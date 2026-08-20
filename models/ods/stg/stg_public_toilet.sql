@@ -1,5 +1,6 @@
 {# 公衆トイレのステージング。緯度経度・便器数を数値化し、設備の有無を BOOLEAN に正規化する。 #}
 
+{{ ods_geocoded_source('raw_public_toilet') }}
 select
     municipality_code,
     facility_id,
@@ -11,7 +12,7 @@ select
     install_position,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     try_cast(male_total as integer) as male_total,
     try_cast(female_total as integer) as female_total,
     try_cast(unisex_total as integer) as unisex_total,
@@ -30,4 +31,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_public_toilet') }}
+from geocoded

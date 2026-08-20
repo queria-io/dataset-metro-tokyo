@@ -7,6 +7,7 @@
     'shelter_overlap',
 ] %}
 
+{{ ods_geocoded_source('raw_evacuation_space') }}
 select
     municipality_code,
     facility_id,
@@ -19,7 +20,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     try_cast(elevation as double) as elevation,
     {% for flag in flags %}
     {{ ods_flag(flag) }} as {{ flag }},
@@ -34,4 +35,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_evacuation_space') }}
+from geocoded

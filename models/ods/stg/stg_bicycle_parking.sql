@@ -1,5 +1,6 @@
 {# 自転車駐車場のステージング。緯度経度・収容台数を数値化し、開設日を DATE に正規化する。 #}
 
+{{ ods_geocoded_source('raw_bicycle_parking') }}
 select
     municipality_code,
     facility_id,
@@ -17,7 +18,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
-    {{ ods_geo_columns() }},
+    {{ ods_geo_columns(geocoded=true) }},
     indoor_outdoor,
     try_cast(capacity as integer) as capacity,
     nearest_station,
@@ -39,4 +40,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_bicycle_parking') }}
+from geocoded

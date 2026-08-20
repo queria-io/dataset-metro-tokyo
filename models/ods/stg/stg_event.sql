@@ -1,6 +1,7 @@
 {# イベントのステージング。開催日・申込締切日を DATE に、緯度経度・基本料金を数値化する。
    緯度は末尾にカンマが残る自治体があるため除いてから数値化する。 #}
 
+{{ ods_geocoded_source('raw_event') }}
 select
     municipality_code,
     corporate_number,
@@ -37,7 +38,7 @@ select
     building_name,
     try_cast(rtrim(lat, ',') as double) as lat,
     try_cast(rtrim(lon, ',') as double) as lon,
-    {{ ods_geo_columns("try_cast(rtrim(lat, ',') as double)", "try_cast(rtrim(lon, ',') as double)") }},
+    {{ ods_geo_columns("try_cast(rtrim(lat, ',') as double)", "try_cast(rtrim(lon, ',') as double)", geocoded=true) }},
     access,
     parking,
     capacity,
@@ -56,4 +57,4 @@ select
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
-from {{ ref('raw_event') }}
+from geocoded
