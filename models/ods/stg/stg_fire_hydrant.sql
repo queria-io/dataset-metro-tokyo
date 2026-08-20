@@ -17,6 +17,7 @@ select
     building_name,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     try_cast(diameter as integer) as diameter,
     notes,
     _extras as extras,

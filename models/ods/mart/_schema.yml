@@ -9,6 +9,9 @@ models:
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
       全国網羅の類似データとして gsi.emergency_evacuation_site（国土地理院）がある。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -21,6 +24,11 @@ models:
       - name: phone_number
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: elevation
       - name: for_flood
       - name: for_landslide
@@ -47,6 +55,9 @@ models:
       横断統合したテーブル。設置位置・利用可能日時・小児対応設備の有無を持つ。
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -59,6 +70,11 @@ models:
       - name: phone_number
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: install_position
       - name: available_days
       - name: start_time
@@ -80,6 +96,9 @@ models:
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
       都全域の認可保育所・児童館は childcare スキーマ（東京都福祉局）にもある。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -93,6 +112,11 @@ models:
       - name: phone_number
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: access
       - name: parking
       - name: corporate_name
@@ -119,6 +143,9 @@ models:
       同一機関が重複しうる（medical_institution_code や名称+所在地で識別可能）。
       診療科目・病床数・診療日時・災害拠点分類を持つ。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -132,6 +159,11 @@ models:
       - name: phone_number
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: corporate_name
       - name: medical_institution_code
       - name: consultation_days
@@ -157,6 +189,9 @@ models:
       データセット）を横断統合したテーブル。SSID・提供エリア・設置者を持つ。
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -169,6 +204,11 @@ models:
       - name: phone_number
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: installer
       - name: ssid
       - name: coverage_area
@@ -188,6 +228,9 @@ models:
       （カバレッジは ods.source_files を参照）。バリアフリー設備等の標準外・自治体独自の
       詳細列は extras（JSON）に退避する。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -202,6 +245,11 @@ models:
       - name: phone_number
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: corporate_number
       - name: corporate_name
       - name: available_days
@@ -227,6 +275,9 @@ models:
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
       和式/洋式/小便器の内訳等の詳細列は extras（JSON）に退避する。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -238,6 +289,11 @@ models:
       - name: install_position
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: male_total
       - name: female_total
       - name: unisex_total
@@ -264,6 +320,9 @@ models:
       所在地とともに収録する。無形文化財や個人所有で住所非公開のものを含むため、緯度経度が
       入らない行がある。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -282,6 +341,11 @@ models:
       - name: phone_number
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: quantity
       - name: quantity_unit
       - name: corporate_number
@@ -312,6 +376,9 @@ models:
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
       文化財を観光資源として扱う場合は ods.cultural_property も併せて参照する。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -326,6 +393,11 @@ models:
       - name: postal_code
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: corporate_number
       - name: available_days
       - name: start_time
@@ -360,6 +432,9 @@ models:
       （カバレッジは ods.source_files を参照）。
       会場の施設情報は ods.public_facility、観光資源は ods.tourism も併せて参照する。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: corporate_number
@@ -396,6 +471,11 @@ models:
       - name: building_name
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: access
       - name: parking
       - name: application_deadline_date
@@ -456,6 +536,9 @@ models:
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
       標準形式ではない独自様式（管轄・水利番号の一覧など）は収録していない。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -471,6 +554,11 @@ models:
       - name: location_municipality_code
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: diameter
       - name: notes
       - name: extras
@@ -488,6 +576,9 @@ models:
       あり、こちらは区市町村が独自に公開する分。公開しているのは一部の自治体のみ
       （カバレッジは ods.source_files を参照）。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -508,6 +599,11 @@ models:
       - name: fax_number
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: corporate_number
       - name: corporate_name
       - name: business_number
@@ -530,6 +626,9 @@ models:
       施設の位置（緯度経度）を持ち、飲食店の出店動向・エリア別の業態構成・許可の新規/継続分析に
       使える。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -553,6 +652,11 @@ models:
       - name: contact_notes
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: corporate_name
       - name: corporate_number
       - name: permit_number
@@ -579,6 +683,9 @@ models:
       ラベルが自治体ごとに混在するため生値のまま保持する。
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: school_code
       - name: school_type
@@ -597,6 +704,11 @@ models:
       - name: postal_code
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: contact_name
       - name: phone_number
       - name: attribute_set_date
@@ -645,6 +757,9 @@ models:
       分かれるため、当テーブルでは住所が空で緯度経度のみを持つ自治体がある。
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: facility_id
@@ -662,6 +777,11 @@ models:
       - name: phone_number
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: indoor_outdoor
       - name: capacity
       - name: nearest_station
@@ -691,6 +811,9 @@ models:
       住所や座標を欠く自治体も多い。
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: municipality_code
       - name: organization_name
@@ -713,6 +836,11 @@ models:
       - name: phone_number
       - name: lat
       - name: lon
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: crs
       - name: crs_code
       - name: polling_place_type

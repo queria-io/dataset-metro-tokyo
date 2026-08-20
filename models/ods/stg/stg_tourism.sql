@@ -14,6 +14,7 @@ select
     postal_code,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     corporate_number,
     available_days,
     start_time,

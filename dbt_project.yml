@@ -5,6 +5,7 @@ profile: "metro_tokyo"
 
 model-paths: ["models"]
 macro-paths: ["macros", "shared/macros"]
+test-paths: ["tests"]
 clean-targets: ["target", "dbt_packages"]
 
 models:

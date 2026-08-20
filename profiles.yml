@@ -12,6 +12,8 @@ metro_tokyo:
         - ducklake
         # credential_chain はこの拡張にある
         - aws
+        # GEOMETRY 型と ST_Point。ods の施設テーブルが地図表示用の列を持つ
+        - spatial
       # 認証情報を値として持たず、期限が切れたら取り直させる。一時認証情報は
       # 15 分で切れるのに対しビルドはそれより長く走るので、値を渡す形にすると
       # 途中で書けなくなる。process が実行するのは queria で、鍵はどこにも置かない

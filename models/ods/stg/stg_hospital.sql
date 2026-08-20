@@ -13,6 +13,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     corporate_name,
     medical_institution_code,
     consultation_days,

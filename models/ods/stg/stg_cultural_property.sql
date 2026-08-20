@@ -20,6 +20,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     try_cast(quantity as integer) as quantity,
     quantity_unit,
     corporate_number,

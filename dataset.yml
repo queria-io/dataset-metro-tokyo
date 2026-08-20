@@ -60,9 +60,14 @@ ai_context:
     resident_population は集計行（総数・区部・市部など）を含むので、区市町村だけなら
     area_type = '区市町村' で絞る。外国人人口と世帯数は2012年7月分と8月分の間に
     制度変更の段差がある。
-    元データの値は補正せず原典のまま入れている。ods.cultural_property には緯度と経度が
-    入れ替わったまま公開されている自治体（豊島区の全行）があり、ods.event にも
-    緯度経度の入れ替わりや経度の小数点欠落がある。地図に出す前に値域を確認する。
+    元データの値は補正せず原典のまま入れている。lat / lon は自治体が公開した生値で、
+    緯度と経度が入れ替わったまま公開されている自治体（ods.cultural_property の豊島区、
+    ods.public_wireless_lan の世田谷区など）や、経度の小数点が欠落している行がある。
+    **地図に出すときは lat / lon ではなく geo_lat / geo_lon / geometry を使う。**
+    これは Queria が付与した列で、値域に収まらない座標を落とし、緯度と経度が
+    入れ替わっている行は入れ替えて採用してある。採用した値の由来は geo_source
+    （source / source_swapped）、粒度は geo_level で引ける。geometry は
+    geo_lat / geo_lon から作った POINT で、座標の無い行は NULL。
     日付は自治体ごとに表記が違うため DATE に正規化しているが、「4月頃」のような
     自由記述は推測せず NULL にしている。
     標準列にマッピングできない自治体独自の列は extras（JSON）に退避してある。

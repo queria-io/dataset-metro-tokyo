@@ -22,6 +22,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     crs,
     crs_code,
     polling_place_type,
