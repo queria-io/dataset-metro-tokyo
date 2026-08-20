@@ -20,6 +20,7 @@ select
     postal_code,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     contact_name,
     phone_number,
     {{ ods_date('attribute_set_date') }} as attribute_set_date,

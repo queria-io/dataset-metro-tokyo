@@ -11,6 +11,7 @@ select
     install_position,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     try_cast(male_total as integer) as male_total,
     try_cast(female_total as integer) as female_total,
     try_cast(unisex_total as integer) as unisex_total,

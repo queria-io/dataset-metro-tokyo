@@ -17,6 +17,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     indoor_outdoor,
     try_cast(capacity as integer) as capacity,
     nearest_station,

@@ -19,6 +19,7 @@ select
     building_name,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     phone_number,
     email,
     contact_form_url,

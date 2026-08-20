@@ -50,6 +50,23 @@ fields:
   - name: lon
     title: 経度
     description: 十進度
+  - name: geo_lat
+    title: 緯度（地図表示用）
+    description: 'Queria が付与。原典の緯度経度が日本の値域に収まればその値、緯度と経度が入れ替わっていれば入れ替えた値。
+
+      採用できる座標が無ければ NULL。由来は geo_source を見る'
+  - name: geo_lon
+    title: 経度（地図表示用）
+    description: Queria が付与。geo_lat と対になる経度
+  - name: geo_source
+    title: 座標の由来
+    description: source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が入れ替わっていたので入れ替えて採用、NULL=採用できる座標が無い
+  - name: geo_level
+    title: 座標の粒度
+    description: 語彙は abr-geocoder の matchLevel に揃えてある。原典由来の座標は粒度が申告されないため source
+  - name: geometry
+    title: ジオメトリ
+    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
   - name: corporate_number
     title: 法人番号
   - name: corporate_name

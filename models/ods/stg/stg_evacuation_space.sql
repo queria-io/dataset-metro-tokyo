@@ -19,6 +19,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     try_cast(elevation as double) as elevation,
     {% for flag in flags %}
     {{ ods_flag(flag) }} as {{ flag }},

@@ -12,6 +12,7 @@ select
     phone_number,
     try_cast(lat as double) as lat,
     try_cast(lon as double) as lon,
+    {{ ods_geo_columns() }},
     installer,
     ssid,
     coverage_area,

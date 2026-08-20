@@ -37,6 +37,7 @@ select
     building_name,
     try_cast(rtrim(lat, ',') as double) as lat,
     try_cast(rtrim(lon, ',') as double) as lon,
+    {{ ods_geo_columns("try_cast(rtrim(lat, ',') as double)", "try_cast(rtrim(lon, ',') as double)") }},
     access,
     parking,
     capacity,
