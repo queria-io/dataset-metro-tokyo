@@ -74,11 +74,30 @@ ods_datasets.yml の identity_column で判定に使う列を差し替える。
 名称・所在地の列を持たない種別（ods.school_district / ods.fire_hydrant）は
 ods_datasets.yml の required_columns で必須列を差し替える。
 
-元データの値は補正せず原典のまま保持する。ods.cultural_property では緯度と経度が
-入れ替わったまま公開されている自治体があり（豊島区の全行）、ods.event でも緯度経度が
-入れ替わっている自治体・経度の小数点が欠落している自治体があるため、地図表示の前に
-値域の確認が要る。日付は自治体ごとに表記が異なる（YYYY-MM-DD / YYYY/M/D / YYYY.M.D）ため
-DATE に正規化するが、「4月頃」「毎年1月1日」のような自由記述は推測せず NULL にする。
+元データの値は補正せず原典のまま保持する。日付は自治体ごとに表記が異なる
+（YYYY-MM-DD / YYYY/M/D / YYYY.M.D）ため DATE に正規化するが、「4月頃」「毎年1月1日」の
+ような自由記述は推測せず NULL にする。
+
+### 地図表示用の列
+
+緯度経度を持つ16種別には、原典の lat / lon とは別に地図表示用の列を付与する。
+lat / lon は自治体が公開した生値のままで、緯度と経度が入れ替わったまま公開されている
+自治体（ods.cultural_property の豊島区、ods.public_wireless_lan の世田谷区など複数の
+種別・自治体）や、経度の小数点が欠落している行（ods.event の狛江市）がある。
+入れ替わっていた行は geo_source = 'source_swapped' で引ける。小数点欠落のように
+どちらとも解釈できない値は値域外として落とすので geo_lat が NULL になり、
+lat is not null and geo_lat is null で該当行を取り出せる。
+
+- geo_lat / geo_lon: 採用した座標。原典が日本の値域に収まればその値、緯度と経度が
+  入れ替わっていれば入れ替えた値。採用できなければ NULL
+- geo_source: 由来。source（原典のまま）/ source_swapped（入れ替えて採用）/ NULL
+- geo_level: 座標の粒度。語彙は abr-geocoder の matchLevel に揃えてある。原典由来の
+  座標は粒度が申告されないため source
+- geometry: geo_lat / geo_lon から作った POINT（GEOMETRY 型）。座標が無い行は NULL
+
+値域は東京都ではなく日本全域（緯度 20.0〜46.0 / 経度 122.0〜154.5）にとる。都外の
+所在地を持つ行が実在し、東京都に絞ると原典の正しい座標を捨てるため。緯度域と経度域は
+重ならないので、この範囲でも緯度経度の入れ替わりは一意に判定できる。
 
 ods.school_district は施設一覧ではなく学校×通学区域の一覧で、所在地・緯度経度の列を持たない
 （学校の位置は nlftp.facility.school を参照）。町丁目ごとに学校名を並べる独自形式で
