@@ -12,9 +12,11 @@ ods の各 stg モデルが原典の緯度経度が無い行の補完に使う�
 import json
 import logging
 import shutil
+import sqlite3
 import subprocess
 import unicodedata
 from collections import Counter
+from contextlib import closing
 from pathlib import Path
 
 logger = logging.getLogger("pipelines")
@@ -166,6 +168,48 @@ def download_abr(abrg_dir: Path) -> None:
     _abrg(["download", "-c", *TOKYO_LG_CODES, "-d", str(abrg_dir), "-t", "1", "--silent"])
 
 
+def _unparsed_downloads(abrg_dir: Path) -> int:
+    """download/ に残った zip でないファイルを数える。
+
+    abrg は取り込めた zip を展開して消すので、残っているものは中身が zip で
+    なかったファイル。配信元がエラーページを返すとここに HTML が溜まる。
+    """
+    count = 0
+    for path in (abrg_dir / "download").glob("*.zip"):
+        with path.open("rb") as f:
+            if f.read(2) != b"PK":
+                count += 1
+    return count
+
+
+def verify_abr(abrg_dir: Path) -> None:
+    """取得した ABR に全市区町村の町字が入っているか確かめる。
+
+    abrg download は配信元が zip でなくエラーページを返しても終了コード 0 で終わる。
+    そのまま run_geocoder に進むと空のデータベースを相手に何時間も返らず、
+    ジョブの実行時間上限で打ち切られる。ここで止めて原因をログに出す。
+    """
+    db = abrg_dir / "database" / "common.sqlite"
+    if not db.exists():
+        raise SystemExit(f"ABR の取得に失敗した: {db} が無い")
+
+    with closing(sqlite3.connect(f"file:{db}?mode=ro", uri=True)) as con:
+        towns = dict(con.execute(
+            "select c.lg_code, count(t.town_key) from city c "
+            "left join town t on t.city_key = c.city_key group by c.lg_code"
+        ).fetchall())
+
+    missing = [code for code in TOKYO_LG_CODES if not towns.get(code)]
+    if not missing:
+        return
+    listed = ", ".join(missing[:5]) + (" ほか" if len(missing) > 5 else "")
+    raise SystemExit(
+        f"ABR の取得が不完全: 町字が 1 件も入っていない市区町村が "
+        f"{len(missing)}/{len(TOKYO_LG_CODES)} 件（{listed}）。"
+        f"zip として読めなかった配布ファイル {_unparsed_downloads(abrg_dir)} 件"
+    )
+
+
 def run_geocoder(abrg_dir: Path, input_path: Path, output_path: Path) -> None:
     """住所ファイルをジオコーディングする。
 
@@ -215,6 +259,7 @@ def geocode(
     if not skip_download:
         logger.info("  ABR データ取得（東京都62市区町村）")
         download_abr(abrg_dir)
+    verify_abr(abrg_dir)
     logger.info("  ジオコーディング実行")
     run_geocoder(abrg_dir, input_path, raw_output)
 
