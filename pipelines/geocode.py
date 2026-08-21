@@ -168,46 +168,62 @@ def download_abr(abrg_dir: Path) -> None:
     _abrg(["download", "-c", *TOKYO_LG_CODES, "-d", str(abrg_dir), "-t", "1", "--silent"])
 
 
-def _unparsed_downloads(abrg_dir: Path) -> int:
-    """download/ に残った zip でないファイルを数える。
+def _unparsed_downloads(abrg_dir: Path) -> list[str]:
+    """download/ に残った zip でないファイルを挙げる。
 
     abrg は取り込めた zip を展開して消すので、残っているものは中身が zip で
     なかったファイル。配信元がエラーページを返すとここに HTML が溜まる。
     """
-    count = 0
-    for path in (abrg_dir / "download").glob("*.zip"):
+    unparsed = []
+    for path in sorted((abrg_dir / "download").glob("*.zip")):
         with path.open("rb") as f:
             if f.read(2) != b"PK":
-                count += 1
-    return count
+                unparsed.append(path.name)
+    return unparsed
 
 
-def verify_abr(abrg_dir: Path) -> None:
-    """取得した ABR に全市区町村の町字が入っているか確かめる。
-
-    abrg download は配信元が zip でなくエラーページを返しても終了コード 0 で終わる。
-    そのまま run_geocoder に進むと空のデータベースを相手に何時間も返らず、
-    ジョブの実行時間上限で打ち切られる。ここで止めて原因をログに出す。
-    """
-    db = abrg_dir / "database" / "common.sqlite"
-    if not db.exists():
-        raise SystemExit(f"ABR の取得に失敗した: {db} が無い")
-
+def _missing_towns(db: Path) -> list[str]:
+    """町字が 1 件も入っていない市区町村コードを挙げる。"""
     with closing(sqlite3.connect(f"file:{db}?mode=ro", uri=True)) as con:
         towns = dict(con.execute(
             "select c.lg_code, count(t.town_key) from city c "
             "left join town t on t.city_key = c.city_key group by c.lg_code"
         ).fetchall())
+    return [code for code in TOKYO_LG_CODES if not towns.get(code)]
 
-    missing = [code for code in TOKYO_LG_CODES if not towns.get(code)]
-    if not missing:
-        return
-    listed = ", ".join(missing[:5]) + (" ほか" if len(missing) > 5 else "")
-    raise SystemExit(
-        f"ABR の取得が不完全: 町字が 1 件も入っていない市区町村が "
-        f"{len(missing)}/{len(TOKYO_LG_CODES)} 件（{listed}）。"
-        f"zip として読めなかった配布ファイル {_unparsed_downloads(abrg_dir)} 件"
-    )
+
+def _listed(names: list[str], limit: int = 5) -> str:
+    return ", ".join(names[:limit]) + (" ほか" if len(names) > limit else "")
+
+
+def verify_abr(abrg_dir: Path) -> None:
+    """取得した ABR が揃っているか確かめる。
+
+    abrg download は配信元が zip でなくエラーページを返しても終了コード 0 で終わる。
+    そのまま run_geocoder に進むと空のデータベースを相手に何時間も返らず、
+    ジョブの実行時間上限で打ち切られる。ここで止めて原因をログに出す。
+
+    町字の件数だけでは足りない。町字が揃っていても住居表示の配布ファイルだけが
+    壊れていることがあり、その場合ジオコーディングは市区町村の代表点しか返さず、
+    失敗しないまま補完率だけが落ちる。読めなかった配布ファイルも失敗として扱う。
+    """
+    db = abrg_dir / "database" / "common.sqlite"
+    if not db.exists():
+        raise SystemExit(f"ABR の取得に失敗した: {db} が無い")
+
+    unparsed = _unparsed_downloads(abrg_dir)
+    if unparsed:
+        raise SystemExit(
+            f"ABR の取得が不完全: zip として読めなかった配布ファイル "
+            f"{len(unparsed)} 件（{_listed(unparsed)}）"
+        )
+
+    missing = _missing_towns(db)
+    if missing:
+        raise SystemExit(
+            f"ABR の取得が不完全: 町字が 1 件も入っていない市区町村が "
+            f"{len(missing)}/{len(TOKYO_LG_CODES)} 件（{_listed(missing)}）"
+        )
 
 
 def run_geocoder(abrg_dir: Path, input_path: Path, output_path: Path) -> None:
