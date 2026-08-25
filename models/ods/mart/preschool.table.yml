@@ -22,6 +22,7 @@ fields:
     title: 全国地方公共団体コード
   - name: facility_id
     title: ID
+    description: 自治体内で一意の施設 ID（元データの ID / NO 列）。1.31025E+11 のような Excel の指数表記のまま公開する自治体があり、その行は元の ID を復元できない
   - name: name
     title: 名称
   - name: name_kana

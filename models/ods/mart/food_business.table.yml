@@ -26,7 +26,7 @@ fields:
     description: 情報の管理主体の全国地方公共団体コード（元データの表記のまま）
   - name: facility_id
     title: ID
-    description: 自治体内で一意の施設 ID（元データの ID / NO 列）。Excel の指数表記のまま公開する自治体があり生値を保持する
+    description: 自治体内で一意の施設 ID（元データの ID / NO 列）。1.31025E+11 のような Excel の指数表記のまま公開する自治体があり、その行は元の ID を復元できない
   - name: name
     title: 施設名称
   - name: name_kana
