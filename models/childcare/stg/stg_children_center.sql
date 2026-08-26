@@ -10,6 +10,8 @@ select
     "所在地" as address,
     try_cast("経度" as double) as lon,
     try_cast("緯度" as double) as lat,
+    {{ ods_geo_columns(lat='try_cast("緯度" as double)',
+                       lon='try_cast("経度" as double)') }},
     "座標系" as crs,
     "電話番号" as phone_number,
     try_cast(nullif(nullif(trim("定員"), ''), '-') as integer) as capacity

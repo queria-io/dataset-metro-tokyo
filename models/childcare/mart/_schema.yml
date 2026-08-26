@@ -8,6 +8,9 @@ models:
       10月時点）更新され、常に最新版を取り込む。どの時点かは source_edition を見る。
       座標系は JGD2011。所在地は都道府県名を含まない（「千代田区外神田…」形式）。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: source_edition
       - name: establisher_type
@@ -17,6 +20,11 @@ models:
       - name: lon
       - name: lat
       - name: crs
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: phone_number
       - name: capacity
 
@@ -27,6 +35,9 @@ models:
       10月時点）更新され、常に最新版を取り込む。どの時点かは source_edition を見る。
       座標系は JGD2011。所在地は都道府県名を含まない（「千代田区外神田…」形式）。
     access: public
+    data_tests:
+      - ods_geo_consistent
+      - ods_geo_coverage
     columns:
       - name: source_edition
       - name: establisher_type
@@ -36,5 +47,10 @@ models:
       - name: lon
       - name: lat
       - name: crs
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
       - name: phone_number
       - name: capacity
