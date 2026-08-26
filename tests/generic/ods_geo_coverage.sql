@@ -13,7 +13,8 @@
    「原典の座標を取りこぼしていないか」だけで、補完の効きは
    ods_geocode_coverage が別に見る。
 
-   既定の 0.95 は実測（16種別すべてで 0.98 以上、最小は ods.event の 0.990）から取る。 #}
+   既定の 0.95 は実測（ods の16種別すべてで 0.98 以上、最小は ods.event の 0.990。
+   childcare の2表はいずれも 1.000）から取る。 #}
 
 {% test ods_geo_coverage(model, min_ratio=0.95) %}
 

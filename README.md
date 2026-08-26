@@ -80,7 +80,8 @@ ods_datasets.yml の required_columns で必須列を差し替える。
 
 ### 地図表示用の列
 
-緯度経度を持つ16種別には、原典の lat / lon とは別に地図表示用の列を付与する。
+ods の緯度経度を持つ16種別と childcare の2表には、原典の lat / lon とは別に
+地図表示用の列を付与する。
 lat / lon は自治体が公開した生値のままで、緯度と経度が入れ替わったまま公開されている
 自治体（ods.cultural_property の豊島区、ods.public_wireless_lan の世田谷区など複数の
 種別・自治体）や、経度の小数点が欠落している行（ods.event の狛江市）がある。
@@ -89,7 +90,8 @@ lat / lon は自治体が公開した生値のままで、緯度と経度が入�
 lat is not null and geo_lat is null で該当行を取り出せる。
 
 原典に使える座標が無い行は、住所を ABR（アドレス・ベース・レジストリ）で
-ジオコーディングした座標で補う。原典の座標は常に優先する。
+ジオコーディングした座標で補う。原典の座標は常に優先する。補完の対象は ods のみで、
+childcare は原典の座標だけを使う（都福祉局の一覧は全行が値域内で、補う行が無い）。
 
 - geo_lat / geo_lon: 採用した座標。採用できなければ NULL
 - geo_source: 由来。source（原典のまま）/ source_swapped（入れ替えて採用）/
@@ -160,6 +162,11 @@ ods.food_business は食品衛生法に基づき保健所が許可・届出を�
 - lon: 経度（十進度、JGD2011）
 - lat: 緯度（十進度、JGD2011）
 - crs: 座標系（元データに記載された座標系。JGD2011）
+- geo_lat / geo_lon: 地図表示用の座標。原典の緯度経度が日本の値域に収まればその値、
+  入れ替わっていれば入れ替えた値（→「地図表示用の列」）
+- geo_source: 座標の由来（source / source_swapped / NULL）
+- geo_level: 座標の粒度。原典由来なので source（採用できる座標が無い行は NULL）
+- geometry: geo_lat / geo_lon から作った POINT（GEOMETRY 型）
 - phone_number: 電話番号
 - capacity: 認可定員（人。元データの '-' や空欄は NULL）
 
@@ -175,6 +182,11 @@ ods.food_business は食品衛生法に基づき保健所が許可・届出を�
 - lon: 経度（十進度、JGD2011）
 - lat: 緯度（十進度、JGD2011）
 - crs: 座標系（元データに記載された座標系。JGD2011）
+- geo_lat / geo_lon: 地図表示用の座標。原典の緯度経度が日本の値域に収まればその値、
+  入れ替わっていれば入れ替えた値（→「地図表示用の列」）
+- geo_source: 座標の由来（source / source_swapped / NULL）
+- geo_level: 座標の粒度。原典由来なので source（採用できる座標が無い行は NULL）
+- geometry: geo_lat / geo_lon から作った POINT（GEOMETRY 型）
 - phone_number: 電話番号
 - capacity: 定員（人。元データの '-' や空欄は NULL。元データは全施設が '-' で公開されており全行 NULL）
 

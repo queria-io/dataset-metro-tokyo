@@ -64,9 +64,10 @@ ai_context:
     緯度と経度が入れ替わったまま公開されている自治体（ods.cultural_property の豊島区、
     ods.public_wireless_lan の世田谷区など）や、経度の小数点が欠落している行がある。
     **地図に出すときは lat / lon ではなく geo_lat / geo_lon / geometry を使う。**
-    これは Queria が付与した列で、値域に収まらない座標を落とし、緯度と経度が
-    入れ替わっている行は入れ替えて採用してある。さらに、原典に使える座標が無い行は
-    住所を ABR（アドレス・ベース・レジストリ）でジオコーディングして補ってある。
+    これは Queria が付与した列で、ods の施設テーブルと childcare の2表が持つ。
+    値域に収まらない座標を落とし、緯度と経度が入れ替わっている行は入れ替えて採用してある。
+    さらに ods では、原典に使える座標が無い行を住所から ABR（アドレス・ベース・
+    レジストリ）でジオコーディングして補ってある（childcare は原典の座標だけを使う）。
     採用した値の由来は geo_source（source / source_swapped / abr）、粒度は geo_level
     で引ける。ABR 由来の粒度は residential_detail（住居番号）/ residential_block（街区）/
     machiaza_detail（丁目）/ machiaza（町字）。市区町村の代表点は採用していない。

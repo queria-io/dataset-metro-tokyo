@@ -8,6 +8,11 @@ select
     lon,
     lat,
     crs,
+    geo_lat,
+    geo_lon,
+    geo_source,
+    geo_level,
+    {{ ods_geometry() }} as geometry,
     phone_number,
     capacity
 from {{ ref('stg_children_center') }}
