@@ -4,7 +4,7 @@
    由来になる。geo_source は 'abr' か NULL の2値で、原典座標を採る ODS のような
    'source' / 'source_swapped' は出ない。 #}
 
-{{ ods_geocoded_source('raw_food_establishment') }}
+{{ ods_geocoded_source('raw_food_establishment', columns=['lg_code']) }}
 
 select
     try_cast(ledger.as_of as date) as source_as_of,
@@ -22,6 +22,7 @@ select
     nullif(geocoded.operator_address, '') as operator_address,
     nullif(geocoded.operator_phone_number, '') as operator_phone_number,
     nullif(geocoded.representative_name, '') as representative_name,
+    left(geocoded.abr_lg_code, 5) as city_code,
     geocoded.abr_lat as geo_lat,
     geocoded.abr_lon as geo_lon,
     case when geocoded.abr_lat is not null then 'abr' end as geo_source,

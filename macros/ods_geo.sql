@@ -81,7 +81,9 @@ trim({{ relation }}.address)
 {%- endif -%}
 {%- endmacro %}
 
-{% macro ods_geocoded_source(raw, parts=none) -%}
+{# columns にジオコーディング結果の列名を渡すと、abr_<列名> として一緒に受け取れる。
+   原典が市区町村を持たないテーブルで lg_code を引くときに使う。 #}
+{% macro ods_geocoded_source(raw, parts=none, columns=none) -%}
 with source as (
     select * from {{ ref(raw) }}
 ),
@@ -91,6 +93,9 @@ geocoded as (
         g.geo_lat as abr_lat,
         g.geo_lon as abr_lon,
         g.geo_level as abr_level
+        {%- for column in columns or [] %},
+        g.{{ column }} as abr_{{ column }}
+        {%- endfor %}
     from source
     left join {{ ref('stg_geocode') }} as g
         on g.org_code = source._org_code

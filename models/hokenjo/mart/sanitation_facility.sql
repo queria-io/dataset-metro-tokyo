@@ -14,6 +14,7 @@ select
     operator_building,
     operator_phone_number,
     representative_name,
+    city_code,
     geo_lat,
     geo_lon,
     geo_source,

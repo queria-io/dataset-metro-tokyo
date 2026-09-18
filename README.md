@@ -223,6 +223,7 @@ geo_lat / geo_lon に持つ（geo_source は 'abr' か NULL の2値）。
 - permit_date: 許可日（許可は初回許可日、届出は届出年月日）
 - operator_name / operator_address / operator_phone_number: 営業者の氏名・住所・電話番号
 - representative_name: 法人代表者氏名
+- city_code: 所在地から求めた5桁の市区町村コード（e_stat.code.municipality・境界データと直結）
 - geo_lat / geo_lon / geo_source / geo_level / geometry: 所在地から求めた位置
 
 ## テーブル: hokenjo.sanitation_facility
@@ -242,6 +243,7 @@ geo_lat / geo_lon に持つ（geo_source は 'abr' か NULL の2値）。
 - permit_date: 確認日（旅館は許可年月日）
 - operator_name / operator_address / operator_building / operator_phone_number: 営業者の情報
 - representative_name: 法人代表者氏名
+- city_code: 所在地から求めた5桁の市区町村コード（e_stat.code.municipality・境界データと直結）
 - geo_lat / geo_lon / geo_source / geo_level / geometry: 所在地から求めた位置
 
 ## スキーマ: stats（都の統計）

@@ -3,7 +3,7 @@
    施設所在地はビル名が別列になっているので、住所の突合には施設所在地だけを使う
    （pipelines/geocode.py も同じ列を読む）。 #}
 
-{{ ods_geocoded_source('raw_sanitation_facility') }}
+{{ ods_geocoded_source('raw_sanitation_facility', columns=['lg_code']) }}
 
 select
     try_cast(ledger.as_of as date) as source_as_of,
@@ -23,6 +23,7 @@ select
     nullif(geocoded.operator_building, '') as operator_building,
     nullif(geocoded.operator_phone_number, '') as operator_phone_number,
     nullif(geocoded.representative_name, '') as representative_name,
+    left(geocoded.abr_lg_code, 5) as city_code,
     geocoded.abr_lat as geo_lat,
     geocoded.abr_lon as geo_lon,
     case when geocoded.abr_lat is not null then 'abr' end as geo_source,

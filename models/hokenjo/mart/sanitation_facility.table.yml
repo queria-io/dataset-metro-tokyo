@@ -55,6 +55,9 @@ fields:
     title: 営業者電話番号
   - name: representative_name
     title: 法人代表者氏名
+  - name: city_code
+    title: 市区町村コード
+    description: 所在地から求めた5桁の市区町村コード。e_stat.code.municipality や境界データと直結できる
   - name: geo_lat
     title: 緯度
     description: 所在地から求めた十進度（JGD2011）

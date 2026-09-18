@@ -28,6 +28,7 @@ models:
       - name: operator_address
       - name: operator_phone_number
       - name: representative_name
+      - name: city_code
       - name: geo_lat
       - name: geo_lon
       - name: geo_source
@@ -62,6 +63,7 @@ models:
       - name: operator_building
       - name: operator_phone_number
       - name: representative_name
+      - name: city_code
       - name: geo_lat
       - name: geo_lon
       - name: geo_source
