@@ -104,19 +104,60 @@ def load_config(path: str = "ods_datasets.yml") -> list[OdsDataset]:
     return datasets
 
 
+def _is_csv(resource: dict) -> bool:
+    """リソースが CSV か。format の申告が無い登録があるので URL の拡張子も見る。"""
+    url = resource.get("url") or ""
+    return (resource.get("format") or "").upper() == "CSV" or url.lower().endswith(".csv")
+
+
+def _matches(dataset: OdsDataset, resource: dict, title: str) -> bool:
+    """リソースが種別に一致するか。URL スラッグが主判定、パッケージタイトルが副判定。"""
+    stem = Path(urlparse(resource.get("url") or "").path).stem.lower()
+    slug_hit = any(
+        re.search(rf"(^|[_\-]){re.escape(s)}([_\-.]|\d|$)", stem)
+        for s in dataset.slug_patterns
+    )
+    title_hit = any(p in title for p in dataset.title_patterns)
+    return slug_hit or title_hit
+
+
+def _formats(resources: list[dict]) -> list[str]:
+    """パッケージが実際に持つリソース形式。台帳の理由欄に入れる。"""
+    seen = []
+    for resource in resources:
+        fmt = (resource.get("format") or "").upper() or "UNKNOWN"
+        if fmt not in seen:
+            seen.append(fmt)
+    return sorted(seen)
+
+
 def classify(
     packages_path: str, datasets: list[OdsDataset]
-) -> list[tuple[OdsDataset, dict, dict]]:
-    """packages.ndjson から取り込み対象の (種別, パッケージ, リソース) を判定する。
+) -> tuple[
+    list[tuple[OdsDataset, dict, dict]], list[tuple[OdsDataset, dict, list[str]]]
+]:
+    """packages.ndjson から取り込み対象と、取り込めなかったパッケージを判定する。
 
     リソース URL のファイル名スラッグを主判定、データセットタイトルを副判定とする。
     副判定はパッケージ内の全 CSV リソースを候補にし、ヘッダー検査で最終判定する。
 
     同一 URL が複数のリソースとして登録されている場合（更新時点だけが異なる版を
     同じファイルに上書き公開している自治体がある）は最初の1件だけを対象にする。
+
+    種別の照合は CSV かどうかに関わらず行う。**CSV ゲートを先に置くと、HTML や PDF
+    でしか登録されていないパッケージが台帳に1行も残らず、「その自治体が公開していない」
+    と区別が付かなくなる。** 一致したのに CSV が1つも無いパッケージは第2の戻り値に入れ、
+    呼び出し側が skipped として1行だけ記録する。
+
+    Returns:
+        (targets, no_csv)
+        targets: 取り込み対象の (種別, パッケージ, リソース)
+        no_csv:  種別に一致したが CSV リソースが無い (種別, パッケージ, 形式一覧)
     """
     targets = []
+    no_csv = []
     seen: set[tuple[str, str]] = set()
+    seen_no_csv: set[tuple[str, str]] = set()
 
     with open(packages_path, encoding="utf-8") as f:
         for line in f:
@@ -124,25 +165,23 @@ def classify(
             if package.get("license_id") not in ALLOWED_LICENSES:
                 continue
             title = package.get("title") or ""
+            resources = package.get("resources") or []
 
-            for resource in package.get("resources") or []:
-                url = resource.get("url") or ""
-                is_csv = (resource.get("format") or "").upper() == "CSV" or (
-                    url.lower().endswith(".csv")
-                )
-                if not is_csv:
+            for dataset in datasets:
+                hits = [r for r in resources if _matches(dataset, r, title)]
+                if not hits:
                     continue
-                stem = Path(urlparse(url).path).stem.lower()
 
-                for dataset in datasets:
-                    slug_hit = any(
-                        re.search(rf"(^|[_\-]){re.escape(s)}([_\-.]|\d|$)", stem)
-                        for s in dataset.slug_patterns
-                    )
-                    title_hit = any(p in title for p in dataset.title_patterns)
-                    if not (slug_hit or title_hit):
-                        continue
-                    key = (dataset.id, url)
+                csv_hits = [r for r in hits if _is_csv(r)]
+                if not csv_hits:
+                    key = (dataset.id, package["id"])
+                    if key not in seen_no_csv:
+                        seen_no_csv.add(key)
+                        no_csv.append((dataset, package, _formats(resources)))
+                    continue
+
+                for resource in csv_hits:
+                    key = (dataset.id, resource.get("url") or "")
                     if key in seen:
                         continue
                     seen.add(key)
@@ -151,7 +190,8 @@ def classify(
     targets.sort(
         key=lambda t: (t[0].id, t[1]["organization"]["name"], t[2]["id"])
     )
-    return targets
+    no_csv.sort(key=lambda t: (t[0].id, t[1]["organization"]["name"], t[1]["id"]))
+    return targets, no_csv
 
 
 class _HostThrottle:
@@ -268,8 +308,11 @@ def download_and_normalize(
     dest.mkdir(parents=True, exist_ok=True)
 
     datasets = load_config(config_path)
-    targets = classify(packages_path, datasets)
-    logger.info(f"  {len(targets)} resources classified")
+    targets, no_csv = classify(packages_path, datasets)
+    logger.info(
+        f"  {len(targets)} resources classified, "
+        f"{len(no_csv)} packages matched without a CSV resource"
+    )
 
     throttle = _HostThrottle()
     fetched_at = datetime.now(UTC).isoformat()
@@ -280,19 +323,30 @@ def download_and_normalize(
     with (dest / "source_files.ndjson").open("w", encoding="utf-8") as source_files:
 
         def log_source(dataset, package, resource, **fields):
+            # resource=None はパッケージ単位の行（CSV リソースが1つも無かった場合）。
+            # リソースが存在しないので、リソース側の列は空にする
             entry = {
                 "dataset_id": dataset.id,
                 "package_id": package["id"],
                 "package_title": package.get("title"),
-                "resource_id": resource["id"],
-                "resource_name": resource.get("name"),
+                "resource_id": resource["id"] if resource else None,
+                "resource_name": resource.get("name") if resource else None,
                 "org_code": package["organization"]["name"],
                 "org_title": package["organization"]["title"],
-                "url": resource.get("url"),
+                "url": resource.get("url") if resource else None,
                 "fetched_at": fetched_at,
                 **fields,
             }
             source_files.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+        # 種別には一致したが CSV リソースが無いパッケージ。取得は試みないが、
+        # 台帳に行が無いと「公開していない」と見分けが付かないので1行だけ残す
+        for dataset, package, formats in no_csv:
+            log_source(
+                dataset, package, None,
+                status="skipped",
+                reason=f"no_csv_resource: formats={','.join(formats)}",
+            )
 
         for dataset, package, resource in targets:
             url = resource.get("url") or ""
