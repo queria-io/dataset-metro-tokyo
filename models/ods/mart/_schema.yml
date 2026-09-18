@@ -1126,9 +1126,11 @@ models:
       - name: population
   - name: source_files
     description: |
-      自治体標準ODS取り込みの実行結果（1行=1リソース）。どの自治体のどのファイルを
+      自治体標準ODS取り込みの実行結果。どの自治体のどのファイルを
       取り込んだか・スキップや失敗の理由・エンコーディング・行数を記録する。
-      種別ごとの自治体カバレッジの把握に使う。
+      基本は1行=1リソースだが、種別に一致しながら CSV リソースを1つも持たない
+      パッケージは、パッケージ単位で1行（status=skipped / reason=no_csv_resource）
+      記録する。種別ごとの自治体カバレッジの把握に使う。
     access: public
     columns:
       - name: dataset_id

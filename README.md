@@ -59,8 +59,11 @@ catalog のメタデータからリソースを判定・ダウンロードして
 - ods.open_data_list: オープンデータ一覧（各自治体が自ら公開するデータセットの目録。タイトル・分類・更新頻度・ファイル形式等のメタデータ。CKAN横断の catalog スキーマとは別物）
 - ods.population: 地域・年齢別人口（地域×調査年月日で総人口・男女別・5歳階級×男女の人口と世帯数をワイドに保持。町丁字単位から自治体全体まで）
 - ods.population_by_age: 地域・年齢別人口（ods.population）の年齢階級×性別の縦持ちビュー。人口ピラミッド・高齢化率の集計に便利
-- ods.source_files: 取り込みの実行結果（1行=1リソース）。自治体カバレッジ・失敗理由・
-  エンコーディングの記録。公開自治体は種別ごとに一部のみで、このテーブルで確認できる
+- ods.source_files: 取り込みの実行結果。自治体カバレッジ・失敗理由・エンコーディングの記録。
+  公開自治体は種別ごとに一部のみで、このテーブルで確認できる。基本は1行=1リソースだが、
+  種別に一致しながら CSV リソースを1つも持たないパッケージ（HTML や PDF でだけ登録されて
+  いる場合）は、パッケージ単位で1行 status=skipped / reason=no_csv_resource を記録する。
+  これが無いと「CSV 以外で公開している」と「公開していない」を台帳から区別できない
 
 取り込みは毎回全量再取得の洗い替え。1リソースの失敗（リンク切れ・ヘッダー不一致等）は
 source_files に記録して隔離し、全体を止めない。リソースのホストは自治体ごとに分散して
@@ -245,6 +248,20 @@ census・boundary・lg_code と直結する。
   data/resident_population/ に保存する（catalog の後に実行する）。公開済みの月にも
   遡及訂正が入るため直近36か月分は毎回取得し直し、それより古い月は取得済みのファイルを使う。
   取り込んだ月・URL・行数は data/resident_population/source.ndjson に記録する
+
+## テスト
+
+取り込みの判定ロジック（pipelines/）の単体テスト。ネットワークにも DuckLake にも
+つながず、packages.ndjson の小さな実例を組み立てて確かめる。
+
+```bash
+uv run --group dev pytest tests/pipelines -q
+```
+
+dev グループは `default-groups = []` で既定から外してある。ビルドは
+`uv run queria sync` を通るので、既定に入れるとビルド環境にテスト依存が混ざる。
+
+tests/generic/ の .sql は dbt の generic test で、こちらは dbt が実行する。
 
 ## ライセンス
 
