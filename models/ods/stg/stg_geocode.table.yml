@@ -1,0 +1,4 @@
+schema: ods
+name: stg_geocode
+description: ジオコーディング結果のステージング。座標が入った行だけに絞り、(組織コード, 住所) で一意にする。
+published: false
