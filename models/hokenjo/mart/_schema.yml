@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: food_establishment
+    description: |
+      食品衛生法に基づく営業許可・営業届出の一覧（ポイント）。屋号・所在地・
+      営業の種類・許可日を持つ。東京都保健医療局「食品関係営業台帳」。
+      収録は東京都が設置する保健所の管轄のみで、八王子市・町田市を除く多摩地域と
+      島しょが対象。23区・八王子市・町田市はそれぞれが保健所を設置しているため
+      含まれない。移動販売・自動販売機・行商などと、廃止・休止した施設、
+      公表を希望しない施設は除かれている。
+      緯度経度は台帳に無いため、所在地から ABR（アドレス・ベース・レジストリ）で
+      求めた値を geo_lat / geo_lon に持つ。
+    access: public
+    data_tests:
+      - abr_geo_consistent
+      - ods_geocode_coverage
+    columns:
+      - name: source_as_of
+      - name: permit_type
+      - name: name
+      - name: address
+      - name: business_type
+      - name: application_type
+      - name: phone_number
+      - name: permit_date
+      - name: operator_name
+      - name: operator_address
+      - name: operator_phone_number
+      - name: representative_name
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry
+
+  - name: sanitation_facility
+    description: |
+      生活衛生関係営業の施設一覧（ポイント）。理容所・美容所・旅館・
+      クリーニング所の施設名・所在地・確認日を持つ。東京都保健医療局
+      「環境衛生施設台帳」。収録は東京都が設置する保健所の管轄のみで、
+      八王子市・町田市を除く多摩地域と島しょが対象。旅館は休止している施設を
+      含み、クリーニング所は無店舗取次店を含む。
+      緯度経度は台帳に無いため、所在地から ABR（アドレス・ベース・レジストリ）で
+      求めた値を geo_lat / geo_lon に持つ。
+    access: public
+    data_tests:
+      - abr_geo_consistent
+      - ods_geocode_coverage
+    columns:
+      - name: source_as_of
+      - name: facility_type
+      - name: permit_number
+      - name: business_form
+      - name: name
+      - name: address
+      - name: building
+      - name: phone_number
+      - name: permit_date
+      - name: operator_name
+      - name: operator_address
+      - name: operator_building
+      - name: operator_phone_number
+      - name: representative_name
+      - name: geo_lat
+      - name: geo_lon
+      - name: geo_source
+      - name: geo_level
+      - name: geometry

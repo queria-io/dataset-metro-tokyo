@@ -13,6 +13,11 @@
 - 東京都総務局統計部「住民基本台帳による世帯と人口」の月次 CSV（2001年1月分以降）
   - 提供組織: 東京都総務局 https://catalog.data.metro.tokyo.lg.jp/organization/t000003
   - 統計表: https://www.toukei.metro.tokyo.lg.jp/juukim/jm-index.htm
+- 東京都保健医療局の保健所台帳のうち、食品関係営業台帳（許可・届出）と環境衛生施設台帳の CSV
+  - 提供組織: 東京都保健医療局 https://catalog.data.metro.tokyo.lg.jp/organization/t000055
+  - 台帳: https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho
+  - 収録は東京都が設置する保健所の管轄のみ。八王子市・町田市を除く多摩地域と島しょが対象で、
+    23区・八王子市・町田市はそれぞれが保健所を設置しているため含まれない
 
 ## スキーマ: catalog（カタログメタデータ）
 
@@ -106,8 +111,10 @@ childcare は原典の座標だけを使う（都福祉局の一覧は全行が�
 
 ### ジオコーディング
 
-pipelines/geocode.py が data/ods/*.ndjson の住所を abr-geocoder に通し、
-(組織コード, 住所) 単位で data/geocode/addresses.ndjson に出す。
+pipelines/geocode.py が data/ods/*.ndjson と data/hokenjo/*.ndjson の住所を
+abr-geocoder に通し、(組織コード, 住所) 単位で data/geocode/addresses.ndjson に出す。
+ODS は原典の緯度経度を優先してここで補うだけだが、保健所台帳は緯度経度を持たないので
+座標はすべてここから来る。
 
 住所は自分の市区町村名から始まらないことがあり、そのままでは市区町村の代表点までしか
 解決しない。東京都名と自治体名を必要に応じて前置してから渡す。ただし東京都の局が
@@ -190,6 +197,53 @@ ods.food_business は食品衛生法に基づき保健所が許可・届出を�
 - phone_number: 電話番号
 - capacity: 定員（人。元データの '-' や空欄は NULL。元データは全施設が '-' で公開されており全行 NULL）
 
+## スキーマ: hokenjo（保健所台帳）
+
+東京都保健医療局が公開する保健所台帳。東京都が設置する保健所（八王子市・町田市を除く
+多摩地域と島しょ）が保有する営業許可・届出の一覧で、毎月更新される。台帳の時点は
+source_as_of に入る。台帳は緯度経度を持たないので、所在地から ABR で求めた座標を
+geo_lat / geo_lon に持つ（geo_source は 'abr' か NULL の2値）。
+
+区市町村が自ら公開する ods.food_business とは出所が別で、収録範囲が重なる市がある。
+
+## テーブル: hokenjo.food_establishment
+
+食品衛生法に基づく営業許可・営業届出の一覧（38,707行）。1行 = 1施設 × 1許可。
+移動販売・自動販売機・行商などと、廃止・休止した施設、公表を希望しない施設は除かれている。
+
+- source_as_of: 台帳の時点
+- permit_type: 区分（許可 / 届出）。2021年6月の食品衛生法改正で、それまで許可が必要だった
+  業種の一部が届出だけで足りるようになった。飲食店は許可、コンビニエンスストアや
+  食料品の販売は届出に入るため、業態を数えるときは両方を見る
+- name: 屋号
+- address: 営業所所在地
+- business_type: 営業の種類（飲食店営業(一般飲食店)・菓子製造業(パン製造業) のように業種と細分を併記）
+- application_type: 申請区分（新規 / 継続 など。届出の行は NULL）
+- phone_number: 営業所電話番号
+- permit_date: 許可日（許可は初回許可日、届出は届出年月日）
+- operator_name / operator_address / operator_phone_number: 営業者の氏名・住所・電話番号
+- representative_name: 法人代表者氏名
+- geo_lat / geo_lon / geo_source / geo_level / geometry: 所在地から求めた位置
+
+## テーブル: hokenjo.sanitation_facility
+
+生活衛生関係営業の施設一覧（7,712行）。理容所・美容所・旅館・クリーニング所。
+旅館は休止している施設を含み、クリーニング所は無店舗取次店を含む。
+
+- source_as_of: 台帳の時点
+- facility_type: 施設の種別（理容所 / 美容所 / 旅館 / クリーニング所）
+- permit_number: 確認番号（旅館は許可番号）
+- business_form: 営業形態（クリーニング所は一般・取次所など、旅館は旅館・ホテル営業など。
+  理容所・美容所は NULL）
+- name: 施設名称
+- address: 施設所在地
+- building: 施設ビル名（所在地とは別列。ジオコーディングは所在地だけを使う）
+- phone_number: 施設電話番号
+- permit_date: 確認日（旅館は許可年月日）
+- operator_name / operator_address / operator_building / operator_phone_number: 営業者の情報
+- representative_name: 法人代表者氏名
+- geo_lat / geo_lon / geo_source / geo_level / geometry: 所在地から求めた位置
+
 ## スキーマ: stats（都の統計）
 
 東京都総務局統計部が公表する統計。区市町村を横断でそろえた都の公式集計で、
@@ -240,6 +294,10 @@ census・boundary・lg_code と直結する。
 - pipelines/childcare.py: catalog のメタデータから「社会福祉施設等一覧」の最新版を解決し、
   認可保育所・児童館の CSV をダウンロードして cp932 から UTF-8 に変換し data/childcare/ に保存。
   取り込んだ版・パッケージ・URL は data/childcare/source.ndjson に記録する（catalog の後に実行する）
+- pipelines/hokenjo.py: 保健所台帳の配布ページから台帳ごとの CSV のリンクと時点を解決し、
+  ダウンロードして共通キーに正規化し data/hokenjo/ に保存する。リンクの URL は更新のたびに
+  変わるため固定せず、台帳名をページの本文から引き当てる。6種すべてが揃わなければ止める
+  （ジオコーディングの前に実行する）
 - pipelines/resident_population.py: catalog のメタデータから公開済みの最新月を解決し、
   2001年1月分からその月までの月次 CSV をダウンロードして共通キーに正規化し
   data/resident_population/ に保存する（catalog の後に実行する）。公開済みの月にも
@@ -250,6 +308,6 @@ census・boundary・lg_code と直結する。
 
 クリエイティブ・コモンズ 表示 4.0 国際（CC BY 4.0）に従う。出典データは加工して利用している。
 
-- 出典: 東京都福祉局「社会福祉施設等一覧」、東京都総務局統計部「住民基本台帳による世帯と人口」
-  （いずれも東京都オープンデータカタログ）
+- 出典: 東京都福祉局「社会福祉施設等一覧」、東京都総務局統計部「住民基本台帳による世帯と人口」、
+  東京都保健医療局「食品関係営業台帳」「環境衛生施設台帳」（いずれも東京都オープンデータカタログ）
 - ライセンス: https://creativecommons.org/licenses/by/4.0/deed.ja

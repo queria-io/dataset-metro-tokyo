@@ -26,6 +26,13 @@ models:
         +materialized: table
       mart:
         +materialized: table
+    hokenjo:
+      raw:
+        +materialized: table
+      stg:
+        +materialized: table
+      mart:
+        +materialized: table
     childcare:
       raw:
         +materialized: table
