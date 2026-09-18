@@ -69,6 +69,11 @@ fields:
     description: abr（所在地から求めた）または空
   - name: geo_level
     title: 座標の粒度
-    description: residential_detail / residential_block / machiaza_detail / machiaza
+    description: |-
+      abr-geocoder の粒度。細かい順に residential_detail（住居番号）/
+      residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
+      市区町村の代表点は位置の情報にならないため採用していない。
+      住所の 13% は町字の代表点までしか解決しないので、店舗単位の距離を測る用途では粒度を見る
   - name: geometry
-    title: 位置
+    title: ジオメトリ
+    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL

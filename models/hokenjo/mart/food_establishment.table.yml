@@ -4,8 +4,14 @@ title: 食品関係営業台帳
 description: |-
   食品衛生法に基づく営業許可・営業届出の一覧（ポイント）。屋号・所在地・営業の種類・
   許可日を持つ。東京都保健医療局「食品関係営業台帳」。
+  1行 = 1施設 × 1つの営業の種類。1つの施設が複数の種類で許可を受けていれば
+  その数だけ行が分かれる（最多で13行）。施設の数を数えるなら
+  count(distinct (name, address)) を使う。全38,707行に対して施設は31,089。
   収録は東京都が設置する保健所の管轄のみで、八王子市・町田市を除く多摩地域と島しょが
   対象。23区・八王子市・町田市はそれぞれが保健所を設置しているため含まれない。
+  収録は平成29年1月以降の新規許可と同年4月以降の更新で、それ以前に許可を受けて
+  以降更新のない施設は入らない。permit_date は初回の許可日なので、
+  これより古い日付が入る。
   移動販売・自動販売機・行商などと、廃止・休止した施設、公表を希望しない施設は
   除かれている。区市町村が自ら公開する ods.food_business とは出所が別で、
   収録範囲も重なる部分がある。
@@ -65,6 +71,11 @@ fields:
     description: abr（所在地から求めた）または空
   - name: geo_level
     title: 座標の粒度
-    description: residential_detail / residential_block / machiaza_detail / machiaza
+    description: |-
+      abr-geocoder の粒度。細かい順に residential_detail（住居番号）/
+      residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
+      市区町村の代表点は位置の情報にならないため採用していない。
+      住所の 13% は町字の代表点までしか解決しないので、店舗単位の距離を測る用途では粒度を見る
   - name: geometry
-    title: 位置
+    title: ジオメトリ
+    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL

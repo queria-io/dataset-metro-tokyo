@@ -122,8 +122,9 @@ _TAG_RE = re.compile(r"<[^>]+>")
 _SOURCE_FILENAME = "source.ndjson"
 
 # CSV のリンクと台帳名の距離の上限（本文の文字数）。
-# 台帳名はリンクの直前に置かれているので、これを超えるものは別の台帳の見出し
-_LEDGER_NAME_DISTANCE = 400
+# 台帳名はリンクの直前に置かれていて、実測では 25〜45 文字。対象外の台帳
+# （医療機関・薬局）のリンクから対象の台帳名までは 316 文字以上離れている
+_LEDGER_NAME_DISTANCE = 100
 
 
 def _fetch(url: str) -> bytes:
@@ -168,7 +169,6 @@ def resolve_csv_links(index_html: str, ledgers: dict[str, str]) -> dict[str, dic
     「(CSV:162KB)」としか書かれていない。リンクより前の本文を末尾から辿り、
     最初に見つかった台帳名をその CSV の台帳とみなす。
     """
-    plain = _plain_text(index_html)
     resolved: dict[str, dict] = {}
 
     for anchor in _ANCHOR_RE.finditer(index_html):
@@ -186,12 +186,23 @@ def resolve_csv_links(index_html: str, ledgers: dict[str, str]) -> dict[str, dic
                 continue
             if nearest is None or index > nearest[0]:
                 nearest = (index, key)
-        if nearest is None or nearest[1] in resolved:
+        if nearest is None:
             continue
-        resolved[nearest[1]] = {
+        position, key = nearest
+        if key in resolved:
+            # 台帳が多摩分と島しょ分に分かれるような版で、2 本目を黙って捨てない
+            raise ValueError(
+                f"{ledgers[key]} の CSV が複数あります: "
+                f"{resolved[key]['url']} と {BASE_URL + anchor.group(1)}"
+            )
+        # 時点は台帳名の直前の見出しにある。割り当てに使ったのと同じ位置を基準にする
+        as_of = _as_of_before(before, position)
+        if as_of is None:
+            raise ValueError(f"{ledgers[key]} の時点（○年○月○日現在）を読めません")
+        resolved[key] = {
             "url": BASE_URL + anchor.group(1),
             "label": label,
-            "as_of": _as_of_before(plain, plain.rfind(ledgers[nearest[1]]) + 1),
+            "as_of": as_of,
         }
 
     missing = sorted(set(ledgers) - set(resolved))

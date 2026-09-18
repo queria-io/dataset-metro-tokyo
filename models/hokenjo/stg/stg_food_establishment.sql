@@ -9,15 +9,12 @@
 select
     try_cast(ledger.as_of as date) as source_as_of,
     geocoded.permit_type,
-    geocoded.name,
+    nullif(geocoded.name, '') as name,
     geocoded.address,
     geocoded.business_type,
     nullif(geocoded.application_type, '') as application_type,
     nullif(geocoded.phone_number, '') as phone_number,
-    coalesce(
-        try_strptime(geocoded.permit_date, '%Y/%m/%d'),
-        try_cast(geocoded.permit_date as timestamp)
-    )::date as permit_date,
+    {{ ods_date('geocoded.permit_date') }} as permit_date,
     nullif(geocoded.operator_name, '') as operator_name,
     nullif(geocoded.operator_address, '') as operator_address,
     nullif(geocoded.operator_phone_number, '') as operator_phone_number,
