@@ -1,0 +1,81 @@
+schema: hokenjo
+name: food_establishment
+title: 食品関係営業台帳
+description: |-
+  食品衛生法に基づく営業許可・営業届出の一覧（ポイント）。屋号・所在地・営業の種類・
+  許可日を持つ。東京都保健医療局「食品関係営業台帳」。
+  1行 = 1施設 × 1つの営業の種類。1つの施設が複数の種類で許可を受けていれば
+  その数だけ行が分かれる（最多で13行）。施設の数を数えるなら
+  count(distinct (name, address)) を使う。全38,707行に対して施設は31,089。
+  収録は東京都が設置する保健所の管轄のみで、八王子市・町田市を除く多摩地域と島しょが
+  対象。23区・八王子市・町田市はそれぞれが保健所を設置しているため含まれない。
+  収録は平成29年1月以降の新規許可と同年4月以降の更新で、それ以前に許可を受けて
+  以降更新のない施設は入らない。permit_date は初回の許可日なので、
+  これより古い日付が入る。
+  移動販売・自動販売機・行商などと、廃止・休止した施設、公表を希望しない施設は
+  除かれている。区市町村が自ら公開する ods.food_business とは出所が別で、
+  収録範囲も重なる部分がある。
+  緯度経度は台帳に無いため、所在地から ABR（アドレス・ベース・レジストリ）で求めた
+  値を geo_lat / geo_lon に持つ。
+keywords:
+  - 東京都
+  - 食品衛生
+  - 営業許可
+  - 飲食店
+  - 施設
+  - GIS
+published: true
+sources:
+  - path: https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho
+fields:
+  - name: source_as_of
+    title: 台帳の時点
+    description: 配布ページが示す「○年○月○日現在」
+  - name: permit_type
+    title: 区分
+    description: 許可 または 届出。食品衛生法の改正で、2021年6月以降に届出だけで足りる業種がある
+  - name: name
+    title: 屋号
+  - name: address
+    title: 営業所所在地
+  - name: business_type
+    title: 営業の種類
+    description: 飲食店営業(一般飲食店)・菓子製造業(パン製造業) のように、業種と細分を括弧で併記する
+  - name: application_type
+    title: 申請区分
+    description: 新規 / 継続 など。届出の行は空
+  - name: phone_number
+    title: 営業所電話番号
+  - name: permit_date
+    title: 許可日
+    description: 許可は初回許可日、届出は届出年月日
+  - name: operator_name
+    title: 営業者氏名
+  - name: operator_address
+    title: 営業者住所
+  - name: operator_phone_number
+    title: 営業者電話番号
+  - name: representative_name
+    title: 法人代表者氏名
+  - name: city_code
+    title: 市区町村コード
+    description: 所在地から求めた5桁の市区町村コード。e_stat.code.municipality や境界データと直結できる
+  - name: geo_lat
+    title: 緯度
+    description: 所在地から求めた十進度（JGD2011）
+  - name: geo_lon
+    title: 経度
+    description: 所在地から求めた十進度（JGD2011）
+  - name: geo_source
+    title: 座標の由来
+    description: abr（所在地から求めた）または空
+  - name: geo_level
+    title: 座標の粒度
+    description: |-
+      abr-geocoder の粒度。細かい順に residential_detail（住居番号）/
+      residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
+      市区町村の代表点は位置の情報にならないため採用していない。
+      住所の 13% は町字の代表点までしか解決しないので、店舗単位の距離を測る用途では粒度を見る
+  - name: geometry
+    title: ジオメトリ
+    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL

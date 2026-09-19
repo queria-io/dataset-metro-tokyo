@@ -1,0 +1,4 @@
+schema: hokenjo
+name: raw_food_establishment
+description: 東京都保健医療局「食品関係営業台帳」（許可・届出）の生データ。標準キーに正規化済み、全列 VARCHAR。
+published: false

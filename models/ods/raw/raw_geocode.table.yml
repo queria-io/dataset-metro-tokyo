@@ -1,0 +1,4 @@
+schema: ods
+name: raw_geocode
+description: 住所をジオコーディングした結果の生データ。(組織コード, 住所) 単位で abr-geocoder の出力を持つ。ODS と保健所台帳の住所が同じ表に入る。
+published: false

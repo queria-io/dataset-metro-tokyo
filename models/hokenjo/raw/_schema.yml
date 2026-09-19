@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: raw_food_establishment
+    description: 東京都保健医療局「食品関係営業台帳」（許可・届出）の生データ。標準キーに正規化済み、全列 VARCHAR。
+  - name: raw_sanitation_facility
+    description: 東京都保健医療局「環境衛生施設台帳」（理容所・美容所・旅館・クリーニング所）の生データ。標準キーに正規化済み、全列 VARCHAR。
+  - name: raw_hokenjo_source
+    description: 保健所台帳の取得元（1行=1台帳）。配布 URL・台帳の時点・行数を記録する。

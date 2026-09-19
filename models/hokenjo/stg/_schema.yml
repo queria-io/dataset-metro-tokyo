@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_food_establishment
+    description: |
+      食品関係営業台帳のステージング。許可日・届出日を DATE に変換し、
+      空欄を NULL にする。台帳は緯度経度を持たないので、座標は住所から求めた
+      ABR 由来のものだけを geo_lat / geo_lon に持つ。
+      取り込んだ台帳の時点を source_as_of として付与する。
+  - name: stg_sanitation_facility
+    description: |
+      環境衛生施設台帳のステージング。確認日・許可日を DATE に変換し、
+      空欄を NULL にする。台帳は緯度経度を持たないので、座標は住所から求めた
+      ABR 由来のものだけを geo_lat / geo_lon に持つ。
+      取り込んだ台帳の時点を source_as_of として付与する。

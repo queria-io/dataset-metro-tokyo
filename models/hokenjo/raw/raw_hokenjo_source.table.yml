@@ -1,0 +1,4 @@
+schema: hokenjo
+name: raw_hokenjo_source
+description: 保健所台帳の取得元（1行=1台帳）。配布 URL・台帳の時点・行数を記録する。
+published: false

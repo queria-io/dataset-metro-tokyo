@@ -1,0 +1,4 @@
+schema: hokenjo
+name: stg_food_establishment
+description: 食品関係営業台帳のステージング。日付を DATE に変換し、住所から求めた ABR 由来の座標を付ける。
+published: false

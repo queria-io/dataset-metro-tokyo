@@ -1,0 +1,79 @@
+schema: hokenjo
+name: sanitation_facility
+title: 環境衛生施設台帳
+description: |-
+  生活衛生関係営業の施設一覧（ポイント）。理容所・美容所・旅館・クリーニング所の
+  施設名・所在地・確認日を持つ。東京都保健医療局「環境衛生施設台帳」。
+  収録は東京都が設置する保健所の管轄のみで、八王子市・町田市を除く多摩地域と島しょが
+  対象。23区・八王子市・町田市はそれぞれが保健所を設置しているため含まれない。
+  旅館は休止している施設を含み、クリーニング所は無店舗取次店を含む。
+  緯度経度は台帳に無いため、所在地から ABR（アドレス・ベース・レジストリ）で求めた
+  値を geo_lat / geo_lon に持つ。
+keywords:
+  - 東京都
+  - 生活衛生
+  - 理容
+  - 美容
+  - クリーニング
+  - 旅館
+  - 施設
+  - GIS
+published: true
+sources:
+  - path: https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho
+fields:
+  - name: source_as_of
+    title: 台帳の時点
+    description: 配布ページが示す「○年○月○日現在」
+  - name: facility_type
+    title: 施設の種別
+    description: 理容所 / 美容所 / 旅館 / クリーニング所
+  - name: permit_number
+    title: 確認番号
+    description: 理容所・美容所・クリーニング所は確認番号、旅館は許可番号
+  - name: business_form
+    title: 営業形態
+    description: クリーニング所は一般・取次所など、旅館は旅館・ホテル営業など。理容所・美容所は空
+  - name: name
+    title: 施設名称
+  - name: address
+    title: 施設所在地
+  - name: building
+    title: 施設ビル名
+  - name: phone_number
+    title: 施設電話番号
+  - name: permit_date
+    title: 確認日
+    description: 理容所・美容所・クリーニング所は確認年月日、旅館は許可年月日
+  - name: operator_name
+    title: 営業者氏名
+  - name: operator_address
+    title: 営業者住所
+  - name: operator_building
+    title: 営業者ビル名
+  - name: operator_phone_number
+    title: 営業者電話番号
+  - name: representative_name
+    title: 法人代表者氏名
+  - name: city_code
+    title: 市区町村コード
+    description: 所在地から求めた5桁の市区町村コード。e_stat.code.municipality や境界データと直結できる
+  - name: geo_lat
+    title: 緯度
+    description: 所在地から求めた十進度（JGD2011）
+  - name: geo_lon
+    title: 経度
+    description: 所在地から求めた十進度（JGD2011）
+  - name: geo_source
+    title: 座標の由来
+    description: abr（所在地から求めた）または空
+  - name: geo_level
+    title: 座標の粒度
+    description: |-
+      abr-geocoder の粒度。細かい順に residential_detail（住居番号）/
+      residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
+      市区町村の代表点は位置の情報にならないため採用していない。
+      住所の 13% は町字の代表点までしか解決しないので、店舗単位の距離を測る用途では粒度を見る
+  - name: geometry
+    title: ジオメトリ
+    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL

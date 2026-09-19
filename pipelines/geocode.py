@@ -1,8 +1,9 @@
-"""ODS の住所を ABR（アドレス・ベース・レジストリ）でジオコーディングする。
+"""住所を ABR（アドレス・ベース・レジストリ）でジオコーディングする。
 
-data/ods/*.ndjson の住所を abr-geocoder に通し、結果を (組織コード, 住所) 単位で
-data/geocode/addresses.ndjson に出力する。models/ods/raw/raw_geocode.sql がこれを読み、
-ods の各 stg モデルが原典の緯度経度が無い行の補完に使う。
+data/ods/*.ndjson と EXTRA_ADDRESS_FILES の住所を abr-geocoder に通し、結果を
+(組織コード, 住所) 単位で data/geocode/addresses.ndjson に出力する。
+models/ods/raw/raw_geocode.sql がこれを読み、ods の各 stg モデルが原典の緯度経度が
+無い行の補完に使う。hokenjo の台帳は緯度経度を持たないので、座標はここだけから来る。
 
 自治体が公開した緯度経度は施設の 54% にしか無く、残りは住所しか手がかりがない。
 住所は原典のまま突き合わせられるよう、正規化はこのモジュールの中だけで完結させ、
@@ -43,6 +44,14 @@ GEOCODED_DATASETS = [
     "educational_institution", "evacuation_space", "event", "fire_hydrant",
     "food_business", "hospital", "polling_place", "preschool",
     "public_facility", "public_toilet", "public_wireless_lan", "tourism",
+]
+
+#: ODS 以外で住所を持つ NDJSON。address / _org_code / _org_title を ODS と同じ形で
+#: 持つものだけをここに書く。結果は同じ addresses.ndjson に入り、
+#: stg 側は ods と同じく (org_code, address) で引く
+EXTRA_ADDRESS_FILES = [
+    "data/hokenjo/food_establishment.ndjson",
+    "data/hokenjo/sanitation_facility.ndjson",
 ]
 
 #: address 列を持たない種別と、代わりに連結する列。
@@ -116,11 +125,23 @@ def geocode_input(address: str, org_title: str) -> str:
     return "東京都" + address
 
 
-def collect_addresses(ods_dir: Path) -> dict[tuple[str, str], str]:
-    """ODS の NDJSON から (組織コード, 住所) → abrg に渡す住所 を集める。"""
+def address_sources(ods_dir: Path, extra_files: list[str]) -> list[tuple[Path, str]]:
+    """住所を読む NDJSON と、その種別 ID の組を並べる。
+
+    種別 ID は ADDRESS_PARTS を引くためだけに使う。ODS 以外のファイルは
+    address 列を持つ前提なので、ファイル名をそのまま種別 ID にしてよい。
+    """
+    sources = [(ods_dir / f"{d}.ndjson", d) for d in GEOCODED_DATASETS]
+    sources += [(Path(p), Path(p).stem) for p in extra_files]
+    return sources
+
+
+def collect_addresses(
+    ods_dir: Path, extra_files: list[str] | None = None
+) -> dict[tuple[str, str], str]:
+    """NDJSON から (組織コード, 住所) → abrg に渡す住所 を集める。"""
     collected: dict[tuple[str, str], str] = {}
-    for dataset_id in GEOCODED_DATASETS:
-        path = ods_dir / f"{dataset_id}.ndjson"
+    for path, dataset_id in address_sources(ods_dir, extra_files or []):
         if not path.exists():
             logger.warning("  %s: NDJSON が無いので飛ばす", dataset_id)
             continue
@@ -184,9 +205,10 @@ def geocode(
     ods_dir: str = "data/ods",
     dest_dir: str = "data/geocode",
     *,
+    extra_files: list[str] | None = None,
     skip_download: bool = False,
 ) -> None:
-    """ODS の住所をジオコーディングして NDJSON に出力する。"""
+    """住所をジオコーディングして NDJSON に出力する。"""
     node_major = _node_major()
     if node_major is None:
         raise SystemExit("node が見つからない。abr-geocoder の実行には Node.js 22 が要る")
@@ -202,7 +224,9 @@ def geocode(
     input_path = dest / "input.txt"
     raw_output = dest / "abrg_output.ndjson"
 
-    collected = collect_addresses(Path(ods_dir))
+    collected = collect_addresses(
+        Path(ods_dir), EXTRA_ADDRESS_FILES if extra_files is None else extra_files
+    )
     logger.info("  住所 %d 件（組織コード×住所）", len(collected))
     if not collected:
         raise SystemExit("ジオコーディング対象の住所が 1 件も無い")

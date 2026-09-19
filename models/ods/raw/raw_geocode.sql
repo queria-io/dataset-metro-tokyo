@@ -1,6 +1,6 @@
-{# ODS の住所をジオコーディングした結果の生データ。
+{# 住所をジオコーディングした結果の生データ。
    pipelines/geocode.py が abr-geocoder の出力を (組織コード, 住所) 単位にまとめて
-   data/geocode/addresses.ndjson に保存する。 #}
+   data/geocode/addresses.ndjson に保存する。ODS と保健所台帳の住所が同じ表に入る。 #}
 
 {{ config(materialized='table') }}
 
