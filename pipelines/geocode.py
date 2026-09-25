@@ -12,7 +12,9 @@ models/ods/raw/raw_geocode.sql がこれを読み、ods の各 stg モデルが�
 
 import json
 import logging
+import os
 import shutil
+import signal
 import subprocess
 import unicodedata
 from collections import Counter
@@ -22,6 +24,20 @@ logger = logging.getLogger("pipelines")
 
 #: 使う abr-geocoder のバージョン。上げるときは採用率を測ってから
 ABRG_VERSION = "2.3.1"
+
+#: abrg download の打ち切り（秒）。東京都62市区町村（zip 187 個）の取得は手元の実測で
+#: 82〜88 秒。CI ランナーは CPU が遅く取得元（東京）から遠いので、数倍かかっても収まる値にする。
+#: abrg は取得に失敗したファイルを飛ばしたあと終了せずに止まることがあり、
+#: 打ち切りが無いとジョブの上限（6 時間）まで待ち続ける
+DOWNLOAD_TIMEOUT = 600
+
+#: abrg でのジオコーディングの打ち切り（秒）。手元の実測で ods の約 4.1 万件が 7 秒、
+#: 保健所台帳の約 3.3 万件が 6 秒（どちらも npx の起動込み）。合わせて 10 秒台なので、
+#: 住所が数倍に増えても収まる
+GEOCODE_TIMEOUT = 300
+
+#: 打ち切ったあと SIGKILL を送るまでの猶予（秒）
+KILL_GRACE = 10
 
 #: 東京都の全国地方公共団体コード62件。ABR の common.sqlite の city テーブルが正で、
 #: `abrg download -c 130001` 後に `select lg_code from city order by lg_code` で取れる。
@@ -170,12 +186,42 @@ def _node_major() -> int | None:
     return int(out.stdout.strip().lstrip("v").split(".")[0])
 
 
-def _abrg(args: list[str], **kwargs) -> None:
+def run_with_timeout(cmd: list[str], timeout: float) -> None:
+    """コマンドを実行し、timeout 秒を超えたらプロセスグループごと止めて例外を投げる。
+
+    npx は sh と node を子に持つので、subprocess.run の timeout では npx しか止まらず、
+    実際に動いている node が残る。新しいセッションで起動してグループごと止める。
+    """
+    proc = subprocess.Popen(cmd, start_new_session=True)
+    try:
+        returncode = proc.wait(timeout=timeout)
+    except BaseException:
+        _kill_group(proc)
+        raise
+    if returncode != 0:
+        raise subprocess.CalledProcessError(returncode, cmd)
+
+
+def _kill_group(proc: subprocess.Popen) -> None:
+    """proc のプロセスグループに SIGTERM を送り、猶予のあと SIGKILL で残りを止める。"""
+    for sig in (signal.SIGTERM, signal.SIGKILL):
+        try:
+            os.killpg(proc.pid, sig)
+        except ProcessLookupError:
+            break
+        if sig == signal.SIGTERM:
+            try:
+                proc.wait(timeout=KILL_GRACE)
+            except subprocess.TimeoutExpired:
+                pass
+    proc.wait()
+
+
+def _abrg(args: list[str], timeout: float) -> None:
     """abr-geocoder を npx 経由で実行する。"""
-    subprocess.run(
+    run_with_timeout(
         ["npx", "--yes", f"@digital-go-jp/abr-geocoder@{ABRG_VERSION}", *args],
-        check=True,
-        **kwargs,
+        timeout,
     )
 
 
@@ -184,7 +230,10 @@ def download_abr(abrg_dir: Path) -> None:
     abrg_dir.mkdir(parents=True, exist_ok=True)
     # スレッド既定だと複数ワーカーが同じ sqlite を掴んで SQLITE_BUSY で即死するので
     # 1 に固定する。所要は東京都全域で 90 秒ほど
-    _abrg(["download", "-c", *TOKYO_LG_CODES, "-d", str(abrg_dir), "-t", "1", "--silent"])
+    _abrg(
+        ["download", "-c", *TOKYO_LG_CODES, "-d", str(abrg_dir), "-t", "1", "--silent"],
+        DOWNLOAD_TIMEOUT,
+    )
 
 
 def run_geocoder(abrg_dir: Path, input_path: Path, output_path: Path) -> None:
@@ -194,11 +243,14 @@ def run_geocoder(abrg_dir: Path, input_path: Path, output_path: Path) -> None:
     寄って街区の解決を奪い、住居表示の採用がかえって減る。ライセンスの面でも
     登記所備付地図データ利用規約に触れずに済む。
     """
-    _abrg([
-        str(input_path), str(output_path),
-        "-d", str(abrg_dir), "-f", "ndjson",
-        "--target", "residential", "--silent",
-    ])
+    _abrg(
+        [
+            str(input_path), str(output_path),
+            "-d", str(abrg_dir), "-f", "ndjson",
+            "--target", "residential", "--silent",
+        ],
+        GEOCODE_TIMEOUT,
+    )
 
 
 def geocode(
