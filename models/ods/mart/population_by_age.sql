@@ -60,6 +60,8 @@ select
         when age_sex like 'age_85over%' then '85+'
         else replace(regexp_replace(regexp_replace(age_sex, '^age_', ''), '_(male|female)$', ''), '_', '-')
     end as age_band,
-    case when age_sex like '%_male' then '男性' else '女性' end as sex,
+    -- LIKE の `_` は任意の1文字に一致するので '%_male' と書くと female も拾う。
+    -- 接尾辞そのものではなく、'female' で終わるかどうかで分ける
+    case when age_sex like '%female' then '女性' else '男性' end as sex,
     count as population
 from long
