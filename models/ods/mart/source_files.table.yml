@@ -9,6 +9,10 @@ description: '自治体標準ODS取り込みの実行結果。どの自治体の
 
   パッケージは、パッケージ単位で1行（status=skipped / reason=no_csv_resource）記録する。
 
+  同じURLが複数のリソースとして登録されているときは、取り込んだ側と
+
+  落とした側（status=skipped / reason=duplicate_url）の両方を記録する。
+
   種別ごとの自治体カバレッジの把握に使う。'
 keywords:
   - 東京都
@@ -41,12 +45,16 @@ fields:
     description: CSVリソースが無く、パッケージ単位で記録した行では空
   - name: status
     title: 取得結果
-    description: ok / failed（取得エラー）/ skipped（ヘッダー不一致・CSV未登録等）
+    description: ok / failed（取得エラー）/ skipped（ヘッダー不一致・CSV未登録・URL重複等）
   - name: reason
     title: 理由
     description: 'failed / skipped の理由。no_csv_resource は種別に一致したが
 
-      CSVリソースが無いことを表し、formats= に実際の登録形式が入る'
+      CSVリソースが無いことを表し、formats= に実際の登録形式が入る。
+
+      duplicate_url は同じURLの別リソースを先に取り込んだことを表し、
+
+      kept= に採用したリソースIDが入る'
   - name: encoding
     title: エンコーディング
     description: 判定されたエンコーディング（utf-8-sig / cp932 等）

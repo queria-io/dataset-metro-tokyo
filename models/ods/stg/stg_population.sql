@@ -1,6 +1,12 @@
 {# 地域・年齢別人口のステージング。総人口・男女別・5歳階級×男女の人口と世帯数を数値化し、
-   調査年月日を DATE に正規化する（コンパクト表記 YYYYMMDD も許容）。 #}
+   調査年月日を DATE に正規化する（コンパクト表記 YYYYMMDD も許容）。
 
+   同じ（自治体・調査年月日・地域）が複数のリソースから入った場合は現行の版だけを残す
+   （規則と根拠は ods_latest_resource マクロ）。正規化を CTE に分けるのは、qualify から
+   raw の列が見えると survey_date が DATE ではなく元の文字列で束縛され、日付の表記が
+   違うだけの重複が残るため。 #}
+
+with normalized as (
 select
     municipality_code,
     area_code,
@@ -53,7 +59,13 @@ select
     _extras as extras,
     _package_id as package_id,
     _resource_id as resource_id,
+    try_cast(_resource_modified as timestamp) as resource_modified,
     _org_code as org_code,
     _org_title as org_title,
     _source_url as source_url
 from {{ ref('raw_population') }}
+)
+
+select *
+from normalized
+{{ ods_latest_resource(['org_code', 'survey_date', 'area_code', 'area_name']) }}

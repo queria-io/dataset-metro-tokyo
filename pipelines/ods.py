@@ -121,6 +121,14 @@ def _matches(dataset: OdsDataset, resource: dict, title: str) -> bool:
     return slug_hit or title_hit
 
 
+def _modified_at(resource: dict) -> str | None:
+    """リソースの最終更新時点。どちらが現行の版かを後段で決める根拠に使う。
+
+    CKAN の last_modified は登録されないことがあるので created で代替する。
+    """
+    return resource.get("last_modified") or resource.get("created")
+
+
 def _formats(resources: list[dict]) -> list[str]:
     """パッケージが実際に持つリソース形式。台帳の理由欄に入れる。"""
     seen = []
@@ -134,29 +142,39 @@ def _formats(resources: list[dict]) -> list[str]:
 def classify(
     packages_path: str, datasets: list[OdsDataset]
 ) -> tuple[
-    list[tuple[OdsDataset, dict, dict]], list[tuple[OdsDataset, dict, list[str]]]
+    list[tuple[OdsDataset, dict, dict]],
+    list[tuple[OdsDataset, dict, dict | None, str]],
 ]:
-    """packages.ndjson から取り込み対象と、取り込めなかったパッケージを判定する。
+    """packages.ndjson から取り込み対象と、取り込まなかったパッケージ・リソースを判定する。
 
     リソース URL のファイル名スラッグを主判定、データセットタイトルを副判定とする。
     副判定はパッケージ内の全 CSV リソースを候補にし、ヘッダー検査で最終判定する。
 
     同一 URL が複数のリソースとして登録されている場合（更新時点だけが異なる版を
     同じファイルに上書き公開している自治体がある）は最初の1件だけを対象にする。
+    **落とした側も台帳に残す。** 月次公開の一部で、新しい月のリソースが前月のファイルを
+    指したまま登録されている例があり（練馬区の地域・年齢別人口 令和7年11月は
+    令和7年10月と同じ URL）、この場合その月のデータはどこにも存在しない。台帳に行が
+    無いと、取り込み側が落としたのか原典に無いのかを後から区別できない。
 
     種別の照合は CSV かどうかに関わらず行う。**CSV ゲートを先に置くと、HTML や PDF
     でしか登録されていないパッケージが台帳に1行も残らず、「その自治体が公開していない」
-    と区別が付かなくなる。** 一致したのに CSV が1つも無いパッケージは第2の戻り値に入れ、
+    と区別が付かなくなる。** 一致したのに CSV が1つも無いパッケージも第2の戻り値に入れ、
     呼び出し側が skipped として1行だけ記録する。
 
     Returns:
-        (targets, no_csv)
+        (targets, skipped)
         targets: 取り込み対象の (種別, パッケージ, リソース)
-        no_csv:  種別に一致したが CSV リソースが無い (種別, パッケージ, 形式一覧)
+        skipped: 取得を試みない (種別, パッケージ, リソース or None, 理由)。
+                 パッケージ単位の行（CSV リソースが無い場合）はリソースが None
     """
     targets = []
-    no_csv = []
-    seen: set[tuple[str, str]] = set()
+    skipped = []
+    # (種別, URL) → 採用したリソース ID
+    seen: dict[tuple[str, str], str] = {}
+    # 同じパッケージが2度現れたときに、同じリソースを2度たどらないための既処理集合。
+    # package_search はページング中にパッケージの更新が入ると同じものを返しうる
+    seen_resources: set[tuple[str, str]] = set()
     seen_no_csv: set[tuple[str, str]] = set()
 
     with open(packages_path, encoding="utf-8") as f:
@@ -177,21 +195,43 @@ def classify(
                     key = (dataset.id, package["id"])
                     if key not in seen_no_csv:
                         seen_no_csv.add(key)
-                        no_csv.append((dataset, package, _formats(resources)))
+                        skipped.append(
+                            (
+                                dataset,
+                                package,
+                                None,
+                                f"no_csv_resource: formats={','.join(_formats(resources))}",
+                            )
+                        )
                     continue
 
                 for resource in csv_hits:
-                    key = (dataset.id, resource.get("url") or "")
-                    if key in seen:
+                    if (dataset.id, resource["id"]) in seen_resources:
                         continue
-                    seen.add(key)
+                    seen_resources.add((dataset.id, resource["id"]))
+
+                    key = (dataset.id, resource.get("url") or "")
+                    kept = seen.get(key)
+                    if kept is not None:
+                        skipped.append(
+                            (dataset, package, resource, f"duplicate_url: kept={kept}")
+                        )
+                        continue
+                    seen[key] = resource["id"]
                     targets.append((dataset, package, resource))
 
     targets.sort(
         key=lambda t: (t[0].id, t[1]["organization"]["name"], t[2]["id"])
     )
-    no_csv.sort(key=lambda t: (t[0].id, t[1]["organization"]["name"], t[1]["id"]))
-    return targets, no_csv
+    skipped.sort(
+        key=lambda t: (
+            t[0].id,
+            t[1]["organization"]["name"],
+            t[2]["id"] if t[2] else "",
+            t[1]["id"],
+        )
+    )
+    return targets, skipped
 
 
 class _HostThrottle:
@@ -308,11 +348,8 @@ def download_and_normalize(
     dest.mkdir(parents=True, exist_ok=True)
 
     datasets = load_config(config_path)
-    targets, no_csv = classify(packages_path, datasets)
-    logger.info(
-        f"  {len(targets)} resources classified, "
-        f"{len(no_csv)} packages matched without a CSV resource"
-    )
+    targets, skipped = classify(packages_path, datasets)
+    logger.info(f"  {len(targets)} resources classified, {len(skipped)} skipped")
 
     throttle = _HostThrottle()
     fetched_at = datetime.now(UTC).isoformat()
@@ -339,14 +376,10 @@ def download_and_normalize(
             }
             source_files.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
-        # 種別には一致したが CSV リソースが無いパッケージ。取得は試みないが、
-        # 台帳に行が無いと「公開していない」と見分けが付かないので1行だけ残す
-        for dataset, package, formats in no_csv:
-            log_source(
-                dataset, package, None,
-                status="skipped",
-                reason=f"no_csv_resource: formats={','.join(formats)}",
-            )
+        # 取得を試みなかったリソース・パッケージ。台帳に行が無いと「公開していない」
+        # 「取り込み側が落とした」の見分けが付かないので、理由つきで1行だけ残す
+        for dataset, package, resource, reason in skipped:
+            log_source(dataset, package, resource, status="skipped", reason=reason)
 
         for dataset, package, resource in targets:
             url = resource.get("url") or ""
@@ -392,6 +425,9 @@ def download_and_normalize(
             for record in records:
                 record["_package_id"] = package["id"]
                 record["_resource_id"] = resource["id"]
+                # 同じ月を複数のリソースが持つときにどちらを採るかの根拠。
+                # 読むのは raw_population だけだが、種別を問わず書いておく
+                record["_resource_modified"] = _modified_at(resource)
                 record["_org_code"] = package["organization"]["name"]
                 record["_org_title"] = package["organization"]["title"]
                 record["_source_url"] = url

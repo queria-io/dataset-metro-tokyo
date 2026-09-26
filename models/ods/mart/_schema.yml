@@ -1050,10 +1050,19 @@ models:
       公開する自治体（区部・練馬区など）と、自治体全体の1行のみで公開する自治体が混在する。
       同一ファイル内に複数の調査年月日を追記する方式のため、時系列比較は survey_date で行う。
       公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
+      月次で公開する自治体では、新しい月のリソースが前の月と同じファイルを指していたり、
+      登録された URL が失効していて、その月が収録されないことがある。どの月が
+      収録できたかは ods.source_files の status と reason で確かめられる。
       年齢階級を縦持ちで扱いたい場合は補助ビュー population_by_age を利用できる。
       独自形式（1歳刻み・性別を行持ちするクロス集計など）で公開する自治体は
       標準形式ではないため収録していない。
     access: public
+    data_tests:
+      # 同じ月の同じ地域が2行に増えると、区の総人口を survey_date で合計しただけで
+      # 倍になる。値そのものは正しいので、集計するまで誰も気付かない
+      - unique_key:
+          arguments:
+            columns: [org_code, survey_date, area_code, area_name]
     columns:
       - name: municipality_code
       - name: area_code
@@ -1130,7 +1139,9 @@ models:
       取り込んだか・スキップや失敗の理由・エンコーディング・行数を記録する。
       基本は1行=1リソースだが、種別に一致しながら CSV リソースを1つも持たない
       パッケージは、パッケージ単位で1行（status=skipped / reason=no_csv_resource）
-      記録する。種別ごとの自治体カバレッジの把握に使う。
+      記録する。同じ URL が複数のリソースとして登録されているときは、取り込んだ側と
+      落とした側（status=skipped / reason=duplicate_url）の両方を記録する。
+      種別ごとの自治体カバレッジの把握に使う。
     access: public
     columns:
       - name: dataset_id
