@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "pipelines/**"
+      # tests/pipelines は dbt マクロ本体の SQL も読んで確かめる
+      - "macros/**"
       - "tests/pipelines/**"
       - "pyproject.toml"
       - "uv.lock"

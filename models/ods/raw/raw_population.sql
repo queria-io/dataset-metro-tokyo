@@ -59,6 +59,7 @@ from read_json(
         '_extras': 'JSON',
         '_package_id': 'VARCHAR',
         '_resource_id': 'VARCHAR',
+        '_resource_modified': 'VARCHAR',
         '_org_code': 'VARCHAR',
         '_org_title': 'VARCHAR',
         '_source_url': 'VARCHAR',
