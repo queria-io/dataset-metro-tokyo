@@ -122,6 +122,35 @@ def test_package_with_csv_still_goes_through_fetch(tmp_path):
     assert rows[0]["url"] == "https://example.jp/132128_aed.csv"
 
 
+def test_duplicate_url_leaves_a_row_for_the_dropped_resource(tmp_path):
+    """同じ URL の2つ目のリソースも、落とした理由つきで台帳に残す。
+
+    新しい月のリソースが前の月と同じファイルを指して登録されている例があり、
+    その月のデータはどこにも無い。台帳に行が無いと、取り込み側が落としたのか
+    原典に無いのかを後から区別できない。
+    """
+    url = "https://example.jp/132128_aed.csv"
+    rows = run(
+        tmp_path,
+        [
+            package(
+                [
+                    {"id": "r1", "name": "10月", "format": "CSV", "url": url},
+                    {"id": "r2", "name": "11月", "format": "CSV", "url": url},
+                ]
+            )
+        ],
+    )
+
+    dropped = [r for r in rows if r["reason"] and r["reason"].startswith("duplicate_url")]
+    assert len(dropped) == 1
+    assert dropped[0]["status"] == "skipped"
+    assert dropped[0]["reason"] == "duplicate_url: kept=r1"
+    # 落とした側のリソースは実在するので、リソース側の列は埋める
+    assert dropped[0]["resource_id"] == "r2"
+    assert dropped[0]["url"] == url
+
+
 def test_unmatched_package_leaves_no_row(tmp_path):
     rows = run(
         tmp_path,

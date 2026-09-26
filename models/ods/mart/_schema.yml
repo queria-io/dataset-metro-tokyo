@@ -1130,7 +1130,9 @@ models:
       取り込んだか・スキップや失敗の理由・エンコーディング・行数を記録する。
       基本は1行=1リソースだが、種別に一致しながら CSV リソースを1つも持たない
       パッケージは、パッケージ単位で1行（status=skipped / reason=no_csv_resource）
-      記録する。種別ごとの自治体カバレッジの把握に使う。
+      記録する。同じ URL が複数のリソースとして登録されているときは、取り込んだ側と
+      落とした側（status=skipped / reason=duplicate_url）の両方を記録する。
+      種別ごとの自治体カバレッジの把握に使う。
     access: public
     columns:
       - name: dataset_id
