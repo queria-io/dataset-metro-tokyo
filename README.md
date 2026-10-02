@@ -159,8 +159,9 @@ abrg は入力と同じ件数を返さない。隣接する2行を連結して1�
 
 ABR の配布元は国外からの取得に 403 を返し、GitHub のランナー（米国）からは取れない。
 そのため日本から取得した abrg のデータ（database と cache、圧縮して約 270MB）を
-assets.queria.io に置き、ビルドはまずそれを展開して取得の代わりにする
-（pipelines/geocode.py の ABR_SNAPSHOT_URL）。展開できなかったときだけ配布元から取る。
+50MB ずつの断片と目録に分けて assets.queria.io に置き、ビルドはまずそれを展開して
+取得の代わりにする（pipelines/geocode.py の ABR_SNAPSHOT_URL が目録）。断片は目録の
+SHA-256 で確かめる。展開できなかったときだけ配布元から取る。
 作り直しは日本から scripts/refresh_abr_snapshot.py --upload で行い、出力された日付を
 ABR_SNAPSHOT_DATE に書いて PR にする。CDN のキャッシュに古い中身が残らないよう、
 置く名前には作った日付を入れて上書きしない。
