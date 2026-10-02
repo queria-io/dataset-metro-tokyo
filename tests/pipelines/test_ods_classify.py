@@ -51,27 +51,59 @@ def test_csv_resource_becomes_target(tmp_path):
         tmp_path,
         [make_package([resource("https://example.jp/132128_aed.csv", "CSV")])],
     )
-    targets, skipped = classify(path, [make_dataset()])
+    targets, skipped, _ = classify(path, [make_dataset()])
 
     assert [t[2]["id"] for t in targets] == ["res-1"]
     assert skipped == []
 
 
-def test_package_matched_by_slug_but_only_html_is_recorded(tmp_path):
-    """HTML でしか登録されていないパッケージが台帳から消えないこと。"""
+def test_package_matched_by_slug_but_only_pdf_is_recorded(tmp_path):
+    """CSV でも HTML でもなく登録されたパッケージが台帳から消えないこと。"""
     path = write_packages(
         tmp_path,
-        [make_package([resource("https://example.jp/132128_aed.html", "HTML")])],
+        [make_package([resource("https://example.jp/132128_aed.pdf", "PDF")])],
     )
-    targets, skipped = classify(path, [make_dataset()])
+    targets, skipped, pages = classify(path, [make_dataset()])
 
     assert targets == []
+    assert pages == []
     assert len(skipped) == 1
     dataset, package, dropped, reason = skipped[0]
     assert dataset.id == "aed"
     assert package["id"] == "pkg-1"
     assert dropped is None
-    assert reason == "no_csv_resource: formats=HTML"
+    assert reason == "no_csv_resource: formats=PDF"
+
+
+def test_package_with_only_html_is_followed_as_page(tmp_path):
+    """HTML のページへのリンクだけで登録されたパッケージは、ページをたどる対象にする。"""
+    path = write_packages(
+        tmp_path,
+        [make_package([resource("https://example.jp/opendata/1026905.html", "HTML")], title="AED設置個所一覧")],
+    )
+    targets, skipped, pages = classify(path, [make_dataset(titles=["AED設置"])])
+
+    assert targets == []
+    assert skipped == []
+    assert [(d.id, r["id"]) for d, _, r in pages] == [("aed", "res-1")]
+
+
+def test_html_is_not_followed_when_package_has_csv(tmp_path):
+    """CSV が登録されているなら、同じパッケージの HTML はたどらない。"""
+    path = write_packages(
+        tmp_path,
+        [
+            make_package(
+                [
+                    resource("https://example.jp/132128_aed.html", "HTML", "r1"),
+                    resource("https://example.jp/132128_aed.csv", "CSV", "r2"),
+                ]
+            )
+        ],
+    )
+    _, _, pages = classify(path, [make_dataset()])
+
+    assert pages == []
 
 
 def test_package_matched_by_title_but_no_csv_is_recorded(tmp_path):
@@ -85,7 +117,7 @@ def test_package_matched_by_title_but_no_csv_is_recorded(tmp_path):
             )
         ],
     )
-    targets, skipped = classify(path, [make_dataset(slugs=["aed"], titles=["AED設置箇所"])])
+    targets, skipped, _ = classify(path, [make_dataset(slugs=["aed"], titles=["AED設置箇所"])])
 
     assert targets == []
     assert [r for _, _, _, r in skipped] == ["no_csv_resource: formats=PDF"]
@@ -97,7 +129,7 @@ def test_formats_are_deduplicated_and_sorted(tmp_path):
         [
             make_package(
                 [
-                    resource("https://example.jp/132128_aed.html", "HTML", "r1"),
+                    resource("https://example.jp/132128_aed.pdf", "PDF", "r1"),
                     resource("https://example.jp/a.pdf", "PDF", "r2"),
                     resource("https://example.jp/b.html", "HTML", "r3"),
                     resource("https://example.jp/c", "", "r4"),
@@ -105,7 +137,7 @@ def test_formats_are_deduplicated_and_sorted(tmp_path):
             )
         ],
     )
-    _, skipped = classify(path, [make_dataset()])
+    _, skipped, _ = classify(path, [make_dataset()])
 
     assert skipped[0][3] == "no_csv_resource: formats=HTML,PDF,UNKNOWN"
 
@@ -123,7 +155,7 @@ def test_package_with_both_csv_and_html_is_not_recorded_as_missing(tmp_path):
             )
         ],
     )
-    targets, skipped = classify(path, [make_dataset()])
+    targets, skipped, _ = classify(path, [make_dataset()])
 
     assert [t[2]["id"] for t in targets] == ["r2"]
     assert skipped == []
@@ -134,7 +166,7 @@ def test_csv_without_format_declaration_is_detected_by_extension(tmp_path):
         tmp_path,
         [make_package([resource("https://example.jp/132128_aed.csv", "")])],
     )
-    targets, skipped = classify(path, [make_dataset()])
+    targets, skipped, _ = classify(path, [make_dataset()])
 
     assert len(targets) == 1
     assert skipped == []
@@ -146,7 +178,7 @@ def test_unmatched_package_is_not_recorded(tmp_path):
         tmp_path,
         [make_package([resource("https://example.jp/yosan.pdf", "PDF")], title="予算書")],
     )
-    targets, skipped = classify(path, [make_dataset()])
+    targets, skipped, _ = classify(path, [make_dataset()])
 
     assert targets == []
     assert skipped == []
@@ -163,7 +195,7 @@ def test_license_gate_still_precedes_matching(tmp_path):
             )
         ],
     )
-    targets, skipped = classify(path, [make_dataset()])
+    targets, skipped, _ = classify(path, [make_dataset()])
 
     assert targets == []
     assert skipped == []
@@ -176,13 +208,13 @@ def test_same_package_is_recorded_once_per_dataset(tmp_path):
         [
             make_package(
                 [
-                    resource("https://example.jp/132128_aed.html", "HTML", "r1"),
-                    resource("https://example.jp/132128_aed_2.html", "HTML", "r2"),
+                    resource("https://example.jp/132128_aed.pdf", "PDF", "r1"),
+                    resource("https://example.jp/132128_aed_2.pdf", "PDF", "r2"),
                 ]
             )
         ],
     )
-    _, skipped = classify(path, [make_dataset()])
+    _, skipped, _ = classify(path, [make_dataset()])
 
     assert len(skipped) == 1
 
@@ -198,7 +230,7 @@ def test_duplicate_url_across_resources_yields_one_target(tmp_path):
             )
         ],
     )
-    targets, _ = classify(path, [make_dataset()])
+    targets, _, _ = classify(path, [make_dataset()])
 
     assert [t[2]["id"] for t in targets] == ["r1"]
 
@@ -215,7 +247,7 @@ def test_same_package_listed_twice_does_not_look_like_a_duplicate_url(tmp_path):
     path = write_packages(
         tmp_path, [make_package(resources), make_package(resources)]
     )
-    targets, skipped = classify(path, [make_dataset()])
+    targets, skipped, _ = classify(path, [make_dataset()])
 
     assert [t[2]["id"] for t in targets] == ["r1"]
     assert skipped == []
@@ -240,10 +272,26 @@ def test_duplicate_url_is_recorded_with_the_resource_it_yielded_to(tmp_path):
             )
         ],
     )
-    targets, skipped = classify(path, [make_dataset()])
+    targets, skipped, _ = classify(path, [make_dataset()])
 
     assert [t[2]["id"] for t in targets] == ["r1"]
     assert len(skipped) == 1
     _, _, dropped, reason = skipped[0]
     assert dropped["id"] == "r2"
     assert reason == "duplicate_url: kept=r1"
+
+
+def test_same_page_in_two_packages_is_followed_once(tmp_path):
+    """同じページを2つのパッケージが指していても、たどるのは1度で、もう一方は重複として残す。"""
+    url = "https://example.jp/opendata/1026914.html"
+    path = write_packages(
+        tmp_path,
+        [
+            make_package([resource(url, "HTML", "r1")], package_id="pkg-1"),
+            make_package([resource(url, "HTML", "r2")], package_id="pkg-2"),
+        ],
+    )
+    _, skipped, pages = classify(path, [make_dataset(titles=["AED設置"])])
+
+    assert [p[2]["id"] for p in pages] == ["r1"]
+    assert [(s[2]["id"], s[3]) for s in skipped] == [("r2", "duplicate_url: kept=r1")]

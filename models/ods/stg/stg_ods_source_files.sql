@@ -9,6 +9,7 @@ select
     org_code,
     org_title,
     url,
+    via_page_url,
     status,
     reason,
     encoding,

@@ -21,10 +21,11 @@ import ssl
 import time
 import unicodedata
 from dataclasses import dataclass
+from html.parser import HTMLParser
 from datetime import UTC, datetime
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
 import certifi
@@ -128,6 +129,62 @@ def _matches(dataset: OdsDataset, resource: dict, title: str) -> bool:
     return slug_hit or title_hit
 
 
+def _is_html(resource: dict) -> bool:
+    """リソースが HTML のページか。自治体のサイトのページへのリンクとして登録されている。"""
+    path = urlparse(resource.get("url") or "").path.lower()
+    return (resource.get("format") or "").upper() == "HTML" or path.endswith((".html", ".htm"))
+
+
+class _CsvLinkParser(HTMLParser):
+    """ページの中の CSV へのリンクを (URL, リンクの文言) で集める。"""
+
+    def __init__(self, base_url: str):
+        super().__init__()
+        self._base_url = base_url
+        self._href: str | None = None
+        self._text: list[str] = []
+        self.links: list[tuple[str, str]] = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "a":
+            self._href = dict(attrs).get("href")
+            self._text = []
+
+    def handle_data(self, data):
+        if self._href is not None:
+            self._text.append(data)
+
+    def handle_endtag(self, tag):
+        if tag != "a" or self._href is None:
+            return
+        url = urljoin(self._base_url, self._href.strip())
+        if urlparse(url).path.lower().endswith(".csv"):
+            text = re.sub(r"\s+", " ", "".join(self._text)).strip()
+            self.links.append((url, text))
+        self._href = None
+
+
+def find_csv_links(html: str, page_url: str, dataset: OdsDataset) -> list[tuple[str, str]]:
+    """ページに置かれた CSV のうち、種別に一致するものを (URL, リンクの文言) で返す。
+
+    自治体のサイトでは、別の種別の CSV が同じページに並ぶことがある。ファイル名の
+    スラッグか、リンクの文言に種別の名前が入っているものだけを候補にし、
+    最後はヘッダー検査で判定する。ファイル名がスラッグに沿っていない自治体
+    （132217_kiyoseshi_koukyoushisetu1.csv「公共施設一覧」など）は文言で拾う。
+    """
+    parser = _CsvLinkParser(page_url)
+    parser.feed(html)
+    found: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for url, text in parser.links:
+        if url in seen:
+            continue
+        if _matches(dataset, {"url": url}, text):
+            seen.add(url)
+            found.append((url, text))
+    return found
+
+
 def _modified_at(resource: dict) -> str | None:
     """リソースの最終更新時点。どちらが現行の版かを後段で決める根拠に使う。
 
@@ -151,6 +208,7 @@ def classify(
 ) -> tuple[
     list[tuple[OdsDataset, dict, dict]],
     list[tuple[OdsDataset, dict, dict | None, str]],
+    list[tuple[OdsDataset, dict, dict]],
 ]:
     """packages.ndjson から取り込み対象と、取り込まなかったパッケージ・リソースを判定する。
 
@@ -169,14 +227,23 @@ def classify(
     と区別が付かなくなる。** 一致したのに CSV が1つも無いパッケージも第2の戻り値に入れ、
     呼び出し側が skipped として1行だけ記録する。
 
+    ただし CSV が無くても HTML のリソースがあるパッケージは、第3の戻り値（たどるページ）に
+    入れる。自治体のサイトのページへのリンクだけで登録し、CSV はそのページに置いている
+    自治体がある。ページの中の CSV は呼び出し側が取得時に探す。
+
     Returns:
-        (targets, skipped)
+        (targets, skipped, pages)
         targets: 取り込み対象の (種別, パッケージ, リソース)
         skipped: 取得を試みない (種別, パッケージ, リソース or None, 理由)。
                  パッケージ単位の行（CSV リソースが無い場合）はリソースが None
+        pages:   CSV を探しに行くページの (種別, パッケージ, HTML リソース)
     """
     targets = []
     skipped = []
+    pages = []
+    # (種別, ページの URL) → 採用したページのリソース ID。同じページを複数のパッケージが
+    # 指していることがあり、2つ目以降は duplicate_url として台帳に残す
+    seen_pages: dict[tuple[str, str], str] = {}
     # (種別, URL) → 採用したリソース ID
     seen: dict[tuple[str, str], str] = {}
     # 同じパッケージが2度現れたときに、同じリソースを2度たどらないための既処理集合。
@@ -198,6 +265,22 @@ def classify(
                     continue
 
                 csv_hits = [r for r in hits if _is_csv(r)]
+                html_hits = [r for r in hits if _is_html(r)]
+                if not csv_hits and html_hits:
+                    for page in html_hits:
+                        if (dataset.id, page["id"]) in seen_resources:
+                            continue
+                        seen_resources.add((dataset.id, page["id"]))
+                        key = (dataset.id, page.get("url") or "")
+                        kept = seen_pages.get(key)
+                        if kept is not None:
+                            skipped.append(
+                                (dataset, package, page, f"duplicate_url: kept={kept}")
+                            )
+                            continue
+                        seen_pages[key] = page["id"]
+                        pages.append((dataset, package, page))
+                    continue
                 if not csv_hits:
                     key = (dataset.id, package["id"])
                     if key not in seen_no_csv:
@@ -238,7 +321,8 @@ def classify(
             t[1]["id"],
         )
     )
-    return targets, skipped
+    pages.sort(key=lambda t: (t[0].id, t[1]["organization"]["name"], t[2]["id"]))
+    return targets, skipped, pages
 
 
 class _HostThrottle:
@@ -355,8 +439,10 @@ def download_and_normalize(
     dest.mkdir(parents=True, exist_ok=True)
 
     datasets = load_config(config_path)
-    targets, skipped = classify(packages_path, datasets)
-    logger.info(f"  {len(targets)} resources classified, {len(skipped)} skipped")
+    targets, skipped, pages = classify(packages_path, datasets)
+    logger.info(
+        f"  {len(targets)} resources classified, {len(skipped)} skipped, {len(pages)} pages to follow"
+    )
 
     throttle = _HostThrottle()
     fetched_at = datetime.now(UTC).isoformat()
@@ -378,17 +464,13 @@ def download_and_normalize(
                 "org_code": package["organization"]["name"],
                 "org_title": package["organization"]["title"],
                 "url": resource.get("url") if resource else None,
+                "via_page_url": resource.get("_via_page_url") if resource else None,
                 "fetched_at": fetched_at,
                 **fields,
             }
             source_files.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
-        # 取得を試みなかったリソース・パッケージ。台帳に行が無いと「公開していない」
-        # 「取り込み側が落とした」の見分けが付かないので、理由つきで1行だけ残す
-        for dataset, package, resource, reason in skipped:
-            log_source(dataset, package, resource, status="skipped", reason=reason)
-
-        for dataset, package, resource in targets:
+        def ingest(dataset, package, resource):
             url = resource.get("url") or ""
             try:
                 data = _fetch(url, throttle)
@@ -398,7 +480,7 @@ def download_and_normalize(
                     dataset, package, resource,
                     status="failed", reason=f"fetch_error: {e}",
                 )
-                continue
+                return
 
             # CSV を装った zip/xlsx（PK マジック）はテキストとして扱えないため隔離
             if data[:4] == b"PK\x03\x04":
@@ -406,7 +488,7 @@ def download_and_normalize(
                     dataset, package, resource,
                     status="skipped", reason="not_csv: zip/xlsx content",
                 )
-                continue
+                return
 
             text, encoding = _decode(data)
             rows = list(csv.reader(text.splitlines()))
@@ -416,7 +498,7 @@ def download_and_normalize(
                     dataset, package, resource,
                     status="skipped", reason="header_mismatch", encoding=encoding,
                 )
-                continue
+                return
 
             records, mapped = _normalize_rows(rows, header_index, dataset)
             # 種別の必須列を取れないファイルは種別誤判定とみなして隔離する
@@ -427,7 +509,7 @@ def download_and_normalize(
                     reason=f"required_columns_missing: mapped={mapped}",
                     encoding=encoding,
                 )
-                continue
+                return
 
             for record in records:
                 record["_package_id"] = package["id"]
@@ -446,6 +528,62 @@ def download_and_normalize(
                 dataset, package, resource,
                 status="ok", encoding=encoding, row_count=len(records),
             )
+
+        # 取得を試みなかったリソース・パッケージ。台帳に行が無いと「公開していない」
+        # 「取り込み側が落とした」の見分けが付かないので、理由つきで1行だけ残す
+        for dataset, package, resource, reason in skipped:
+            log_source(dataset, package, resource, status="skipped", reason=reason)
+
+        for dataset, package, resource in targets:
+            ingest(dataset, package, resource)
+
+        # カタログに CSV として登録された URL は上で取ったので、ページからは取り直さない。
+        # 値は取り込んだリソース ID（duplicate_url の kept= に入れる）
+        registered = {(d.id, r.get("url") or ""): r["id"] for d, _, r in targets}
+        for dataset, package, page in pages:
+            page_url = page.get("url") or ""
+            try:
+                html, _ = _decode(_fetch(page_url, throttle))
+            except Exception as e:
+                logger.info(f"  failed: {page_url} ({e})")
+                log_source(
+                    dataset, package, page,
+                    status="failed", reason=f"page_fetch_error: {e}",
+                )
+                continue
+
+            found = find_csv_links(html, page_url, dataset)
+            links = [(url, text) for url, text in found if (dataset.id, url) not in registered]
+            if not found:
+                log_source(
+                    dataset, package, page,
+                    status="skipped", reason="no_csv_on_page",
+                )
+                continue
+            if not links:
+                kept = registered[(dataset.id, found[0][0])]
+                log_source(
+                    dataset, package, page,
+                    status="skipped", reason=f"duplicate_url: kept={kept}",
+                )
+                continue
+
+            for url, text in links:
+                registered[(dataset.id, url)] = f"{page['id']}#{Path(urlparse(url).path).name}"
+                # ページのリソースから派生した擬似リソース。ID はページのリソース ID と
+                # ファイル名で作り、ビルドのたびに同じ値になるようにする
+                ingest(
+                    dataset,
+                    package,
+                    {
+                        "id": f"{page['id']}#{Path(urlparse(url).path).name}",
+                        "name": text or page.get("name"),
+                        "url": url,
+                        "last_modified": page.get("last_modified"),
+                        "created": page.get("created"),
+                        "_via_page_url": page_url,
+                    },
+                )
 
     for writer in writers.values():
         writer.close()
