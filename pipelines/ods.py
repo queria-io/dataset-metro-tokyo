@@ -17,6 +17,7 @@ import csv
 import json
 import logging
 import re
+import ssl
 import time
 import unicodedata
 from dataclasses import dataclass
@@ -26,11 +27,17 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
+import certifi
 import yaml
 
 logger = logging.getLogger("pipelines")
 
 USER_AGENT = "dataset-metro-tokyo"
+
+# 証明書の検証には Mozilla のルート証明書 (certifi) を使う。実行環境の OS のストアには
+# GlobalSign Root R46 が無いことがあり、それを使う自治体のサイト（福生市・清瀬市など）は
+# 正しいチェーンを送っていても検証に失敗する
+SSL_CONTEXT = ssl.create_default_context(cafile=certifi.where())
 
 # ホスト別の最小リクエスト間隔（秒）。data.bodik.jp は一括アクセスで
 # IP が一時ブロックされる実績があるため長めにとる
@@ -255,7 +262,7 @@ def _fetch(url: str, throttle: _HostThrottle) -> bytes:
         throttle.wait(url)
         try:
             req = Request(url, headers={"User-Agent": USER_AGENT})
-            with urlopen(req, timeout=60) as resp:
+            with urlopen(req, timeout=60, context=SSL_CONTEXT) as resp:
                 return resp.read()
         except (HTTPError, URLError, TimeoutError) as e:
             status = getattr(e, "code", None)
