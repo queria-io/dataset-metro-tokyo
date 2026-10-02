@@ -158,7 +158,9 @@ class _CsvLinkParser(HTMLParser):
         if tag != "a" or self._href is None:
             return
         url = urljoin(self._base_url, self._href.strip())
-        if urlparse(url).path.lower().endswith(".csv"):
+        parsed = urlparse(url)
+        # ページに書かれたリンクは file:// なども取りうるので、Web 上の CSV だけを拾う
+        if parsed.scheme in ("http", "https") and parsed.path.lower().endswith(".csv"):
             text = re.sub(r"\s+", " ", "".join(self._text)).strip()
             self.links.append((url, text))
         self._href = None

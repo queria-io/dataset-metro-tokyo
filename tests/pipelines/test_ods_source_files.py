@@ -241,3 +241,19 @@ def test_csv_on_page_goes_through_header_check(tmp_path):
     assert rows[0]["status"] == "skipped"
     assert rows[0]["reason"] == "header_mismatch"
     assert rows[0]["via_page_url"] == PAGE
+
+
+def test_page_whose_csv_is_already_registered_is_recorded_as_duplicate(tmp_path):
+    """ページの CSV がカタログにも CSV として登録済みなら、ページ側は重複として残す。"""
+    html = f'<a href="{CSV_URL}">AED設置箇所一覧</a>'.encode()
+    registered = package(
+        [{"id": "c1", "name": "AED", "format": "CSV", "url": CSV_URL}], package_id="pkg-csv"
+    )
+    rows = run(tmp_path, [registered, page_package()], responses={PAGE: html, CSV_URL: AED_CSV})
+
+    page_rows = [r for r in rows if r["url"] == PAGE]
+    assert len(page_rows) == 1
+    assert page_rows[0]["status"] == "skipped"
+    assert page_rows[0]["reason"] == "duplicate_url: kept=c1"
+    # CSV はカタログ側の1回だけ取り込む
+    assert [r["resource_id"] for r in rows if r["status"] == "ok"] == ["c1"]

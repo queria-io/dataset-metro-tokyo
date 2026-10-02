@@ -71,3 +71,9 @@ def test_non_csv_links_are_ignored():
     html = '<a href="/a/132128_aed.xlsx">AED設置箇所一覧</a><a href="/a/132128_aed.html">AED設置</a>'
 
     assert find_csv_links(html, PAGE, dataset("aed", ["aed"], ["AED設置"])) == []
+
+
+def test_links_outside_the_web_are_ignored():
+    html = '<a href="file:///etc/132128_aed.csv">AED設置箇所一覧</a><a href="ftp://example.jp/132128_aed.csv">AED設置箇所一覧</a>'
+
+    assert find_csv_links(html, PAGE, dataset("aed", ["aed"], ["AED設置"])) == []

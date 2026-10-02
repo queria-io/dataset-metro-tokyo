@@ -50,10 +50,12 @@ fields:
     title: 取得元URL
     description: 'CSVリソースが無く、パッケージ単位で記録した行では空。
 
-      ページをたどった行では、取り込んだCSV（no_csv_on_page と page_fetch_error ではページ）のURL'
+      ページから拾ったCSVの行ではそのCSVのURL。ページ自体の行（no_csv_on_page・
+
+      page_fetch_error と、同じページの二重登録による duplicate_url）ではページのURL'
   - name: via_page_url
     title: たどったページのURL
-    description: 'カタログにHTMLのページとして登録されていて、そのページに置かれたCSVを取り込んだときのページ。
+    description: 'カタログにHTMLのページとして登録されていて、そのページから拾ったCSVの行（取り込めなかった行を含む）でのページ。
 
       カタログにCSVとして登録されたリソースの行では空'
   - name: status
