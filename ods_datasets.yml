@@ -1356,7 +1356,8 @@ datasets:
       - key: city
         source: ["市区町村名"]
       - key: survey_date
-        source: ["調査年月日"]
+        # 清瀬市は2020年10月分から「調査年月日入力」の見出しで公開している
+        source: ["調査年月日", "調査年月日入力"]
       - key: area_name
         source: ["地域名"]
       - key: total_population
