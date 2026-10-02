@@ -10,12 +10,15 @@ models/ods/raw/raw_geocode.sql がこれを読み、ods の各 stg モデルが�
 出力には原典の住所文字列をそのまま持たせる（SQL 側に正規化を持ち込まない）。
 """
 
+import hashlib
 import json
 import logging
 import os
 import shutil
 import signal
 import subprocess
+import tarfile
+import tempfile
 import time
 import unicodedata
 import zipfile
@@ -49,6 +52,22 @@ DOWNLOAD_RETRY_WAITS = (60, 180)
 
 #: 壊れた zip の中身をログに出すバイト数。取得元のエラーページなら <title> まで入る
 BROKEN_HEAD_BYTES = 400
+
+#: 日本から取得した abrg のデータを固めたもの。ABR の配布元は国外からの取得に 403 を返し、
+#: GitHub のランナー（米国）からは取れないので、CI はこれを展開して取得の代わりにする。
+#: 中身は東京都62市区町村の分で、作り直しは scripts/refresh_abr_snapshot.py（日本から実行する）。
+#: CDN にキャッシュされるので同じ名前で上書きせず、作り直したら日付を進めてここを書き換える。
+#: 置き場には断片の一覧を書いた目録 (<名前>.json) と断片 (<名前>.tar.gz.000 ...) が並ぶ
+ABR_SNAPSHOT_DATE = "20261002"
+ABR_SNAPSHOT_URL = (
+    f"https://assets.queria.io/abr/abrg-{ABRG_VERSION}-tokyo-{ABR_SNAPSHOT_DATE}.json"
+)
+#: 断片1つの大きさ。置くのに使う cf はリクエストを30秒で打ち切るので、
+#: 手元の回線（20MB を5秒）で余裕をもって収まる大きさにする
+ABR_SNAPSHOT_PART_BYTES = 50 * 1024 * 1024
+#: スナップショットに入れる abrg のデータの下のディレクトリ。download は取得した zip の置き場で、
+#: 取り込みが終われば空になるので入れない
+ABR_SNAPSHOT_DIRS = ("database", "cache")
 
 #: abrg が取得する zip の一覧（DCAT）。壊れた zip の取得元 URL を引くのに使う
 ABR_FEED_URL = "https://dataset.address-br.digital.go.jp/api/feed/dcat-us/1.1.json"
@@ -389,6 +408,68 @@ def download_abr(
     )
 
 
+def make_snapshot(abrg_dir: Path, out_path: Path) -> None:
+    """abrg のデータのうちジオコーディングに要るものを tar.gz に固める。"""
+    with tarfile.open(out_path, "w:gz") as tar:
+        for name in ABR_SNAPSHOT_DIRS:
+            path = abrg_dir / name
+            if path.exists():
+                tar.add(path, arcname=name)
+
+
+def split_snapshot(archive: Path, out_dir: Path, part_bytes: int = ABR_SNAPSHOT_PART_BYTES) -> dict:
+    """tar.gz を断片に分けて out_dir に書き、目録を返す。
+
+    断片の名前は <アーカイブ名>.000 から。目録には断片ごとの大きさと SHA-256 を入れ、
+    展開する側が欠けや取り違えを見分けられるようにする。
+    """
+    out_dir.mkdir(parents=True, exist_ok=True)
+    parts = []
+    with archive.open("rb") as f:
+        for index in range(10_000):
+            chunk = f.read(part_bytes)
+            if not chunk:
+                break
+            name = f"{archive.name}.{index:03d}"
+            (out_dir / name).write_bytes(chunk)
+            parts.append(
+                {"name": name, "size": len(chunk), "sha256": hashlib.sha256(chunk).hexdigest()}
+            )
+    return {"abrg_version": ABRG_VERSION, "parts": parts}
+
+
+def _read_url(url: str, timeout: float) -> bytes:
+    request = Request(url, headers={"User-Agent": "dataset-metro-tokyo"})
+    with urlopen(request, timeout=timeout) as response:
+        return response.read()
+
+
+def restore_snapshot(abrg_dir: Path, url: str = ABR_SNAPSHOT_URL) -> bool:
+    """目録 (url) と断片を取り、つなぎ合わせて abrg_dir に展開する。取れなければ False を返す。
+
+    断片は目録と同じ場所にある。取れないときは呼び出し側が配布元からの取得に
+    切り替える（日本からなら通る）。
+    """
+    try:
+        manifest = json.loads(_read_url(url, timeout=60))
+        base = url.rsplit("/", 1)[0]
+        with tempfile.TemporaryFile() as tmp:
+            for part in manifest["parts"]:
+                chunk = _read_url(f"{base}/{part['name']}", timeout=600)
+                if len(chunk) != part["size"] or hashlib.sha256(chunk).hexdigest() != part["sha256"]:
+                    raise ValueError(f"断片 {part['name']} の中身が目録と合わない")
+                tmp.write(chunk)
+            tmp.seek(0)
+            abrg_dir.mkdir(parents=True, exist_ok=True)
+            with tarfile.open(fileobj=tmp, mode="r:gz") as tar:
+                # 中身はこちらで作ったものだが、パスの外に書けないよう data フィルタを掛ける
+                tar.extractall(abrg_dir, filter="data")
+    except Exception as e:
+        logger.warning("  ABR のスナップショットを取れない: %s (%r)", url, e)
+        return False
+    return True
+
+
 def run_geocoder(abrg_dir: Path, input_path: Path, output_path: Path) -> None:
     """住所ファイルをジオコーディングする。
 
@@ -442,8 +523,11 @@ def geocode(
     logger.info("  abrg へ渡す住所 %d 件", len(queries))
 
     if not skip_download:
-        logger.info("  ABR データ取得（東京都62市区町村）")
-        download_abr(abrg_dir)
+        if restore_snapshot(abrg_dir):
+            logger.info("  ABR データはスナップショット %s を使う", ABR_SNAPSHOT_URL)
+        else:
+            logger.info("  ABR データ取得（東京都62市区町村）")
+            download_abr(abrg_dir)
     logger.info("  ジオコーディング実行")
     run_geocoder(abrg_dir, input_path, raw_output)
 
