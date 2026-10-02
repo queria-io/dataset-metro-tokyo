@@ -139,6 +139,7 @@ name = "dataset-metro-tokyo"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "certifi" },
     { name = "dbt-core" },
     { name = "dbt-duckdb" },
     { name = "pyyaml" },
@@ -152,6 +153,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "certifi", specifier = ">=2026.6.17" },
     { name = "dbt-core", specifier = ">=1.11.2" },
     { name = "dbt-duckdb", specifier = ">=1.10.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },

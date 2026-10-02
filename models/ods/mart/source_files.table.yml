@@ -13,6 +13,10 @@ description: '自治体標準ODS取り込みの実行結果。どの自治体の
 
   落とした側（status=skipped / reason=duplicate_url）の両方を記録する。
 
+  HTMLのページへのリンクだけで登録されたパッケージは、そのページに置かれた
+
+  CSVをたどって取り込み、CSVごとに1行（via_page_url にたどったページ）記録する。
+
   種別ごとの自治体カバレッジの把握に使う。'
 keywords:
   - 東京都
@@ -36,13 +40,24 @@ fields:
     title: データセット名
   - name: resource_id
     title: リソースID
-    description: CSVリソースが無く、パッケージ単位で記録した行では空
+    description: 'CSVリソースが無く、パッケージ単位で記録した行では空。
+
+      ページからたどったCSVでは「ページのリソースID#ファイル名」'
   - name: resource_name
     title: リソース名
     description: CSVリソースが無く、パッケージ単位で記録した行では空
   - name: url
     title: 取得元URL
-    description: CSVリソースが無く、パッケージ単位で記録した行では空
+    description: 'CSVリソースが無く、パッケージ単位で記録した行では空。
+
+      ページから拾ったCSVの行ではそのCSVのURL。ページ自体の行（no_csv_on_page・
+
+      page_fetch_error と、同じページの二重登録による duplicate_url）ではページのURL'
+  - name: via_page_url
+    title: たどったページのURL
+    description: 'カタログにHTMLのページとして登録されていて、そのページから拾ったCSVの行（取り込めなかった行を含む）でのページ。
+
+      カタログにCSVとして登録されたリソースの行では空'
   - name: status
     title: 取得結果
     description: ok / failed（取得エラー）/ skipped（ヘッダー不一致・CSV未登録・URL重複等）
@@ -54,7 +69,9 @@ fields:
 
       duplicate_url は同じURLの別リソースを先に取り込んだことを表し、
 
-      kept= に採用したリソースIDが入る'
+      kept= に採用したリソースIDが入る。no_csv_on_page はHTMLのページに
+
+      種別に一致するCSVが無かったこと、page_fetch_error はページを開けなかったことを表す'
   - name: encoding
     title: エンコーディング
     description: 判定されたエンコーディング（utf-8-sig / cp932 等）

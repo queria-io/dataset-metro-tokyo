@@ -1,5 +1,7 @@
 {# ODS 取り込みの実行結果。基本は1行=1リソースだが、CSV リソースを持たない
    パッケージはパッケージ単位で1行になる（リソース側の列が空）。
+   HTML のページへのリンクだけで登録されたパッケージは、ページに置かれた CSV ごとに
+   1行になり、via_page_url にたどったページが入る。
    pipelines/ods.py が data/ods/source_files.ndjson に保存する。 #}
 
 {{ config(materialized='table') }}
@@ -17,6 +19,7 @@ from read_json(
         'org_code': 'VARCHAR',
         'org_title': 'VARCHAR',
         'url': 'VARCHAR',
+        'via_page_url': 'VARCHAR',
         'fetched_at': 'VARCHAR',
         'status': 'VARCHAR',
         'reason': 'VARCHAR',

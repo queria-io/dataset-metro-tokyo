@@ -52,10 +52,20 @@ def write_packages(tmp_path, packages):
     return str(path)
 
 
-def run(tmp_path, packages):
-    """取得を行わずに download_and_normalize を回し、台帳の行を返す。"""
+def run(tmp_path, packages, responses=None):
+    """download_and_normalize を回し、台帳の行を返す。
+
+    responses は URL → 応答のバイト列。載っていない URL の取得は失敗させる。
+    """
     dest = tmp_path / "out"
-    with patch.object(ods, "_fetch", side_effect=RuntimeError("no network in test")):
+    responses = responses or {}
+
+    def fake_fetch(url, throttle):
+        if url in responses:
+            return responses[url]
+        raise RuntimeError("no network in test")
+
+    with patch.object(ods, "_fetch", side_effect=fake_fetch):
         ods.download_and_normalize(
             config_path=write_config(tmp_path),
             packages_path=write_packages(tmp_path, packages),
@@ -81,8 +91,8 @@ def test_package_without_csv_leaves_one_row(tmp_path):
         [
             package(
                 [
-                    {"id": "r1", "name": "AED一覧", "format": "HTML",
-                     "url": "https://example.jp/132128_aed.html"},
+                    {"id": "r1", "name": "AED一覧", "format": "XLSX",
+                     "url": "https://example.jp/132128_aed.xlsx"},
                     {"id": "r2", "name": "AED一覧", "format": "PDF",
                      "url": "https://example.jp/132128_aed.pdf"},
                 ]
@@ -96,7 +106,7 @@ def test_package_without_csv_leaves_one_row(tmp_path):
     assert row["package_id"] == "pkg-1"
     assert row["org_code"] == "t132128"
     assert row["status"] == "skipped"
-    assert row["reason"] == "no_csv_resource: formats=HTML,PDF"
+    assert row["reason"] == "no_csv_resource: formats=PDF,XLSX"
     # リソースが存在しない行なので、リソース側の列は空にする
     assert row["resource_id"] is None
     assert row["resource_name"] is None
@@ -164,3 +174,86 @@ def test_unmatched_package_leaves_no_row(tmp_path):
     )
 
     assert rows == []
+
+
+PAGE = "https://www.city.example.lg.jp/opendata/1001605.html"
+CSV_URL = "https://www.city.example.lg.jp/_res/001/605/132217_kiyose_aed.csv"
+AED_CSV = "名称,住所\n市役所,東京都清瀬市中里五丁目842\n".encode("utf-8")
+
+
+def page_package():
+    return package(
+        [{"id": "p1", "name": "AED設置箇所一覧", "format": "HTML", "url": PAGE,
+          "last_modified": "2026-04-01T00:00:00"}]
+    )
+
+
+def read_records(tmp_path, dataset_id="aed"):
+    path = tmp_path / "out" / f"{dataset_id}.ndjson"
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+
+
+def test_csv_on_linked_page_is_ingested(tmp_path):
+    """HTML だけで登録されたページに置かれた CSV を取り込み、たどったページを台帳に残す。"""
+    html = f'<a href="../_res/001/605/132217_kiyose_aed.csv">AED設置箇所一覧（CSV 2KB）</a>'.encode()
+    rows = run(tmp_path, [page_package()], responses={PAGE: html, CSV_URL: AED_CSV})
+
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["status"] == "ok"
+    assert row["url"] == CSV_URL
+    assert row["via_page_url"] == PAGE
+    assert row["resource_id"] == "p1#132217_kiyose_aed.csv"
+    assert row["row_count"] == 1
+
+    records = read_records(tmp_path)
+    assert records[0]["name"] == "市役所"
+    assert records[0]["_source_url"] == CSV_URL
+    assert records[0]["_resource_modified"] == "2026-04-01T00:00:00"
+
+
+def test_page_without_matching_csv_leaves_one_row(tmp_path):
+    html = '<a href="/files/emergency.csv">緊急情報</a>'.encode()
+    rows = run(tmp_path, [page_package()], responses={PAGE: html})
+
+    assert len(rows) == 1
+    assert rows[0]["status"] == "skipped"
+    assert rows[0]["reason"] == "no_csv_on_page"
+    assert rows[0]["url"] == PAGE
+
+
+def test_page_fetch_failure_is_recorded(tmp_path):
+    rows = run(tmp_path, [page_package()])
+
+    assert len(rows) == 1
+    assert rows[0]["status"] == "failed"
+    assert rows[0]["reason"].startswith("page_fetch_error:")
+
+
+def test_csv_on_page_goes_through_header_check(tmp_path):
+    """ページから拾った CSV も、列名の検査で種別違いを弾く。"""
+    html = f'<a href="{CSV_URL}">AED設置箇所一覧</a>'.encode()
+    rows = run(
+        tmp_path, [page_package()],
+        responses={PAGE: html, CSV_URL: "番号,品目\n1,缶\n".encode()},
+    )
+
+    assert rows[0]["status"] == "skipped"
+    assert rows[0]["reason"] == "header_mismatch"
+    assert rows[0]["via_page_url"] == PAGE
+
+
+def test_page_whose_csv_is_already_registered_is_recorded_as_duplicate(tmp_path):
+    """ページの CSV がカタログにも CSV として登録済みなら、ページ側は重複として残す。"""
+    html = f'<a href="{CSV_URL}">AED設置箇所一覧</a>'.encode()
+    registered = package(
+        [{"id": "c1", "name": "AED", "format": "CSV", "url": CSV_URL}], package_id="pkg-csv"
+    )
+    rows = run(tmp_path, [registered, page_package()], responses={PAGE: html, CSV_URL: AED_CSV})
+
+    page_rows = [r for r in rows if r["url"] == PAGE]
+    assert len(page_rows) == 1
+    assert page_rows[0]["status"] == "skipped"
+    assert page_rows[0]["reason"] == "duplicate_url: kept=c1"
+    # CSV はカタログ側の1回だけ取り込む
+    assert [r["resource_id"] for r in rows if r["status"] == "ok"] == ["c1"]

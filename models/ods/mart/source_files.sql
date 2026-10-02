@@ -10,6 +10,7 @@ select
     resource_id,
     resource_name,
     url,
+    via_page_url,
     status,
     reason,
     encoding,
