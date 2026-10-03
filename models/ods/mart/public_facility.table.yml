@@ -22,6 +22,7 @@ fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+    semantic: { role: entity, name: city }
   - name: facility_id
     title: ID
     description: 元データの ID / NO 列。自治体によっては同じ値が複数施設に付いており、行の識別子には使えない。Excel の指数表記 (1.31025E+11) や下位桁が 0 に潰れた値 (132152000000) のまま公開する自治体もあり、その行は元の ID を復元できない
@@ -42,6 +43,7 @@ fields:
     title: 市区町村
   - name: postal_code
     title: 郵便番号
+    semantic: { role: entity, name: postal_code }
   - name: phone_number
     title: 電話番号
   - name: lat
@@ -75,6 +77,7 @@ fields:
     description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
   - name: corporate_number
     title: 法人番号
+    semantic: { role: entity, name: corporate_number }
   - name: corporate_name
     title: 団体名
     description: 運営主体（指定管理者等）の名称

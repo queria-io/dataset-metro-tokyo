@@ -34,6 +34,7 @@ fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 情報の管理主体の全国地方公共団体コード（旧様式では都道府県コード又は市区町村コード）
+    semantic: { role: entity, name: city }
   - name: dataset_id
     title: データセットID
     description: 自治体内で一意のデータセットID。旧様式の連番（NO）を含む

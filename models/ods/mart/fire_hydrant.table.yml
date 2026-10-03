@@ -24,6 +24,7 @@ fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 情報の管理主体の6桁の全国地方公共団体コード
+    semantic: { role: entity, name: city }
   - name: facility_id
     title: ID
     description: 自治体内で一意の施設 ID（元データの ID / NO 列）。付番していない自治体は NULL
@@ -51,6 +52,7 @@ fields:
   - name: location_municipality_code
     title: 所在地_全国地方公共団体コード
     description: 水利の所在地の6桁コード。管轄外にある場合は管理主体のコードと異なる
+    semantic: { role: entity, name: city }
   - name: lat
     title: 緯度
   - name: lon

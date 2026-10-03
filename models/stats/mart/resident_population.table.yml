@@ -39,6 +39,7 @@ fields:
   - name: area_code
     title: 地域コード
     description: 全国地方公共団体コードの上5桁。集計行は都が付す地域コード（総数13000・区部13100など）
+    semantic: { role: entity, name: city }
   - name: area_name
     title: 地域
   - name: area_type

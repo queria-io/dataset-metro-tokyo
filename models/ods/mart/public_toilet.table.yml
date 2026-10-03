@@ -22,6 +22,7 @@ sources:
 fields:
   - name: municipality_code
     title: 全国地方公共団体コード
+    semantic: { role: entity, name: city }
   - name: facility_id
     title: ID
   - name: name

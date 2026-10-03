@@ -29,6 +29,7 @@ fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 情報の管理主体の全国地方公共団体コード
+    semantic: { role: entity, name: city }
   - name: school_id
     title: 学校ID
     description: 自治体内で一意の学校 ID。ods.school_district と共通の ID を想定。空欄の自治体もある
@@ -53,6 +54,7 @@ fields:
     description: 政令指定都市の場合のみ
   - name: school_municipality_code
     title: 学校所在地_全国地方公共団体コード
+    semantic: { role: entity, name: city }
   - name: provided_date
     title: 提供年月日
     description: 献立を提供した年月日

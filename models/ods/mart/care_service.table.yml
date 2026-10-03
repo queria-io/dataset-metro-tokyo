@@ -26,6 +26,7 @@ fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 情報の管理主体の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+    semantic: { role: entity, name: city }
   - name: facility_id
     title: ID
     description: 自治体内で一意の事業所 ID（元データの ID / NO 列）。1.31025E+11 のような Excel の指数表記のまま公開する自治体があり、その行は元の ID を復元できない
@@ -57,8 +58,10 @@ fields:
   - name: location_municipality_code
     title: 所在地_全国地方公共団体コード
     description: 事業所の所在地の全国地方公共団体コード。管轄外にある場合は管理主体のコードと異なる
+    semantic: { role: entity, name: city }
   - name: postal_code
     title: 郵便番号
+    semantic: { role: entity, name: postal_code }
   - name: phone_number
     title: 電話番号
   - name: fax_number
@@ -95,6 +98,7 @@ fields:
   - name: corporate_number
     title: 法人番号
     description: 運営主体の法人番号（記載している自治体のみ）。houjin_bangou と結合可能
+    semantic: { role: entity, name: corporate_number }
   - name: corporate_name
     title: 法人の名称
   - name: business_number

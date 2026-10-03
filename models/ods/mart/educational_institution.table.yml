@@ -29,6 +29,7 @@ fields:
     description: 幼稚園・小学校・中学校等の種別。統制コード（A1・B1 等）と日本語ラベルが混在
   - name: prefecture_code
     title: 都道府県番号
+    semantic: { role: entity, name: prefecture }
   - name: establishment_category
     title: 設置区分
     description: 国立・公立・私立等の区分
@@ -59,6 +60,7 @@ fields:
     description: 所在地の番地以下
   - name: postal_code
     title: 郵便番号
+    semantic: { role: entity, name: postal_code }
   - name: lat
     title: 緯度
   - name: lon
