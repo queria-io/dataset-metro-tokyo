@@ -23,6 +23,7 @@ sources:
 fields:
   - name: municipality_code
     title: 全国地方公共団体コード
+    semantic: { role: entity, name: city }
   - name: facility_id
     title: ID
   - name: organization_name
@@ -49,6 +50,7 @@ fields:
     title: 建物名等（方書）
   - name: postal_code
     title: 郵便番号
+    semantic: { role: entity, name: postal_code }
   - name: phone_number
     title: 電話番号
   - name: lat

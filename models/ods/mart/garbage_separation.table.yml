@@ -26,6 +26,7 @@ fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
+    semantic: { role: entity, name: city }
   - name: item_id
     title: ID
     description: 自治体内で一意の品目 ID（元データの ID / NO 列）。付番していない自治体は NULL

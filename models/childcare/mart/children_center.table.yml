@@ -28,6 +28,7 @@ fields:
     title: 施設名
   - name: postal_code
     title: 郵便番号
+    semantic: { role: entity, name: postal_code }
   - name: address
     title: 所在地
     description: 都道府県名を含まない所在地（「千代田区外神田…」形式）

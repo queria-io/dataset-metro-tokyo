@@ -25,6 +25,7 @@ fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 6桁の全国地方公共団体コード（記載している自治体のみ）
+    semantic: { role: entity, name: city }
   - name: organization_name
     title: 地方公共団体名
   - name: system_org
@@ -86,6 +87,7 @@ fields:
     title: 連絡先FormURL
   - name: postal_code
     title: 郵便番号
+    semantic: { role: entity, name: postal_code }
   - name: contact_address
     title: 連絡先住所
   - name: url

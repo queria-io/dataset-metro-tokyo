@@ -26,6 +26,7 @@ fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 情報の管理主体の6桁の全国地方公共団体コード
+    semantic: { role: entity, name: city }
   - name: school_id
     title: 学校ID
     description: 自治体内で一意の学校 ID
@@ -53,6 +54,7 @@ fields:
     description: 政令指定都市の場合のみ
   - name: school_municipality_code
     title: 学校所在地_全国地方公共団体コード
+    semantic: { role: entity, name: city }
   - name: district_addresses
     title: 通学区域の住所
     description: 通学区域に含まれる住所をセミコロン区切りで列挙。「〇丁目全域」「〇番地～〇番地」など粒度は自治体ごとに異なる
