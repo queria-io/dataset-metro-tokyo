@@ -1,0 +1,6 @@
+schema: stats
+name: stg_foreign_population
+description: '外国人人口のステージング。人口を INTEGER に型変換し（原典は年により桁区切りのカンマを含む）、
+
+  現在日（各年1月1日）を DATE で付与し、地域コードから区分を導出する。'
+published: false

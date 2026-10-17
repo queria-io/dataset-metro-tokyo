@@ -1,0 +1,4 @@
+schema: stats
+name: raw_foreign_population_source
+description: 外国人人口の取得元（1行=1ファイル）。取得元 URL・取得時刻・行数を記録する。
+published: false

@@ -32,3 +32,23 @@ models:
       - name: household_japanese_only
       - name: household_foreign_only
       - name: household_mixed
+  - name: foreign_population
+    description: |
+      東京都の国籍・地域別外国人人口の年次時系列。1行 = 年 × 地域 × 国籍・地域で、
+      1979年から各年1月1日現在の値を収録する。地域は区市町村と島部の支庁に加えて
+      総数・区部・市部・町村部・郡部・島部の集計行を含む。島部の町村は支庁単位でしか
+      載らないため、都内を漏れなく分けるときは area_type in ('区市町村', '支庁') で絞る。
+      国籍・地域は総数・主要22か国・地域・その他の24区分で、総数の行を除いて足すと
+      1990年まではドイツ（東西ドイツの合計）と東ドイツ・西ドイツが二重に数えられる。
+      2016年までの「中国」は台湾を、「韓国・朝鮮」は韓国と朝鮮を合わせた区分で、
+      2017年からは中国・台湾・韓国・朝鮮に分かれる（区分名に収録期間が付く）。
+      2012年までは外国人登録者数、2013年からは住民基本台帳上の人口。
+    access: public
+    columns:
+      - name: year
+      - name: as_of_date
+      - name: area_code
+      - name: area_name
+      - name: area_type
+      - name: nationality
+      - name: population
