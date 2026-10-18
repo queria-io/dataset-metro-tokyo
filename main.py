@@ -6,7 +6,8 @@
 4. geocode:   住所をジオコーディング（ods と hokenjo の後に実行する）
 5. childcare: 子育て施設データ取得（認可保育所・児童館。catalog の後に実行する）
 6. stats:     都の統計データ取得（住民基本台帳による世帯と人口。catalog の後に実行する）
-7. dbt:       dbt ビルド
+7. stats:     都の統計データ取得（外国人人口の時系列）
+8. dbt:       dbt ビルド
 """
 
 import logging
@@ -15,6 +16,7 @@ from dbt.cli.main import dbtRunner
 
 from pipelines.childcare import download_childcare
 from pipelines.ckan import download_catalog
+from pipelines.foreign_population import download_foreign_population
 from pipelines.geocode import geocode
 from pipelines.hokenjo import download_hokenjo
 from pipelines.ods import download_and_normalize
@@ -42,31 +44,35 @@ def dbt_build():
 
 def main():
     # 1. カタログメタデータ（CKAN API）
-    logger.info("1/7: catalog (カタログメタデータ)")
+    logger.info("1/8: catalog (カタログメタデータ)")
     download_catalog("data/catalog")
 
     # 2. 自治体標準オープンデータセット（catalog のメタデータから対象を判定）
-    logger.info("2/7: ods (自治体標準オープンデータセット)")
+    logger.info("2/8: ods (自治体標準オープンデータセット)")
     download_and_normalize()
 
     # 3. 都の保健所台帳（配布ページから CSV のリンクを解決）
-    logger.info("3/7: hokenjo (保健所台帳)")
+    logger.info("3/8: hokenjo (保健所台帳)")
     download_hokenjo("data/hokenjo")
 
     # 4. 住所のジオコーディング（ods と hokenjo が書いた NDJSON の住所を読む）
-    logger.info("4/7: geocode (住所のジオコーディング)")
+    logger.info("4/8: geocode (住所のジオコーディング)")
     geocode()
 
     # 5. 子育て施設データ（catalog のメタデータから最新版の一覧を解決）
-    logger.info("5/7: childcare (子育て施設データ)")
+    logger.info("5/8: childcare (子育て施設データ)")
     download_childcare("data/childcare")
 
     # 6. 都の統計データ（catalog のメタデータから最新月を解決）
-    logger.info("6/7: stats (住民基本台帳による世帯と人口)")
+    logger.info("6/8: stats (住民基本台帳による世帯と人口)")
     download_resident_population("data/resident_population")
 
-    # 7. dbt ビルド
-    logger.info("7/7: dbt build")
+    # 7. 都の統計データ（外国人人口の時系列。1ファイルに全年が入る）
+    logger.info("7/8: stats (外国人人口)")
+    download_foreign_population("data/foreign_population")
+
+    # 8. dbt ビルド
+    logger.info("8/8: dbt build")
     dbt_build()
 
 

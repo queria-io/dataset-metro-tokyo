@@ -5,7 +5,7 @@ description: |-
   東京都オープンデータカタログ (catalog.data.metro.tokyo.lg.jp) から取得した東京都のオープンデータ。
   全データセットのメタデータ（カタログ台帳）と、東京都福祉局「社会福祉施設等一覧」の
   認可保育所・児童館など都内の施設情報、東京都総務局統計部が公表する
-  住民基本台帳による世帯と人口の月次時系列、東京都保健医療局が公表する保健所台帳の
+  住民基本台帳による世帯と人口の月次時系列と国籍・地域別外国人人口の年次時系列、東京都保健医療局が公表する保健所台帳の
   食品関係営業（許可・届出）と環境衛生施設（理容所・美容所・旅館・クリーニング所）を提供。
 keywords:
   - 東京都
@@ -18,6 +18,7 @@ keywords:
   - メタデータ
   - 人口
   - 世帯
+  - 外国人
   - 食品衛生
   - 営業許可
   - 飲食店
@@ -35,6 +36,8 @@ sources:
     path: https://www.opendata.metro.tokyo.lg.jp/
   - title: 住民基本台帳による世帯と人口（東京都総務局統計部）
     path: https://www.toukei.metro.tokyo.lg.jp/juukiv/js-index.htm
+  - title: 外国人人口（東京都総務局統計部）
+    path: https://www.toukei.metro.tokyo.lg.jp/gaikoku/ga-index.htm
   - title: 保健所台帳（東京都保健医療局）
     path: https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho
 
@@ -70,6 +73,9 @@ ai_context:
     resident_population は集計行（総数・区部・市部など）を含むので、区市町村だけなら
     area_type = '区市町村' で絞る。外国人人口と世帯数は2012年7月分と8月分の間に
     制度変更の段差がある。
+    foreign_population は1979年からの各年1月1日現在の外国人人口を国籍・地域別に持つ。
+    総数の行があるので、国籍・地域を足して総数を作らない（1990年まではドイツと
+    東西ドイツが重複し、2016年と2017年で中国・韓国の区分が変わる）。
     元データの値は補正せず原典のまま入れている。lat / lon は自治体が公開した生値で、
     緯度と経度が入れ替わったまま公開されている自治体（ods.cultural_property の豊島区、
     ods.public_wireless_lan の世田谷区など）や、経度の小数点が欠落している行がある。

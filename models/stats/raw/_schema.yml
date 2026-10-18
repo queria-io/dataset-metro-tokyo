@@ -8,3 +8,10 @@ models:
       割り当てたうえで出力する（旧様式に無い列は NULL）。
   - name: raw_resident_population_source
     description: 住民基本台帳による世帯と人口の取得元（1行=1月分）。取り込んだ月・URL・行数を記録する。
+  - name: raw_foreign_population
+    description: |
+      東京都「外国人人口」時系列（各年1月1日現在）の生データ。全列 VARCHAR で取り込む。
+      原典の横持ち（列 = 和暦の年）をパイプラインが 国籍・地域 × 地域 × 年 の縦持ちに直し、
+      値の無い年（国籍・地域の区分が無い年）の行は出力しない。
+  - name: raw_foreign_population_source
+    description: 外国人人口の取得元（1行=1ファイル）。取得元 URL・取得時刻・行数を記録する。
