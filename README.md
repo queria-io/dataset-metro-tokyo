@@ -13,6 +13,8 @@
 - 東京都総務局統計部「住民基本台帳による世帯と人口」の月次 CSV（2001年1月分以降）
   - 提供組織: 東京都総務局 https://catalog.data.metro.tokyo.lg.jp/organization/t000003
   - 統計表: https://www.toukei.metro.tokyo.lg.jp/juukim/jm-index.htm
+- 東京都総務局統計部「毎月勤労統計調査」年報の第1-1表・第1-2表の CSV（2013年以降の年報）
+  - 統計表: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 - 東京都保健医療局の保健所台帳のうち、食品関係営業台帳（許可・届出）と環境衛生施設台帳の CSV
   - 提供組織: 東京都保健医療局 https://catalog.data.metro.tokyo.lg.jp/organization/t000055
   - 台帳: https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho
@@ -357,6 +359,36 @@ resident_population・census・boundary・lg_code と直結する。
 原典は列が和暦の年の横持ちで、パイプラインが西暦の縦持ちに直している。
 国籍・地域の区分が無い年（2017年より前の台湾など）は行が無い。
 
+## テーブル: stats.labour_earnings
+
+毎月勤労統計調査（地方調査）の月間現金給与額（10,400行）。1行 = 年 × 月（または年平均）×
+事業所規模 × 産業で、2013年から各月と年平均の常用労働者1人平均の額を収録する。
+
+- year: 年（西暦）
+- period_type: 期間区分（月次 / 年平均）
+- month: 月（1〜12。年平均の行は NULL）
+- establishment_size: 事業所規模（5人以上 / 30人以上）
+- industry_code: 産業符号（TL は調査産業計、英字1字は大分類、TK・TT は特掲産業）
+- industry_name: 産業
+- cash_earnings / cash_earnings_male / cash_earnings_female: 現金給与総額（計・男・女。円）
+- contractual_earnings / contractual_earnings_male / contractual_earnings_female: きまって支給する給与（計・男・女。円）
+- scheduled_earnings: 所定内給与（円）
+- overtime_earnings: 所定外給与（円）
+- special_earnings / special_earnings_male / special_earnings_female: 特別に支払われた給与（計・男・女。円）
+
+各年の値はその年の年報から取っている。年報には過去の年の年平均も載るが、その行は取り込まない。
+2013年以降の年について、後の年報に載る年平均がその年の年報の値とすべて一致することを確認している。
+事業所規模の5人以上は30人以上の事業所を含むため、2区分を足さない。
+
+産業は2013年〜2016年が53区分、2017年が52区分（鉱業が無い）で、大分類に加えて製造業の中分類・
+特掲産業などを含む。2018年からは調査産業計と大分類の17区分。年をまたいで産業を比べるときは
+industry_code でそろえる。産業名は年報によって読点の全角・半角と注記の番号が揺れるため、
+注記を落として半角の読点にそろえている。
+
+原典で秘匿（×）または該当なし（－）の値は NULL。現金給与総額 = きまって支給する給与 +
+特別に支払われた給与、きまって支給する給与 = 所定内給与 + 所定外給与 が全行で成り立つことを
+dbt のテスト（tests/stats_labour_earnings_breakdown.sql）で確かめている。
+
 ### データ更新手順
 
 パイプライン実行時に以下を行う。ビルドは `bash scripts/build.sh` で実行する（Queria に公開する）。
@@ -377,6 +409,10 @@ resident_population・census・boundary・lg_code と直結する。
 - pipelines/foreign_population.py: 外国人人口の時系列 CSV（1979年からの全年が1ファイル）を
   毎回ダウンロードし、和暦の年の列を西暦の縦持ちに直して data/foreign_population/ に保存する。
   取得元 URL と行数は data/foreign_population/source.ndjson に記録する
+- pipelines/labour_earnings.py: 毎月勤労統計調査の年報の一覧ページから各年の年報を解決し、
+  第1-1表・第1-2表の CSV をダウンロードして公表年の行を data/labour_earnings/ に保存する。
+  ファイル名の付け方が年によって違うため URL は固定せず、表題の行で表を確かめる。
+  取り込んだ年報・表・URL・行数は data/labour_earnings/source.ndjson に記録する
 
 ## テスト
 
@@ -397,6 +433,6 @@ tests/generic/ の .sql は dbt の generic test で、こちらは dbt が実�
 
 クリエイティブ・コモンズ 表示 4.0 国際（CC BY 4.0）に従う。出典データは加工して利用している。
 
-- 出典: 東京都福祉局「社会福祉施設等一覧」、東京都総務局統計部「住民基本台帳による世帯と人口」、
+- 出典: 東京都福祉局「社会福祉施設等一覧」、東京都総務局統計部「住民基本台帳による世帯と人口」「毎月勤労統計調査」、
   東京都保健医療局「食品関係営業台帳」「環境衛生施設台帳」（いずれも東京都オープンデータカタログ）
 - ライセンス: https://creativecommons.org/licenses/by/4.0/deed.ja
