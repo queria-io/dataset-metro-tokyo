@@ -1,0 +1,6 @@
+schema: stats
+name: stg_labour_hours
+description: '毎月勤労統計調査（月間出勤日数・実労働時間）のステージング。日数・時間を DECIMAL に型変換し（「×」と「－」は NULL）、
+
+  「年平均・月」を月の番号に直し、産業を符号と名前に分ける。'
+published: false
