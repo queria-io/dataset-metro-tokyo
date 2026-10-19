@@ -1,0 +1,6 @@
+schema: stats
+name: raw_labour_hours
+description: '毎月勤労統計調査（東京都）年報の第6-1表・第6-2表の生データ。全列 VARCHAR で取り込む。
+
+  各年の年報から公表年の行（各月と年平均）だけを取り出し、過去年の年平均の行は出力しない。'
+published: false
