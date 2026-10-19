@@ -33,8 +33,8 @@ INDEX_URL = "https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index2.htm"
 _REPORT_LINK_RE = re.compile(r'href="(/maikin/(\d{4})/[^"]+\.htm)"[^>]*>\s*年報\s*<')
 _CSV_LINK_RE = re.compile(r'href="([^"]+\.csv)"', re.IGNORECASE)
 
-# 年報のページに並ぶ CSV の先頭2つが第1-1表と第1-2表。表題の行で確かめる
-_TABLES = ["第1-1表", "第1-2表"]
+# 年報のページに並ぶ CSV の (並び位置, 表番号)。先頭2つが第1-1表と第1-2表。表題の行で確かめる
+_TABLES = [(0, "第1-1表"), (1, "第1-2表")]
 
 _HEADER = [
     "事業所規模",
@@ -104,7 +104,12 @@ def _table_name(rows: list[list[str]]) -> str | None:
     return None
 
 
-def _parse(text: str, report_year: int) -> list[dict]:
+def _parse(
+    text: str,
+    report_year: int,
+    header: list[str] = _HEADER,
+    value_keys: list[str] = _VALUE_KEYS,
+) -> list[dict]:
     """年報の CSV から公表年の行（各月と年平均）を取り出す。
 
     表末尾の空行・表題の行は西暦年が数字でないので落ちる。値は原典の文字列のまま
@@ -114,17 +119,17 @@ def _parse(text: str, report_year: int) -> list[dict]:
     if not rows:
         raise ValueError("空のファイルです")
     headers = [h.strip() for h in rows[0]]
-    if headers != _HEADER:
+    if headers != header:
         raise ValueError(f"ヘッダーを認識できません: {headers}")
 
     records = []
     for row in rows[1:]:
-        if len(row) < len(_HEADER):
+        if len(row) < len(header):
             continue
         size, industry, _, year, period = (v.strip() for v in row[:5])
         if not year.isdigit() or int(year) != report_year:
             continue
-        values = [v.strip() for v in row[5 : len(_HEADER)]]
+        values = [v.strip() for v in row[5 : len(header)]]
         records.append(
             {
                 "report_year": str(report_year),
@@ -132,15 +137,22 @@ def _parse(text: str, report_year: int) -> list[dict]:
                 "industry": industry,
                 "year": year,
                 "period": period,
-                **dict(zip(_VALUE_KEYS, values, strict=True)),
+                **dict(zip(value_keys, values, strict=True)),
             }
         )
     return records
 
 
-def download_labour_earnings(dest_dir: str) -> None:
-    """各年の年報から第1-1表・第1-2表を取得し、公表年の行を NDJSON に出力する。
+def download_annual_tables(
+    dest_dir: str,
+    tables: list[tuple[int, str]],
+    header: list[str],
+    value_keys: list[str],
+    output_filename: str,
+) -> None:
+    """各年の年報から指定の表を取得し、公表年の行を NDJSON に出力する。
 
+    tables は年報のページに並ぶ CSV の (並び位置, 表番号)。表番号は CSV の表題の行で確かめる。
     取り込んだ年報・表・URL・行数は source.ndjson に記録する。
     """
     dest = Path(dest_dir)
@@ -155,13 +167,13 @@ def download_labour_earnings(dest_dir: str) -> None:
     fetched_at = datetime.now(UTC).isoformat()
     for report_year, page_url in pages:
         links = _CSV_LINK_RE.findall(_fetch(page_url))
-        for expected, link in zip(_TABLES, links[: len(_TABLES)], strict=True):
-            url = urljoin(page_url, link)
+        for position, expected in tables:
+            url = urljoin(page_url, links[position])
             text = _fetch(url)
             table = _table_name(list(csv.reader(text.splitlines())))
             if table != expected:
                 raise RuntimeError(f"{url} は {expected} ではありません（{table}）")
-            parsed = _parse(text, report_year)
+            parsed = _parse(text, report_year, header, value_keys)
             if not parsed:
                 raise RuntimeError(f"{report_year}年の行を取り出せません: {url}")
             records.extend(parsed)
@@ -175,7 +187,7 @@ def download_labour_earnings(dest_dir: str) -> None:
                 }
             )
 
-    with (dest / _OUTPUT_FILENAME).open("w", encoding="utf-8") as f:
+    with (dest / output_filename).open("w", encoding="utf-8") as f:
         for record in records:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
@@ -184,5 +196,11 @@ def download_labour_earnings(dest_dir: str) -> None:
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
     logger.info(
-        f"  labour_earnings: {len(records)} rows / {pages[0][0]}-{pages[-1][0]}"
+        f"  {Path(output_filename).stem}: {len(records)} rows"
+        f" / {pages[0][0]}-{pages[-1][0]}"
     )
+
+
+def download_labour_earnings(dest_dir: str) -> None:
+    """各年の年報から第1-1表・第1-2表を取得し、公表年の行を NDJSON に出力する。"""
+    download_annual_tables(dest_dir, _TABLES, _HEADER, _VALUE_KEYS, _OUTPUT_FILENAME)
