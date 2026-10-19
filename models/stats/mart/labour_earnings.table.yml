@@ -1,0 +1,82 @@
+schema: stats
+name: labour_earnings
+title: 毎月勤労統計調査 月間現金給与額
+description: '毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間現金給与額。
+
+  1行 = 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
+
+  各年の値はその年の年報から取っている。事業所規模は5人以上と30人以上の2区分で、
+
+  5人以上は30人以上の事業所を含むため、2区分を足さない。産業は調査産業計（TL）と
+
+  大分類に加えて、2017年までは製造業の中分類・特掲産業などを含む（2013年〜2016年は53区分、
+
+  2017年は52区分、2018年からは17区分）。年をまたいで産業を比べるときは industry_code で
+
+  そろえる。原典で秘匿（×）または該当なし（－）の値は NULL。
+
+  現金給与総額 = きまって支給する給与 + 特別に支払われた給与、
+
+  きまって支給する給与 = 所定内給与 + 所定外給与 が全行で成り立つ。'
+keywords:
+  - 東京都
+  - 毎月勤労統計
+  - 賃金
+  - 給与
+  - 賞与
+  - 産業
+  - 時系列
+published: true
+sources:
+  - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
+fields:
+  - name: year
+    title: 年
+    description: 対象年（西暦）
+  - name: period_type
+    title: 期間区分
+    description: 月次 / 年平均
+  - name: month
+    title: 月
+    description: 対象月（1〜12）。年平均の行は NULL
+  - name: establishment_size
+    title: 事業所規模
+    description: 5人以上 / 30人以上。5人以上は30人以上の事業所を含む
+  - name: industry_code
+    title: 産業符号
+    description: 原典の産業符号。TL は調査産業計、英字1字は日本標準産業分類の大分類、TK・TT は都が定める特掲産業
+  - name: industry_name
+    title: 産業
+  - name: cash_earnings
+    title: 現金給与総額
+    description: 常用労働者1人平均の月間現金給与総額（円）。所得税・社会保険料などを差し引く前の額で、きまって支給する給与と特別に支払われた給与の合計
+  - name: cash_earnings_male
+    title: 現金給与総額（男）
+    description: 円
+  - name: cash_earnings_female
+    title: 現金給与総額（女）
+    description: 円
+  - name: contractual_earnings
+    title: きまって支給する給与
+    description: 労働契約・団体協約・事業所の給与規則などであらかじめ定められた支給条件・算定方法によって支給される給与（円）。所定内給与と所定外給与の合計
+  - name: contractual_earnings_male
+    title: きまって支給する給与（男）
+    description: 円
+  - name: contractual_earnings_female
+    title: きまって支給する給与（女）
+    description: 円
+  - name: scheduled_earnings
+    title: 所定内給与
+    description: きまって支給する給与のうち所定外給与以外のもの（円）
+  - name: overtime_earnings
+    title: 所定外給与
+    description: 所定の労働時間を超える労働・休日労働・深夜労働に対して支給される給与（円）。時間外手当・休日出勤手当・深夜手当など
+  - name: special_earnings
+    title: 特別に支払われた給与
+    description: 一時的・突発的な理由で支払われた給与（円）。賞与、過去にさかのぼった追給額、3か月を超える期間ごとに算定される手当を含む
+  - name: special_earnings_male
+    title: 特別に支払われた給与（男）
+    description: 円
+  - name: special_earnings_female
+    title: 特別に支払われた給与（女）
+    description: 円

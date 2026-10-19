@@ -52,3 +52,30 @@ models:
       - name: area_type
       - name: nationality
       - name: population
+  - name: labour_earnings
+    description: |
+      毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間現金給与額。
+      1行 = 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
+      各年の値はその年の年報から取っている。事業所規模は5人以上と30人以上の2区分で、
+      5人以上は30人以上の事業所を含むため、2区分を足さない。産業は2017年までは
+      製造業の中分類・特掲産業などを含み、2018年からは調査産業計と大分類の17区分。
+      原典で秘匿（×）または該当なし（－）の値は NULL。
+    access: public
+    columns:
+      - name: year
+      - name: period_type
+      - name: month
+      - name: establishment_size
+      - name: industry_code
+      - name: industry_name
+      - name: cash_earnings
+      - name: cash_earnings_male
+      - name: cash_earnings_female
+      - name: contractual_earnings
+      - name: contractual_earnings_male
+      - name: contractual_earnings_female
+      - name: scheduled_earnings
+      - name: overtime_earnings
+      - name: special_earnings
+      - name: special_earnings_male
+      - name: special_earnings_female

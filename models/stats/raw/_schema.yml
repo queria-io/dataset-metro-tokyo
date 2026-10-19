@@ -15,3 +15,9 @@ models:
       値の無い年（国籍・地域の区分が無い年）の行は出力しない。
   - name: raw_foreign_population_source
     description: 外国人人口の取得元（1行=1ファイル）。取得元 URL・取得時刻・行数を記録する。
+  - name: raw_labour_earnings
+    description: |
+      毎月勤労統計調査（東京都）年報の第1-1表・第1-2表の生データ。全列 VARCHAR で取り込む。
+      各年の年報から公表年の行（各月と年平均）だけを取り出し、過去年の年平均の行は出力しない。
+  - name: raw_labour_earnings_source
+    description: 毎月勤労統計調査の取得元（1行=1ファイル）。年報の年・表・取得元 URL・取得時刻・行数を記録する。
