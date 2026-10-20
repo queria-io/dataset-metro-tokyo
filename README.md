@@ -13,7 +13,7 @@
 - 東京都総務局統計部「住民基本台帳による世帯と人口」の月次 CSV（2001年1月分以降）
   - 提供組織: 東京都総務局 https://catalog.data.metro.tokyo.lg.jp/organization/t000003
   - 統計表: https://www.toukei.metro.tokyo.lg.jp/juukim/jm-index.htm
-- 東京都総務局統計部「毎月勤労統計調査」年報の第1-1表・第1-2表・第6-1表・第6-2表の CSV（2013年以降の年報）
+- 東京都総務局統計部「毎月勤労統計調査」年報の第1-1表・第1-2表・第6-1表・第6-2表・第10-1表・第10-2表の CSV（2013年以降の年報）
   - 統計表: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 - 東京都保健医療局の保健所台帳のうち、食品関係営業台帳（許可・届出）と環境衛生施設台帳の CSV
   - 提供組織: 東京都保健医療局 https://catalog.data.metro.tokyo.lg.jp/organization/t000055
@@ -409,6 +409,28 @@ dbt のテスト（tests/stats_labour_earnings_breakdown.sql）で確かめて�
 原典で秘匿（×・x）または該当なし（－）の値は NULL。総実労働時間 = 所定内労働時間 + 所定外労働時間
 が計・男・女のすべてで成り立つことを dbt のテスト（tests/stats_labour_hours_breakdown.sql）で確かめている。
 
+## テーブル: stats.labour_employment
+
+毎月勤労統計調査（地方調査）の常用労働者数（推計）とパートタイム労働者比率（10,400行）。1行 = 年 × 月
+（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均の値を収録する。
+年報の第10-1表（事業所規模5人以上）・第10-2表（事業所規模30人以上）から取る。
+
+- year / period_type / month / establishment_size / industry_code / industry_name: stats.labour_earnings と同じ
+- employees_start / employees_start_male / employees_start_female: 前月末労働者数（計・男・女。人）
+- employees_added / employees_added_male / employees_added_female: 本月中の増加労働者数（計・男・女。人）
+- employees_removed / employees_removed_male / employees_removed_female: 本月中の減少労働者数（計・男・女。人）
+- employees / employees_male / employees_female: 本月末労働者数（計・男・女。人）
+- part_time_ratio / part_time_ratio_male / part_time_ratio_female: パートタイム労働者比率（計・男・女。％）
+
+労働者数は INTEGER、比率は原典の小数1桁のまま DECIMAL で持つ。年平均の行の労働者数は各月の平均。
+行の区分（年・月・事業所規模・産業）は stats.labour_earnings と全行で一致し、year・month・
+establishment_size・industry_code で結合できる。男女の値は別に推計されているため、計が男と女の和と
+一致しない行がある（390行）。
+
+原典で秘匿（×・x）または該当なし（－）の値は NULL。月次の行で 本月末労働者数 = 前月末労働者数 +
+増加労働者数 − 減少労働者数 が計・男・女のすべてで成り立つことを dbt のテスト
+（tests/stats_labour_employment_flow.sql）で確かめている。
+
 ### データ更新手順
 
 パイプライン実行時に以下を行う。ビルドは `bash scripts/build.sh` で実行する（Queria に公開する）。
@@ -436,6 +458,8 @@ dbt のテスト（tests/stats_labour_earnings_breakdown.sql）で確かめて�
 - pipelines/labour_hours.py: 同じ年報から第6-1表・第6-2表の CSV をダウンロードし、公表年の行を
   data/labour_hours/ に保存する。表は年報のページに並ぶ順番で選び、表題の行で確かめる
   （2024年報はファイル名の番号が1つずれている）
+- pipelines/labour_employment.py: 同じ年報から第10-1表・第10-2表の CSV をダウンロードし、公表年の行を
+  data/labour_employment/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
 
 ## テスト
 
