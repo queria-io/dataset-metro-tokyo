@@ -1,0 +1,94 @@
+schema: stats
+name: labour_employment
+title: 毎月勤労統計調査 常用労働者数・パートタイム労働者比率
+description: '毎月勤労統計調査（地方調査）による東京都の常用労働者数（推計）とパートタイム労働者比率。
+
+  1行 = 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
+
+  各年の値はその年の年報から取っている。事業所規模は5人以上と30人以上の2区分で、
+
+  5人以上は30人以上の事業所を含むため、2区分を足さない。産業の区分は labour_earnings と同じで、
+
+  2013年〜2016年は53区分、2017年は52区分、2018年からは17区分。年をまたいで産業を比べるときは
+
+  industry_code でそろえる。原典で秘匿（×）または該当なし（－）の値は NULL。
+
+  月次の行では 本月末労働者数 = 前月末労働者数 + 増加労働者数 − 減少労働者数 が成り立つ。
+
+  男女の値は別に推計されているため、計が男と女の和と一致しない行がある。
+
+  labour_earnings・labour_hours とは year・month・establishment_size・industry_code で結合できる。'
+keywords:
+  - 東京都
+  - 毎月勤労統計
+  - 雇用
+  - 労働者数
+  - パートタイム
+  - 産業
+  - 時系列
+published: true
+sources:
+  - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
+fields:
+  - name: year
+    title: 年
+    description: 対象年（西暦）
+  - name: period_type
+    title: 期間区分
+    description: 月次 / 年平均
+  - name: month
+    title: 月
+    description: 対象月（1〜12）。年平均の行は NULL
+  - name: establishment_size
+    title: 事業所規模
+    description: 5人以上 / 30人以上。5人以上は30人以上の事業所を含む
+  - name: industry_code
+    title: 産業符号
+    description: 原典の産業符号。TL は調査産業計、英字1字は日本標準産業分類の大分類、TK・TT は都が定める特掲産業
+  - name: industry_name
+    title: 産業
+  - name: employees_start
+    title: 前月末労働者数
+    description: 前月末の常用労働者数の推計（人）。年平均の行は各月の平均
+  - name: employees_start_male
+    title: 前月末労働者数（男）
+    description: 人
+  - name: employees_start_female
+    title: 前月末労働者数（女）
+    description: 人
+  - name: employees_added
+    title: 増加労働者数
+    description: 本月中に採用・転入などで増えた常用労働者数（人）。年平均の行は各月の平均
+  - name: employees_added_male
+    title: 増加労働者数（男）
+    description: 人
+  - name: employees_added_female
+    title: 増加労働者数（女）
+    description: 人
+  - name: employees_removed
+    title: 減少労働者数
+    description: 本月中に退職・転出などで減った常用労働者数（人）。年平均の行は各月の平均
+  - name: employees_removed_male
+    title: 減少労働者数（男）
+    description: 人
+  - name: employees_removed_female
+    title: 減少労働者数（女）
+    description: 人
+  - name: employees
+    title: 本月末労働者数
+    description: 本月末の常用労働者数の推計（人）。年平均の行は各月の平均
+  - name: employees_male
+    title: 本月末労働者数（男）
+    description: 人
+  - name: employees_female
+    title: 本月末労働者数（女）
+    description: 人
+  - name: part_time_ratio
+    title: パートタイム労働者比率
+    description: 本月末の常用労働者に占めるパートタイム労働者の割合（％）
+  - name: part_time_ratio_male
+    title: パートタイム労働者比率（男）
+    description: ％
+  - name: part_time_ratio_female
+    title: パートタイム労働者比率（女）
+    description: ％
