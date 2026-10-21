@@ -1,0 +1,6 @@
+schema: stats
+name: stg_labour_earnings_by_employment_type
+description: '毎月勤労統計調査（就業形態別月間現金給与額）のステージング。金額を INTEGER に型変換し（「×」と「－」は NULL）、
+
+  「年平均・月」を月の番号に直し、産業を符号と名前に分ける。'
+published: false

@@ -13,7 +13,7 @@
 - 東京都総務局統計部「住民基本台帳による世帯と人口」の月次 CSV（2001年1月分以降）
   - 提供組織: 東京都総務局 https://catalog.data.metro.tokyo.lg.jp/organization/t000003
   - 統計表: https://www.toukei.metro.tokyo.lg.jp/juukim/jm-index.htm
-- 東京都総務局統計部「毎月勤労統計調査」年報の第1-1表・第1-2表・第6-1表・第6-2表・第10-1表・第10-2表の CSV（2013年以降の年報）
+- 東京都総務局統計部「毎月勤労統計調査」年報の第1-1表・第1-2表・第2-1表・第2-2表・第6-1表・第6-2表・第10-1表・第10-2表の CSV（2013年以降の年報）
   - 統計表: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 - 東京都保健医療局の保健所台帳のうち、食品関係営業台帳（許可・届出）と環境衛生施設台帳の CSV
   - 提供組織: 東京都保健医療局 https://catalog.data.metro.tokyo.lg.jp/organization/t000055
@@ -389,6 +389,30 @@ industry_code でそろえる。産業名は年報によって読点の全角・
 特別に支払われた給与、きまって支給する給与 = 所定内給与 + 所定外給与 が全行で成り立つことを
 dbt のテスト（tests/stats_labour_earnings_breakdown.sql）で確かめている。
 
+## テーブル: stats.labour_earnings_by_employment_type
+
+毎月勤労統計調査（地方調査）の就業形態別月間現金給与額（5,720行）。1行 = 年 × 月（または年平均）×
+事業所規模 × 産業で、2013年から各月と年平均の常用労働者1人平均の額を一般労働者とパートタイム労働者に
+分けて収録する。年報の第2-1表（事業所規模5人以上）・第2-2表（事業所規模30人以上）から取る。
+
+- year / period_type / month / establishment_size / industry_code / industry_name: stats.labour_earnings と同じ
+- general_cash_earnings / part_time_cash_earnings: 現金給与総額（一般労働者・パートタイム労働者。円）
+- general_contractual_earnings / part_time_contractual_earnings: きまって支給する給与（円）
+- general_scheduled_earnings / part_time_scheduled_earnings: 所定内給与（円）
+- general_overtime_earnings / part_time_overtime_earnings: 所定外給与（円）
+- general_special_earnings / part_time_special_earnings: 特別に支払われた給与（円）
+
+パートタイム労働者は、常用労働者のうち1日の所定労働時間が一般の労働者より短い者、または1日の所定労働時間が
+同じで1週の所定労働日数が少ない者。一般労働者はそれ以外の常用労働者。就業形態を合わせた計の額は
+stats.labour_earnings にあり、year・month・establishment_size・industry_code で結合できる。
+
+産業は調査産業計と大分類の17区分（2017年は鉱業が無く16区分）で、stats.labour_earnings にある製造業の
+中分類・特掲産業は無い。各年の値の取り方と産業名のそろえ方は stats.labour_earnings と同じ。
+
+原典で秘匿（×・x）または該当なし（－）の値は NULL。現金給与総額 = きまって支給する給与 +
+特別に支払われた給与、きまって支給する給与 = 所定内給与 + 所定外給与 が一般労働者・パートタイム労働者の
+全行で成り立つことを dbt のテスト（tests/stats_labour_earnings_by_employment_type_breakdown.sql）で確かめている。
+
 ## テーブル: stats.labour_hours
 
 毎月勤労統計調査（地方調査）の月間出勤日数・実労働時間（10,400行）。1行 = 年 × 月（または年平均）×
@@ -460,6 +484,8 @@ establishment_size・industry_code で結合できる。男女の値は別に推
   （2024年報はファイル名の番号が1つずれている）
 - pipelines/labour_employment.py: 同じ年報から第10-1表・第10-2表の CSV をダウンロードし、公表年の行を
   data/labour_employment/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
+- pipelines/labour_earnings_by_employment_type.py: 同じ年報から第2-1表・第2-2表の CSV をダウンロードし、
+  公表年の行を data/labour_earnings_by_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
 
 ## テスト
 

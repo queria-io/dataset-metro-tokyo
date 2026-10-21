@@ -33,3 +33,9 @@ models:
       各年の年報から公表年の行（各月と年平均）だけを取り出し、過去年の年平均の行は出力しない。
   - name: raw_labour_employment_source
     description: 毎月勤労統計調査（常用労働者数・パートタイム労働者比率）の取得元（1行=1ファイル）。年報の年・表・取得元 URL・取得時刻・行数を記録する。
+  - name: raw_labour_earnings_by_employment_type
+    description: |
+      毎月勤労統計調査（東京都）年報の第2-1表・第2-2表の生データ。全列 VARCHAR で取り込む。
+      各年の年報から公表年の行（各月と年平均）だけを取り出し、過去年の年平均の行は出力しない。
+  - name: raw_labour_earnings_by_employment_type_source
+    description: 毎月勤労統計調査（就業形態別月間現金給与額）の取得元（1行=1ファイル）。年報の年・表・取得元 URL・取得時刻・行数を記録する。
