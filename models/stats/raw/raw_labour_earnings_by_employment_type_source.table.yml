@@ -1,0 +1,4 @@
+schema: stats
+name: raw_labour_earnings_by_employment_type_source
+description: 毎月勤労統計調査（就業形態別月間現金給与額）の取得元（1行=1ファイル）。年報の年・表・取得元 URL・取得時刻・行数を記録する。
+published: false
