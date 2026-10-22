@@ -13,7 +13,7 @@
 - 東京都総務局統計部「住民基本台帳による世帯と人口」の月次 CSV（2001年1月分以降）
   - 提供組織: 東京都総務局 https://catalog.data.metro.tokyo.lg.jp/organization/t000003
   - 統計表: https://www.toukei.metro.tokyo.lg.jp/juukim/jm-index.htm
-- 東京都総務局統計部「毎月勤労統計調査」年報の第1-1表・第1-2表・第2-1表・第2-2表・第6-1表・第6-2表・第10-1表・第10-2表の CSV（2013年以降の年報）
+- 東京都総務局統計部「毎月勤労統計調査」年報の第1-1表・第1-2表・第2-1表・第2-2表・第6-1表・第6-2表・第7-1表・第7-2表・第10-1表・第10-2表の CSV（2013年以降の年報）
   - 統計表: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 - 東京都保健医療局の保健所台帳のうち、食品関係営業台帳（許可・届出）と環境衛生施設台帳の CSV
   - 提供組織: 東京都保健医療局 https://catalog.data.metro.tokyo.lg.jp/organization/t000055
@@ -433,6 +433,29 @@ stats.labour_earnings にあり、year・month・establishment_size・industry_c
 原典で秘匿（×・x）または該当なし（－）の値は NULL。総実労働時間 = 所定内労働時間 + 所定外労働時間
 が計・男・女のすべてで成り立つことを dbt のテスト（tests/stats_labour_hours_breakdown.sql）で確かめている。
 
+## テーブル: stats.labour_hours_by_employment_type
+
+毎月勤労統計調査（地方調査）の就業形態別月間出勤日数・実労働時間（5,720行）。1行 = 年 × 月（または年平均）×
+事業所規模 × 産業で、2013年から各月と年平均の常用労働者1人平均の値を一般労働者とパートタイム労働者に
+分けて収録する。年報の第7-1表（事業所規模5人以上）・第7-2表（事業所規模30人以上）から取る。
+
+- year / period_type / month / establishment_size / industry_code / industry_name: stats.labour_earnings と同じ
+- general_days_worked / part_time_days_worked: 出勤日数（一般労働者・パートタイム労働者。日）
+- general_total_hours / part_time_total_hours: 総実労働時間（時間）
+- general_scheduled_hours / part_time_scheduled_hours: 所定内労働時間（時間）
+- general_overtime_hours / part_time_overtime_hours: 所定外労働時間（時間）
+
+値は原典の小数1桁のまま DECIMAL で持つ。就業形態を合わせた計の値は stats.labour_hours にあり、
+year・month・establishment_size・industry_code で結合できる。stats.labour_earnings_by_employment_type とも
+同じキーで結合でき、就業形態別の時間あたりの給与を求められる。
+
+産業は調査産業計と大分類の17区分（2017年は鉱業が無く16区分）で、stats.labour_hours にある製造業の
+中分類・特掲産業は無い。各年の値の取り方と産業名のそろえ方は stats.labour_earnings と同じ。
+
+原典で秘匿（×・x）または該当なし（－）の値は NULL。総実労働時間 = 所定内労働時間 + 所定外労働時間 が
+一般労働者・パートタイム労働者の全行で成り立つことを dbt のテスト
+（tests/stats_labour_hours_by_employment_type_breakdown.sql）で確かめている。
+
 ## テーブル: stats.labour_employment
 
 毎月勤労統計調査（地方調査）の常用労働者数（推計）とパートタイム労働者比率（10,400行）。1行 = 年 × 月
@@ -486,6 +509,8 @@ establishment_size・industry_code で結合できる。男女の値は別に推
   data/labour_employment/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
 - pipelines/labour_earnings_by_employment_type.py: 同じ年報から第2-1表・第2-2表の CSV をダウンロードし、
   公表年の行を data/labour_earnings_by_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
+- pipelines/labour_hours_by_employment_type.py: 同じ年報から第7-1表・第7-2表の CSV をダウンロードし、
+  公表年の行を data/labour_hours_by_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
 
 ## テスト
 
