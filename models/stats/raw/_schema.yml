@@ -45,3 +45,9 @@ models:
       各年の年報から公表年の行（各月と年平均）だけを取り出し、過去年の年平均の行は出力しない。
   - name: raw_labour_hours_by_employment_type_source
     description: 毎月勤労統計調査（就業形態別月間出勤日数・実労働時間）の取得元（1行=1ファイル）。年報の年・表・取得元 URL・取得時刻・行数を記録する。
+  - name: raw_labour_employment_by_employment_type
+    description: |
+      毎月勤労統計調査（東京都）年報の第11-1表・第11-2表の生データ。全列 VARCHAR で取り込む。
+      各年の年報から公表年の行（各月と年平均）だけを取り出し、過去年の年平均の行は出力しない。
+  - name: raw_labour_employment_by_employment_type_source
+    description: 毎月勤労統計調査（就業形態別常用労働者数）の取得元（1行=1ファイル）。年報の年・表・取得元 URL・取得時刻・行数を記録する。
