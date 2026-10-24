@@ -94,11 +94,11 @@ def _report_pages(index_html: str) -> list[tuple[int, str]]:
 
 
 def _table_name(rows: list[list[str]]) -> str | None:
-    """CSV の末尾に置かれた表題の行から「第1-1表」などを取り出す。"""
+    """CSV の末尾に置かれた表題の行から「第1-1表」「第3表」などを取り出す。"""
     for row in rows:
         if not row:
             continue
-        matched = re.match(r"第\d+-\d+表", _normalize(row[0]))
+        matched = re.match(r"第\d+(?:-\d+)?表", _normalize(row[0]))
         if matched:
             return matched.group(0)
     return None
@@ -113,7 +113,8 @@ def _parse(
     """年報の CSV から公表年の行（各月と年平均）を取り出す。
 
     表末尾の空行・表題の行は西暦年が数字でないので落ちる。値は原典の文字列のまま
-    （「×」は秘匿、「－」は該当なし）。
+    （「×」は秘匿、「－」は該当なし）。調査産業計だけの表（第3表など）は産業の列が無く、
+    industry を出力しない。
     """
     rows = list(csv.reader(text.splitlines()))
     if not rows:
@@ -122,19 +123,26 @@ def _parse(
     if headers != header:
         raise ValueError(f"ヘッダーを認識できません: {headers}")
 
+    with_industry = header[1] == "産業"
+    key_count = 5 if with_industry else 4
     records = []
     for row in rows[1:]:
         if len(row) < len(header):
             continue
-        size, industry, _, year, period = (v.strip() for v in row[:5])
+        keys = [v.strip() for v in row[:key_count]]
+        size, year, period = keys[0], keys[-2], keys[-1]
         if not year.isdigit() or int(year) != report_year:
             continue
-        values = [v.strip() for v in row[5 : len(header)]]
+        values = [v.strip() for v in row[key_count : len(header)]]
+        record = {
+            "report_year": str(report_year),
+            "establishment_size": _normalize(size),
+        }
+        if with_industry:
+            record["industry"] = keys[1]
         records.append(
             {
-                "report_year": str(report_year),
-                "establishment_size": _normalize(size),
-                "industry": industry,
+                **record,
                 "year": year,
                 "period": period,
                 **dict(zip(value_keys, values, strict=True)),
