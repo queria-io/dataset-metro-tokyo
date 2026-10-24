@@ -18,6 +18,7 @@ keywords:
   - 観光
   - 自治体標準オープンデータセット
 published: true
+themes: [education_culture]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:

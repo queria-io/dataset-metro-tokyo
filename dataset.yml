@@ -30,6 +30,7 @@ keywords:
   - 生活衛生
 homepage: https://github.com/queria-io/dataset-metro-tokyo
 language: ja
+themes: [social_security_health, labour, education_culture, population, government_finance, justice_safety_environment, commerce_services, transport_tourism, ict_science, international]
 
 licenses:
   - CC-BY-4.0

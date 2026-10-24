@@ -13,6 +13,7 @@ keywords:
   - 自治体標準オープンデータセット
   - GIS
 published: true
+themes: [social_security_health]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:
