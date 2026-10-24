@@ -25,6 +25,7 @@ keywords:
   - 施設
   - GIS
 published: true
+themes: [commerce_services, social_security_health]
 sources:
   - path: https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho
 fields:

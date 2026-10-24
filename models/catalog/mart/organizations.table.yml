@@ -12,6 +12,7 @@ keywords:
   - カタログ
   - メタデータ
 published: true
+themes: [other]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:

@@ -12,6 +12,7 @@ keywords:
   - 年齢別人口
   - 自治体標準オープンデータセット
 published: true
+themes: [population]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:
