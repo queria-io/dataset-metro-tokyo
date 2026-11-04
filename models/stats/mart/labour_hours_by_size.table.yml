@@ -1,0 +1,77 @@
+schema: stats
+name: labour_hours_by_size
+title: 毎月勤労統計調査 規模別月間出勤日数・実労働時間
+description: '毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間出勤日数・実労働時間を、事業所規模別に分けたもの。
+
+  1行 = 年 × 月（または年平均）× 事業所規模で、2013年から各月と年平均を収録する。
+
+  各年の値はその年の年報から取っている。産業は調査産業計だけで、事業所規模は
+
+  5〜29人・30〜99人・100〜499人・500人以上の4区分。区分は重ならない。
+
+  総実労働時間 = 所定内労働時間 + 所定外労働時間 が全行で成り立つ。
+
+  labour_earnings_by_size とは year・month・establishment_size で結合でき、
+
+  時間あたりの給与を求められる。'
+keywords:
+  - 東京都
+  - 毎月勤労統計
+  - 労働時間
+  - 残業
+  - 出勤日数
+  - 事業所規模
+  - 時系列
+published: true
+themes: [labour]
+sources:
+  - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
+fields:
+  - name: year
+    title: 年
+    description: 対象年（西暦）
+  - name: period_type
+    title: 期間区分
+    description: 月次 / 年平均
+  - name: month
+    title: 月
+    description: 対象月（1〜12）。年平均の行は NULL
+  - name: establishment_size
+    title: 事業所規模
+    description: 5〜29人 / 30〜99人 / 100〜499人 / 500人以上。常用労働者数による区分で、区分どうしは重ならない
+  - name: days_worked
+    title: 出勤日数
+    description: 常用労働者1人平均の月間出勤日数（日）。業務のため実際に出勤した日数で、1時間でも就業すれば1日とする
+  - name: days_worked_male
+    title: 出勤日数（男）
+    description: 日
+  - name: days_worked_female
+    title: 出勤日数（女）
+    description: 日
+  - name: total_hours
+    title: 総実労働時間
+    description: 常用労働者1人平均の月間総実労働時間（時間）。所定内労働時間と所定外労働時間の合計
+  - name: total_hours_male
+    title: 総実労働時間（男）
+    description: 時間
+  - name: total_hours_female
+    title: 総実労働時間（女）
+    description: 時間
+  - name: scheduled_hours
+    title: 所定内労働時間
+    description: 事業所の就業規則で定められた正規の始業時刻と終業時刻の間の実労働時間（時間）
+  - name: scheduled_hours_male
+    title: 所定内労働時間（男）
+    description: 時間
+  - name: scheduled_hours_female
+    title: 所定内労働時間（女）
+    description: 時間
+  - name: overtime_hours
+    title: 所定外労働時間
+    description: 早出・残業・臨時の呼出・休日出勤などの実労働時間（時間）
+  - name: overtime_hours_male
+    title: 所定外労働時間（男）
+    description: 時間
+  - name: overtime_hours_female
+    title: 所定外労働時間（女）
+    description: 時間

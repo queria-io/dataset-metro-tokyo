@@ -13,7 +13,7 @@
 - 東京都総務局統計部「住民基本台帳による世帯と人口」の月次 CSV（2001年1月分以降）
   - 提供組織: 東京都総務局 https://catalog.data.metro.tokyo.lg.jp/organization/t000003
   - 統計表: https://www.toukei.metro.tokyo.lg.jp/juukim/jm-index.htm
-- 東京都総務局統計部「毎月勤労統計調査」年報の第1-1表・第1-2表・第2-1表・第2-2表・第6-1表・第6-2表・第7-1表・第7-2表・第10-1表・第10-2表・第11-1表・第11-2表・第3表の CSV（2013年以降の年報）
+- 東京都総務局統計部「毎月勤労統計調査」年報の第1-1表・第1-2表・第2-1表・第2-2表・第6-1表・第6-2表・第7-1表・第7-2表・第10-1表・第10-2表・第11-1表・第11-2表・第3表・第8表の CSV（2013年以降の年報）
   - 統計表: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 - 東京都保健医療局の保健所台帳のうち、食品関係営業台帳（許可・届出）と環境衛生施設台帳の CSV
   - 提供組織: 東京都保健医療局 https://catalog.data.metro.tokyo.lg.jp/organization/t000055
@@ -515,6 +515,19 @@ year・month・establishment_size・industry_code で結合できる。月次の
 特別に支払われた給与、きまって支給する給与 = 所定内給与 + 所定外給与 が全行で成り立つことを dbt のテスト
 （tests/stats_labour_earnings_by_size_breakdown.sql）で確かめている。
 
+## テーブル: stats.labour_hours_by_size
+
+毎月勤労統計調査（地方調査）の規模別月間出勤日数・実労働時間（676行）。1行 = 年 × 月（または年平均）×
+事業所規模で、2013年から各月と年平均の常用労働者1人平均の値を収録する。年報の第8表から取る。
+
+- year / period_type / month / establishment_size: stats.labour_earnings_by_size と同じ
+- days_worked ほかの日数・時間の列: stats.labour_hours と同じ（日・時間）
+
+値は原典の小数1桁のまま DECIMAL で持つ。産業は調査産業計だけで、事業所規模の4区分は重ならない。
+行の区分は stats.labour_earnings_by_size と全行で一致し、year・month・establishment_size で結合できる。
+各年の値の取り方は stats.labour_earnings と同じ。総実労働時間 = 所定内労働時間 + 所定外労働時間 が
+計・男・女のすべてで成り立つことを dbt のテスト（tests/stats_labour_hours_by_size_breakdown.sql）で確かめている。
+
 ### データ更新手順
 
 パイプライン実行時に以下を行う。ビルドは `bash scripts/build.sh` で実行する（Queria に公開する）。
@@ -552,6 +565,8 @@ year・month・establishment_size・industry_code で結合できる。月次の
   公表年の行を data/labour_employment_by_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
 - pipelines/labour_earnings_by_size.py: 同じ年報から第3表の CSV をダウンロードし、
   公表年の行を data/labour_earnings_by_size/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
+- pipelines/labour_hours_by_size.py: 同じ年報から第8表の CSV をダウンロードし、
+  公表年の行を data/labour_hours_by_size/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
 
 ## テスト
 
