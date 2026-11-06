@@ -102,6 +102,8 @@ ai_context:
     labour_earnings_by_size と year・period_type・month・establishment_size で結合できる。
     labour_hours_by_size_and_employment_type は labour_hours_by_size を一般労働者とパートタイム労働者に
     分けた出勤日数・労働時間で、labour_hours_by_size と同じキーで結合できる。
+    labour_earnings_by_size_and_employment_type は labour_earnings_by_size を一般労働者とパートタイム労働者に
+    分けた現金給与額で、labour_earnings_by_size と同じキーで結合できる。
     元データの値は補正せず原典のまま入れている。lat / lon は自治体が公開した生値で、
     緯度と経度が入れ替わったまま公開されている自治体（ods.cultural_property の豊島区、
     ods.public_wireless_lan の世田谷区など）や、経度の小数点が欠落している行がある。

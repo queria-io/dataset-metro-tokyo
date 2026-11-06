@@ -1,0 +1,63 @@
+schema: stats
+name: labour_earnings_by_size_and_employment_type
+title: 毎月勤労統計調査 規模・就業形態別月間現金給与額
+description: |-
+  毎月勤労統計調査（地方調査）の、東京都の常用労働者 1 人平均月間現金給与額を事業所規模の 4 区分と就業形態に分けたものです。1 行が 1 年・月（または年平均）・事業所規模で、2013 年からです。
+
+  - 産業は調査産業計だけです
+keywords:
+  - 東京都
+  - 毎月勤労統計
+  - 賃金
+  - 給与
+  - パートタイム
+  - 就業形態
+  - 事業所規模
+  - 時系列
+published: true
+themes: [labour]
+sources:
+  - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
+fields:
+  - name: year
+    title: 年
+    description: 対象年（西暦）
+  - name: period_type
+    title: 期間区分
+    description: 月次 / 年平均
+  - name: month
+    title: 月
+    description: 対象月（1〜12）。年平均の行は NULL
+  - name: establishment_size
+    title: 事業所規模
+    description: 5〜29人 / 30〜99人 / 100〜499人 / 500人以上。区分は重ならない
+  - name: general_cash_earnings
+    title: 現金給与総額（一般労働者）
+    description: 一般労働者 1 人平均の月間現金給与総額（円）。きまって支給する給与と特別に支払われた給与の合計
+  - name: general_contractual_earnings
+    title: きまって支給する給与（一般労働者）
+    description: 円。所定内給与と所定外給与の合計
+  - name: general_scheduled_earnings
+    title: 所定内給与（一般労働者）
+    description: 円
+  - name: general_overtime_earnings
+    title: 所定外給与（一般労働者）
+    description: 円
+  - name: general_special_earnings
+    title: 特別に支払われた給与（一般労働者）
+    description: 円。賞与などを含む
+  - name: part_time_cash_earnings
+    title: 現金給与総額（パートタイム労働者）
+    description: パートタイム労働者 1 人平均の月間現金給与総額（円）
+  - name: part_time_contractual_earnings
+    title: きまって支給する給与（パートタイム労働者）
+    description: 円。所定内給与と所定外給与の合計
+  - name: part_time_scheduled_earnings
+    title: 所定内給与（パートタイム労働者）
+    description: 円
+  - name: part_time_overtime_earnings
+    title: 所定外給与（パートタイム労働者）
+    description: 円
+  - name: part_time_special_earnings
+    title: 特別に支払われた給与（パートタイム労働者）
+    description: 円。賞与などを含む
