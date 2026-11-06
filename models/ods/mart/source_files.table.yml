@@ -1,23 +1,10 @@
 schema: ods
 name: source_files
 title: ODS取り込み結果
-description: '自治体標準ODS取り込みの実行結果。どの自治体のどのファイルを
+description: |-
+  自治体標準オープンデータセットの取り込みの結果です。どの自治体のどのファイルを取り込んだか、取り込めなかった理由・文字コード・行数を記録しています。
 
-  取り込んだか・スキップや失敗の理由・エンコーディング・行数を記録する。
-
-  基本は1行=1リソースだが、種別に一致しながらCSVリソースを1つも持たない
-
-  パッケージは、パッケージ単位で1行（status=skipped / reason=no_csv_resource）記録する。
-
-  同じURLが複数のリソースとして登録されているときは、取り込んだ側と
-
-  落とした側（status=skipped / reason=duplicate_url）の両方を記録する。
-
-  HTMLのページへのリンクだけで登録されたパッケージは、そのページに置かれた
-
-  CSVをたどって取り込み、CSVごとに1行（via_page_url にたどったページ）記録する。
-
-  種別ごとの自治体カバレッジの把握に使う。'
+  - 種類ごとに、どの自治体のデータが入っているかの確認に使います
 keywords:
   - 東京都
   - 自治体標準オープンデータセット
@@ -41,38 +28,22 @@ fields:
     title: データセット名
   - name: resource_id
     title: リソースID
-    description: 'CSVリソースが無く、パッケージ単位で記録した行では空。
-
-      ページからたどったCSVでは「ページのリソースID#ファイル名」'
+    description: CKAN のリソース ID。パッケージ単位の行では空
   - name: resource_name
     title: リソース名
     description: CSVリソースが無く、パッケージ単位で記録した行では空
   - name: url
     title: 取得元URL
-    description: 'CSVリソースが無く、パッケージ単位で記録した行では空。
-
-      ページから拾ったCSVの行ではそのCSVのURL。ページ自体の行（no_csv_on_page・
-
-      page_fetch_error と、同じページの二重登録による duplicate_url）ではページのURL'
+    description: 取り込んだ CSV の URL。パッケージ単位の行では空
   - name: via_page_url
     title: たどったページのURL
-    description: 'カタログにHTMLのページとして登録されていて、そのページから拾ったCSVの行（取り込めなかった行を含む）でのページ。
-
-      カタログにCSVとして登録されたリソースの行では空'
+    description: HTML のページからたどった CSV の行での、そのページの URL
   - name: status
     title: 取得結果
     description: ok / failed（取得エラー）/ skipped（ヘッダー不一致・CSV未登録・URL重複等）
   - name: reason
     title: 理由
-    description: 'failed / skipped の理由。no_csv_resource は種別に一致したが
-
-      CSVリソースが無いことを表し、formats= に実際の登録形式が入る。
-
-      duplicate_url は同じURLの別リソースを先に取り込んだことを表し、
-
-      kept= に採用したリソースIDが入る。no_csv_on_page はHTMLのページに
-
-      種別に一致するCSVが無かったこと、page_fetch_error はページを開けなかったことを表す'
+    description: failed / skipped の理由（no_csv_resource・duplicate_url など）
   - name: encoding
     title: エンコーディング
     description: 判定されたエンコーディング（utf-8-sig / cp932 等）

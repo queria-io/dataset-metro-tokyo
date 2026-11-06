@@ -1,15 +1,12 @@
 schema: ods
 name: food_business
 title: 食品等営業許可・届出
-description: '都内区市町村が公開する「食品等営業許可・届出一覧」（自治体標準オープンデータセット）を
+description: |-
+  都内の区市町村が公開する「食品等営業許可・届出一覧」（自治体標準オープンデータセット）を統合したものです。1 行が 1 施設で、営業の種類・業態・所在地・許可年月日を持ちます。
 
-  横断統合したテーブル。食品衛生法に基づき保健所が許可・届出を受理した飲食店・食品製造・
-
-  販売施設を、営業の種類・業態・所在地・許可年月日・申請区分とともに1行=1施設で収録する。
-
-  施設の位置（緯度経度）を持ち、飲食店の出店動向・エリア別の業態構成・許可の新規/継続分析に
-
-  使える。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+  - 公開している自治体は一部だけです。どの自治体のファイルを収録したかは `ods.source_files` にあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
+  - 東京都の保健所台帳は `hokenjo.food_establishment` にあります
 keywords:
   - 東京都
   - 食品
@@ -28,7 +25,7 @@ fields:
     semantic: { role: entity, name: city }
   - name: facility_id
     title: ID
-    description: 自治体内で一意の施設 ID（元データの ID / NO 列）。1.31025E+11 のような Excel の指数表記のまま公開する自治体があり、その行は元の ID を復元できない
+    description: 元データの ID / NO 列。Excel の指数表記のまま復元できない値がある
   - name: name
     title: 施設名称
   - name: name_kana
@@ -37,7 +34,7 @@ fields:
     title: 施設名称英字
   - name: business_type
     title: 営業の種類
-    description: 飲食店営業・菓子製造業など食品衛生法施行令に基づく営業分類。統制語彙だが自治体ごとに表記が揺れるため生値のまま
+    description: 飲食店営業・菓子製造業など。表記は自治体ごとに違う
   - name: business_category
     title: 業態
     description: 居酒屋・食料品販売など営業の種類より詳細な業態。記載している自治体のみ
@@ -80,27 +77,19 @@ fields:
     description: 十進度
   - name: geo_lat
     title: 緯度（地図表示用）
-    description: 'Queria が付与。原典の緯度経度が使えればその値、緯度と経度が入れ替わっていれば入れ替えた値。
-
-      原典に使える座標が無い行は住所から求めた座標。採用できなければ NULL。由来は geo_source を見る'
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
   - name: geo_lon
     title: 経度（地図表示用）
     description: Queria が付与。geo_lat と対になる経度
   - name: geo_source
     title: 座標の由来
-    description: 'source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が入れ替わっていたので入れ替えて採用、
-
-      abr=原典に使える座標が無く住所から求めた座標を採用、NULL=採用できる座標が無い'
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
   - name: geo_level
     title: 座標の粒度
-    description: '原典由来は source。住所から求めた座標は abr-geocoder の粒度で、細かい順に
-
-      residential_detail（住居番号）/ residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
-
-      市区町村の代表点は位置の情報にならないため採用していない'
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: corporate_name
     title: 法人名
     description: 申請主体が法人の場合の法人名（個人事業は空）

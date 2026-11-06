@@ -1,19 +1,11 @@
 schema: ods
 name: school_district
 title: 小中学校通学区域
-description: '都内区市町村が公開する「小中学校通学区域情報」（自治体標準オープンデータセット）を
+description: |-
+  都内の区市町村が公開する「小中学校通学区域情報」（自治体標準オープンデータセット）を統合したものです。1 行が 1 学校の通学区域で、区域の住所をセミコロン区切りで持ちます。
 
-  横断統合したテーブル。1行=1学校の通学区域で、区域に含まれる住所をセミコロン区切りの
-
-  文字列で持つ。施設一覧ではないため所在地・緯度経度の列は持たない（学校の位置は
-
-  nlftp.facility.school を参照）。公開しているのは一部の自治体のみ
-
-  （カバレッジは ods.source_files を参照）。
-
-  独自形式で通学区域を公開している自治体（町丁目ごとに学校名を並べる形式など）は
-
-  標準形式ではないため収録していない。'
+  - 公開している自治体は一部だけです。どの自治体のファイルを収録したかは `ods.source_files` にあります
+  - 学校の位置は `nlftp.facility.school` にあります
 keywords:
   - 東京都
   - 教育
@@ -58,7 +50,7 @@ fields:
     semantic: { role: entity, name: city }
   - name: district_addresses
     title: 通学区域の住所
-    description: 通学区域に含まれる住所をセミコロン区切りで列挙。「〇丁目全域」「〇番地～〇番地」など粒度は自治体ごとに異なる
+    description: 通学区域の住所のセミコロン区切り。粒度は自治体ごとに違う
   - name: registered_date
     title: 通学区域_登録年月日
   - name: abolished_date

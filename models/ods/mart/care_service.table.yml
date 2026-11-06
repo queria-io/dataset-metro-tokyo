@@ -1,17 +1,12 @@
 schema: ods
 name: care_service
 title: 介護サービス事業所
-description: '都内区市町村が公開する「介護サービス事業所一覧」（自治体標準オープンデータセット）を
+description: |-
+  都内の区市町村が公開する「介護サービス事業所一覧」（自治体標準オープンデータセット）を統合したものです。1 行が 1 事業所で、実施サービス・所在地・定員・運営法人を持ちます。
 
-  横断統合したテーブル。1行=1事業所で、訪問介護・特別養護老人ホーム・通所介護などの
-
-  介護保険サービス事業所の名称・実施サービス・所在地・定員・運営法人を持つ。
-
-  全国網羅の類似データとして mhlw.kaigo.establishment（介護サービス情報公表システム）が
-
-  あり、こちらは区市町村が独自に公開する分。公開しているのは一部の自治体のみ
-
-  （カバレッジは ods.source_files を参照）。'
+  - 公開している自治体は一部だけです。どの自治体のファイルを収録したかは `ods.source_files` にあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
+  - 全国の事業所は `mhlw.kaigo.establishment` にあります
 keywords:
   - 東京都
   - 介護
@@ -30,7 +25,7 @@ fields:
     semantic: { role: entity, name: city }
   - name: facility_id
     title: ID
-    description: 自治体内で一意の事業所 ID（元データの ID / NO 列）。1.31025E+11 のような Excel の指数表記のまま公開する自治体があり、その行は元の ID を復元できない
+    description: 元データの ID / NO 列。Excel の指数表記のまま復元できない値がある
   - name: name
     title: 介護サービス事業所名称
   - name: name_kana
@@ -39,7 +34,7 @@ fields:
     title: 名称英字
   - name: service_type
     title: 実施サービス
-    description: 訪問介護・介護老人福祉施設（特別養護老人ホーム）など提供する介護サービス。統制語彙が無く自治体ごとに表記が揺れるため生値のまま
+    description: 訪問介護・介護老人福祉施設など。表記は自治体ごとに違う
   - name: address
     title: 所在地
     description: 所在地の連結表記（旧形式の「住所」列を含む）
@@ -75,27 +70,19 @@ fields:
     description: 十進度
   - name: geo_lat
     title: 緯度（地図表示用）
-    description: 'Queria が付与。原典の緯度経度が使えればその値、緯度と経度が入れ替わっていれば入れ替えた値。
-
-      原典に使える座標が無い行は住所から求めた座標。採用できなければ NULL。由来は geo_source を見る'
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
   - name: geo_lon
     title: 経度（地図表示用）
     description: Queria が付与。geo_lat と対になる経度
   - name: geo_source
     title: 座標の由来
-    description: 'source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が入れ替わっていたので入れ替えて採用、
-
-      abr=原典に使える座標が無く住所から求めた座標を採用、NULL=採用できる座標が無い'
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
   - name: geo_level
     title: 座標の粒度
-    description: '原典由来は source。住所から求めた座標は abr-geocoder の粒度で、細かい順に
-
-      residential_detail（住居番号）/ residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
-
-      市区町村の代表点は位置の情報にならないため採用していない'
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: corporate_number
     title: 法人番号
     description: 運営主体の法人番号（記載している自治体のみ）。houjin_bangou と結合可能

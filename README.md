@@ -1,626 +1,155 @@
-# dataset-metro-tokyo
-
-東京都オープンデータカタログ（catalog.data.metro.tokyo.lg.jp）で公開されるデータを DuckLake カタログ化したデータセット。
-
-## データ出典
-
-- 東京都オープンデータカタログ: https://catalog.data.metro.tokyo.lg.jp/
-  - catalog スキーマ: CKAN API（package_search / organization_list / group_list）から取得したメタデータ
-- 東京都福祉局「社会福祉施設等一覧」のうち、認可保育所と児童館の CSV。緯度経度は十進度、座標系は JGD2011
-  - 一覧は年2回（5月時点・10月時点）新しいデータセットとして公開され、その都度
-    パッケージも配布ファイル名も変わる。URL は固定せず catalog のメタデータから最新版を解決する
-  - 提供組織: 東京都福祉局 https://catalog.data.metro.tokyo.lg.jp/organization/t000054
-- 東京都総務局統計部「住民基本台帳による世帯と人口」の月次 CSV（2001年1月分以降）
-  - 提供組織: 東京都総務局 https://catalog.data.metro.tokyo.lg.jp/organization/t000003
-  - 統計表: https://www.toukei.metro.tokyo.lg.jp/juukim/jm-index.htm
-- 東京都総務局統計部「毎月勤労統計調査」年報の第1-1表・第1-2表・第2-1表・第2-2表・第6-1表・第6-2表・第7-1表・第7-2表・第10-1表・第10-2表・第11-1表・第11-2表・第3表・第4表・第8表・第9表の CSV（2013年以降の年報）
-  - 統計表: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
-- 東京都保健医療局の保健所台帳のうち、食品関係営業台帳（許可・届出）と環境衛生施設台帳の CSV
-  - 提供組織: 東京都保健医療局 https://catalog.data.metro.tokyo.lg.jp/organization/t000055
-  - 台帳: https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho
-  - 収録は東京都が設置する保健所の管轄のみ。八王子市・町田市を除く多摩地域と島しょが対象で、
-    23区・八王子市・町田市はそれぞれが保健所を設置しているため含まれない
-
-## スキーマ: catalog（カタログメタデータ）
-
-東京都オープンデータカタログに登録された全データセット（約9,600件）のメタデータ台帳。
-都庁各局と都内62区市町村が提供するオープンデータの全体像を SQL で俯瞰できる。
-CKAN API から毎回全量を取得して洗い替える。
-
-- catalog.datasets: 全データセット一覧（タイトル・提供組織・ライセンス・更新頻度・metadata_modified・ポータルURL）
-- catalog.resources: 全リソース（配布ファイル）一覧（フォーマット・ダウンロードURL・更新日時）。
-  リソース URL はファイル更新で変わることがあるため、常に本テーブルの最新 URL を参照する
-- catalog.organizations: 提供組織一覧（組織コード・組織種別: 都庁各局/特別区/市/町村）
-- catalog.groups: 分野分類（16分類）
-- catalog.dataset_tags: データセット×タグ（「自治体標準オープンデータセット」「都知事杯ハッカソン」等）
-- catalog.dataset_groups: データセット×分野分類
-
-## スキーマ: ods（自治体標準オープンデータセット）
-
-都内区市町村が公開する「自治体標準オープンデータセット」（デジタル庁 データセット定義書A）を
-種別ごとに区市町村横断で統合したテーブル群。取り込み対象は ods_datasets.yml で定義し、
-catalog のメタデータからリソースを判定・ダウンロードして列名を標準キーに正規化する。
-新標準（所在地_連結表記等）と旧推奨データセット形式（住所・都道府県名等）のヘッダー揺れは
-エイリアス辞書で吸収し、標準列にマッピングできない列は extras (JSON) に退避する。
-
-- ods.evacuation_space: 指定緊急避難場所一覧（災害種別対応可否を BOOLEAN 化）
-- ods.aed: AED設置箇所一覧（設置位置・利用可能日時・小児対応設備）
-- ods.preschool: 子育て施設一覧（種別・収容定員・一時預かり/病児保育）
-- ods.hospital: 医療機関一覧（診療科目・病床数・災害拠点分類。都保健医療局の都全域データ含む）
-- ods.public_wireless_lan: 公衆無線LANアクセスポイント一覧（SSID・提供エリア）
-- ods.public_facility: 公共施設一覧（名称・所在地・連絡先・利用可能時間・アクセス方法。公民館・図書館・区民施設等）
-- ods.public_toilet: 公衆トイレ一覧（便器数・バリアフリートイレ数・車椅子使用者用/乳幼児用設備/オストメイトの有無）
-- ods.cultural_property: 文化財一覧（文化財分類・種類・員数・所有者・文化財指定日）
-- ods.tourism: 観光施設一覧（POIコード・利用可能時間・料金・アクセス方法・バリアフリー情報）
-- ods.event: イベント一覧（開催日・会場・料金・定員・申込方法。祭り・講座・展示等）
-- ods.school_district: 小中学校通学区域情報（学校×通学区域。区域の住所はセミコロン区切り）
-- ods.fire_hydrant: 消防水利施設一覧（消火栓・防火水槽・プール・河川等の位置と口径）
-- ods.care_service: 介護サービス事業所一覧（実施サービス・定員・運営法人。全国網羅は mhlw.kaigo.establishment）
-- ods.food_business: 食品等営業許可・届出一覧（営業の種類・業態・許可年月日・申請区分。飲食店・食品製造/販売施設の位置）
-- ods.educational_institution: 教育機関一覧（幼稚園・小中学校・義務教育学校等の学校種・設置区分・所在地・緯度経度・連絡先。所在地は市区町村/町字/番地以下に分割）
-- ods.garbage_separation: ごみの分別方法一覧（品目ごとの分別区分・出し方の注意点・手数料。施設ではなく品目マスタで名称/所在地を持たず品目名で識別）
-- ods.bicycle_parking: 自転車駐車場一覧（駐輪場ごとの収容台数・屋内外区分・利用時間・料金・最寄駅。区市町村が公営/民営の駐輪場を公開。分割形式では住所が施設情報ファイル側に分かれ緯度経度のみの自治体がある）
-- ods.polling_place: 投票所一覧（期日前投票所を含む。名称・投票区名・投票所区分を軸に緯度経度や所在地を持つ自治体もある）
-- ods.support_system: 区市町村が公開する支援制度情報（補助金・助成・手当等）。制度名・対象者・制度概要・申請方法・問い合わせ先を横断統合
-- ods.school_lunch: 学校給食献立情報（学校×提供年月日×料理。料理名・食品・栄養価・アレルゲン品目。栄養価は自治体により空欄）
-- ods.open_data_list: オープンデータ一覧（各自治体が自ら公開するデータセットの目録。タイトル・分類・更新頻度・ファイル形式等のメタデータ。CKAN横断の catalog スキーマとは別物）
-- ods.population: 地域・年齢別人口（地域×調査年月日で総人口・男女別・5歳階級×男女の人口と世帯数をワイドに保持。町丁字単位から自治体全体まで）
-  月次で公開する自治体では、前の年の同月のファイルが新しい月のデータで上書きされたまま、
-  正しい名前のリソースも別に登録されることがある。同じ（自治体・調査年月日・地域）が
-  複数のリソースから入った場合は、リソースの最終更新時点が新しい側だけを残す
-  （macros/ods_latest_resource.sql）。どの月が収録できたかは ods.source_files で確かめられる
-- ods.population_by_age: 地域・年齢別人口（ods.population）の年齢階級×性別の縦持ちビュー。人口ピラミッド・高齢化率の集計に便利
-- ods.source_files: 取り込みの実行結果。自治体カバレッジ・失敗理由・エンコーディングの記録。
-  公開自治体は種別ごとに一部のみで、このテーブルで確認できる。基本は1行=1リソースだが、
-  種別に一致しながら CSV リソースを1つも持たないパッケージ（PDF や Excel でだけ登録されて
-  いる場合）は、パッケージ単位で1行 status=skipped / reason=no_csv_resource を記録する。
-  これが無いと「CSV 以外で公開している」と「公開していない」を台帳から区別できない。
-  HTML のページへのリンクだけで登録されたパッケージは、そのページに置かれた CSV を
-  たどって取り込み、CSV ごとに1行（via_page_url にたどったページ）を記録する。
-  ページに種別の CSV が無ければ reason=no_csv_on_page、ページを開けなければ
-  reason=page_fetch_error になる
-
-取り込みは毎回全量再取得の洗い替え。1リソースの失敗（リンク切れ・ヘッダー不一致等）は
-source_files に記録して隔離し、全体を止めない。リソースのホストは自治体ごとに分散して
-いるためホスト別にリクエスト間隔を制御する（data.bodik.jp は2秒以上）。
-同一 URL が複数リソースとして登録されている場合（同じファイルに上書き公開しつつ、更新時点
-ごとにリソースを増やしている自治体がある）は最初の1件のみ取り込み、落とした側は
-status=skipped / reason=duplicate_url で台帳に残す。新しい月のリソースが前の月と同じ
-ファイルを指したまま登録されている例があり、その月はどこにも無い。台帳に行が無いと
-取り込み側が落としたのか原典に無いのかを後から区別できない。名称が空の行（表末尾の
-バージョン表記など）は実体を持たないため落とす。名称の列を持たない種別（ods.fire_hydrant）は
-ods_datasets.yml の identity_column で判定に使う列を差し替える。
-
-自治体のページには、別の種別の CSV が同じページに並ぶことがある。ページから拾うのは、
-ファイル名が種別のスラッグに一致するか、リンクの文言に種別の名前（ods_datasets.yml の
-title_patterns）が入っている CSV だけで、そのうえでカタログに登録された CSV と同じ
-ヘッダー検査を通す。証明書の検証には certifi のルート証明書を使う。実行環境の OS の
-ストアに無いルート証明書を使う自治体のサイトがある。
-
-種別誤判定を弾くため、名称と所在地の両方をマッピングできないファイルは隔離する。
-名称・所在地の列を持たない種別（ods.school_district / ods.fire_hydrant）は
-ods_datasets.yml の required_columns で必須列を差し替える。
-
-元データの値は補正せず原典のまま保持する。日付は自治体ごとに表記が異なる
-（YYYY-MM-DD / YYYY/M/D / YYYY.M.D）ため DATE に正規化するが、「4月頃」「毎年1月1日」の
-ような自由記述は推測せず NULL にする。
-
-### 地図表示用の列
-
-ods の緯度経度を持つ16種別と childcare の2表には、原典の lat / lon とは別に
-地図表示用の列を付与する。
-lat / lon は自治体が公開した生値のままで、緯度と経度が入れ替わったまま公開されている
-自治体（ods.cultural_property の豊島区、ods.public_wireless_lan の世田谷区など複数の
-種別・自治体）や、経度の小数点が欠落している行（ods.event の狛江市）がある。
-入れ替わっていた行は geo_source = 'source_swapped' で引ける。小数点欠落のように
-どちらとも解釈できない値は値域外として落とすので geo_lat が NULL になり、
-lat is not null and geo_lat is null で該当行を取り出せる。
-
-原典に使える座標が無い行は、住所を ABR（アドレス・ベース・レジストリ）で
-ジオコーディングした座標で補う。原典の座標は常に優先する。補完の対象は ods のみで、
-childcare は原典の座標だけを使う（都福祉局の一覧は全行が値域内で、補う行が無い）。
-
-- geo_lat / geo_lon: 採用した座標。採用できなければ NULL
-- geo_source: 由来。source（原典のまま）/ source_swapped（入れ替えて採用）/
-  abr（住所から求めた）/ NULL
-- geo_level: 座標の粒度。原典由来は source、ABR 由来は abr-geocoder の
-  coordinate_level（residential_detail / residential_block / machiaza_detail / machiaza）
-- geometry: geo_lat / geo_lon から作った POINT（GEOMETRY 型）。座標が無い行は NULL
-
-値域は東京都ではなく日本全域（緯度 20.0〜46.0 / 経度 122.0〜154.5）にとる。都外の
-所在地を持つ行が実在し、東京都に絞ると原典の正しい座標を捨てるため。緯度域と経度域は
-重ならないので、この範囲でも緯度経度の入れ替わりは一意に判定できる。
-
-### ジオコーディング
-
-pipelines/geocode.py が data/ods/*.ndjson と data/hokenjo/*.ndjson の住所を
-abr-geocoder に通し、(組織コード, 住所) 単位で data/geocode/addresses.ndjson に出す。
-ODS は原典の緯度経度を優先してここで補うだけだが、保健所台帳は緯度経度を持たないので
-座標はすべてここから来る。
-
-住所は自分の市区町村名から始まらないことがあり、そのままでは市区町村の代表点までしか
-解決しない。東京都名と自治体名を必要に応じて前置してから渡す。ただし東京都の局が
-公開したデータの組織名は「東京都デジタルサービス局」のような部局名なので、
-市区町村名としては使わない。
-
-すでに都道府県名で始まる住所には何も足さない。区市町村は都外に保養所などを持っており、
-前置すると「東京都新宿区山梨県北杜市…」という存在しない住所ができる。前置した自治体の
-町字と偶然一致すれば、全く別の場所の座標を採用してしまう。
-
-市区町村代表点（coordinate_level = city）は採用しない。地図に出すと区役所にピンが
-積み上がるだけで、位置の情報になっていない。
-
-ABR データは市区町村コードを62件明示して取得する。都道府県コード 130001 を渡すと
-住居表示データが落ちてこず地番マスターだけになり、丁目代表点までしか解決しなくなる。
-地番は使わない（--target residential）。地番を使うと解決が地番側に寄って街区の解決を
-奪い、住居表示の採用がかえって減る。
-
-abrg は入力と同じ件数を返さない。隣接する2行を連結して1クエリにしてしまうことがあり、
-連結された側は結果が返らない。突合は abrg が返す query.input を NFKC 正規化した文字列で
-行い、解決しなかった住所は件数を数えて警告に出す。
-
-ABR の配布元は国外からの取得に 403 を返し、GitHub のランナー（米国）からは取れない。
-そのため日本から取得した abrg のデータ（database と cache、圧縮して約 270MB）を
-50MB ずつの断片と目録に分けて assets.queria.io に置き、ビルドはまずそれを展開して
-取得の代わりにする（pipelines/geocode.py の ABR_SNAPSHOT_URL が目録）。断片は目録の
-SHA-256 で確かめる。展開できなかったときだけ配布元から取る。
-作り直しは日本から scripts/refresh_abr_snapshot.py --upload で行い、出力された日付を
-ABR_SNAPSHOT_DATE に書いて PR にする。CDN のキャッシュに古い中身が残らないよう、
-置く名前には作った日付を入れて上書きしない。
-
-abrg は取得元の HTTP ステータスを見ずに応答を保存するので、取得元がエラーページを返すと
-HTML が .zip の名前で残り、abrg はそれを飛ばしたあと終了せずに止まることがある。
-そのため abrg の実行は download 600 秒・ジオコーディング 300 秒で打ち切り、取得後に
-zip として読めないファイルが残っていれば、その先頭と取得元の応答をログに出して
-60 秒・180 秒の間隔で2回まで取り直す。それでも残れば失敗させる。
-
-ods.school_district は施設一覧ではなく学校×通学区域の一覧で、所在地・緯度経度の列を持たない
-（学校の位置は nlftp.facility.school を参照）。町丁目ごとに学校名を並べる独自形式で
-通学区域を公開している自治体は標準形式ではないため収録していない。
-
-ods.fire_hydrant は定義上そもそも名称の列を持たず、種別（消火栓・防火水槽・プール・河川等）で
-水利を識別する。種別に統制語彙が無いため表記は自治体ごとに揺れる（防火水槽 / 防火水そう など）が、
-原典のまま保持する。管轄・水利番号を並べる独自様式で公開している自治体は収録していない。
-
-ods.care_service は区市町村が公開する介護保険サービス事業所の一覧で、全国網羅の
-mhlw.kaigo.establishment（介護サービス情報公表システム）とは別に、自治体独自の公開分を統合する。
-緯度経度・定員は推奨項目のため掲載していない自治体があり全件は揃わない。事業所番号・法人番号を
-Excel が指数表記に変換したまま公開している自治体があり（例: 中央区）、原典のまま文字列で保持する。
-
-ods.food_business は食品衛生法に基づき保健所が許可・届出を受理した飲食店・食品製造/販売施設の
-一覧で、1行=1施設。営業の種類（飲食店営業・菓子製造業など）・業態・許可年月日・申請区分を持つ。
-営業の種類と申請区分は統制語彙が定義されているが自治体ごとに表記が揺れるため原典のまま保持する。
-緯度経度は推奨項目で掲載していない自治体があり全件は揃わない。ID を Excel が指数表記に変換した
-まま公開している自治体があり（例: 中央区）、原典のまま文字列で保持する。廃業した施設を一覧から
-除いている自治体があるため、掲載範囲は自治体ごとに異なる。
-
-## テーブル: childcare.nursery_school
-
-東京都内の認可保育所の一覧（3,579施設、2025-10 版時点）。取り込む版は自動で最新に追随する。
-
-- source_edition: 取込時点（取り込んだ「社会福祉施設等一覧」の時点。YYYY-MM）
-- establisher_type: 設置（設置主体の区分。区市町村立・私立等）
-- name: 施設名
-- postal_code: 郵便番号
-- address: 所在地（都道府県名を含まない。「千代田区外神田…」形式）
-- lon: 経度（十進度、JGD2011）
-- lat: 緯度（十進度、JGD2011）
-- crs: 座標系（元データに記載された座標系。JGD2011）
-- geo_lat / geo_lon: 地図表示用の座標。原典の緯度経度が日本の値域に収まればその値、
-  入れ替わっていれば入れ替えた値（→「地図表示用の列」）
-- geo_source: 座標の由来（source / source_swapped / NULL）
-- geo_level: 座標の粒度。原典由来なので source（採用できる座標が無い行は NULL）
-- geometry: geo_lat / geo_lon から作った POINT（GEOMETRY 型）
-- phone_number: 電話番号
-- capacity: 認可定員（人。元データの '-' や空欄は NULL）
-
-## テーブル: childcare.children_center
-
-東京都内の児童館の一覧（590施設、2025-10 版時点）。取り込む版は自動で最新に追随する。
-
-- source_edition: 取込時点（取り込んだ「社会福祉施設等一覧」の時点。YYYY-MM）
-- establisher_type: 設置（設置主体の区分。区市町村立・私立等）
-- name: 施設名
-- postal_code: 郵便番号
-- address: 所在地（都道府県名を含まない。「千代田区外神田…」形式）
-- lon: 経度（十進度、JGD2011）
-- lat: 緯度（十進度、JGD2011）
-- crs: 座標系（元データに記載された座標系。JGD2011）
-- geo_lat / geo_lon: 地図表示用の座標。原典の緯度経度が日本の値域に収まればその値、
-  入れ替わっていれば入れ替えた値（→「地図表示用の列」）
-- geo_source: 座標の由来（source / source_swapped / NULL）
-- geo_level: 座標の粒度。原典由来なので source（採用できる座標が無い行は NULL）
-- geometry: geo_lat / geo_lon から作った POINT（GEOMETRY 型）
-- phone_number: 電話番号
-- capacity: 定員（人。元データの '-' や空欄は NULL。元データは全施設が '-' で公開されており全行 NULL）
-
-## スキーマ: hokenjo（保健所台帳）
-
-東京都保健医療局が公開する保健所台帳。東京都が設置する保健所（八王子市・町田市を除く
-多摩地域と島しょ）が保有する営業許可・届出の一覧で、毎月更新される。台帳の時点は
-source_as_of に入る。台帳は緯度経度を持たないので、所在地から ABR で求めた座標を
-geo_lat / geo_lon に持つ（geo_source は 'abr' か NULL の2値）。
-
-区市町村が自ら公開する ods.food_business とは出所が別で、収録範囲が重なる市がある。
-
-## テーブル: hokenjo.food_establishment
-
-食品衛生法に基づく営業許可・営業届出の一覧（38,707行）。1行 = 1施設 × 1つの営業の種類で、
-1つの施設が複数の種類で許可を受けていればその数だけ行が分かれる（最多で13行）。
-施設の数を数えるなら `count(distinct (name, address))` を使う。全38,707行に対して施設は31,089。
-
-収録は平成29年1月以降の新規許可と同年4月以降の更新で、それ以前に許可を受けて以降更新のない
-施設は入らない。permit_date は初回の許可日なので、これより古い日付が入る（最も古いのは1956年）。
-移動販売・自動販売機・行商などと、廃止・休止した施設、公表を希望しない施設は除かれている。
-
-- source_as_of: 台帳の時点
-- permit_type: 区分（許可 / 届出）。2021年6月の食品衛生法改正で、それまで許可が必要だった
-  業種の一部が届出だけで足りるようになった。飲食店は許可、コンビニエンスストアや
-  食料品の販売は届出に入るため、業態を数えるときは両方を見る
-- name: 屋号
-- address: 営業所所在地
-- business_type: 営業の種類（飲食店営業(一般飲食店)・菓子製造業(パン製造業) のように業種と細分を併記）
-- application_type: 申請区分（新規 / 継続 など。届出の行は NULL）
-- phone_number: 営業所電話番号
-- permit_date: 許可日（許可は初回許可日、届出は届出年月日）
-- operator_name / operator_address / operator_phone_number: 営業者の氏名・住所・電話番号
-- representative_name: 法人代表者氏名
-- city_code: 所在地から求めた5桁の市区町村コード（e_stat.code.municipality・境界データと直結）
-- geo_lat / geo_lon / geo_source / geo_level / geometry: 所在地から求めた位置
-
-## テーブル: hokenjo.sanitation_facility
-
-生活衛生関係営業の施設一覧（7,712行）。理容所・美容所・旅館・クリーニング所。
-旅館は休止している施設を含み、クリーニング所は無店舗取次店を含む。
-
-- source_as_of: 台帳の時点
-- facility_type: 施設の種別（理容所 / 美容所 / 旅館 / クリーニング所）
-- permit_number: 確認番号（旅館は許可番号）
-- business_form: 営業形態（クリーニング所は一般・取次所など、旅館は旅館・ホテル営業など。
-  理容所・美容所は NULL）
-- name: 施設名称
-- address: 施設所在地
-- building: 施設ビル名（所在地とは別列。ジオコーディングは所在地だけを使う）
-- phone_number: 施設電話番号
-- permit_date: 確認日（旅館は許可年月日）
-- operator_name / operator_address / operator_building / operator_phone_number: 営業者の情報
-- representative_name: 法人代表者氏名
-- city_code: 所在地から求めた5桁の市区町村コード（e_stat.code.municipality・境界データと直結）
-- geo_lat / geo_lon / geo_source / geo_level / geometry: 所在地から求めた位置
-
-## スキーマ: stats（都の統計）
-
-東京都総務局統計部が公表する統計。区市町村を横断でそろえた都の公式集計で、
-自治体ごとの公開状況に左右される ods スキーマとは収録範囲の性格が違う。
-
-## テーブル: stats.resident_population
-
-住民基本台帳による世帯と人口（22,033行）。1行 = 月 × 地域で、2001年1月分から
-毎月1日現在の人口・世帯数を収録する。地域コードは全国地方公共団体コードの上5桁で、
-census・boundary・lg_code と直結する。
-
-- year_month: 年月（YYYY-MM）
-- as_of_date: 現在日（各月1日）
-- area_code: 地域コード（全国地方公共団体コードの上5桁。集計行は都が付す地域コード）
-- area_name: 地域
-- area_type: 地域区分（総数 / 地域区分 / 支庁 / 区市町村。地域コードから導出）
-- population_total: 人口総数（日本人と外国人の合計。人）
-- population_change: 前月差（前月の人口総数との増減。人。原典が '-' の月は NULL）
-- japanese_total / japanese_male / japanese_female: 日本人人口（総数・男・女）
-- foreign_total / foreign_male / foreign_female: 外国人人口（総数・男・女）
-- household_total: 世帯数（住民基本台帳上の世帯数）
-- household_japanese_only: 日本人のみの世帯数
-- household_foreign_only: 外国人のみの世帯数
-- household_mixed: 複数国籍世帯数（日本人と外国人が同居する世帯）
-
-区市町村（62）のほかに総数・区部・市部・町村部・郡部・島部・支庁の集計行を含むため、
-区市町村だけを見るときは `area_type = '区市町村'` で絞る。全月で区市町村の合計が
-総数の行と一致することを確認している。2001年1月分のみ西東京市（13229）が無く、
-合併前の田無市（13216）・保谷市（13217）が入る（63区市町村）。
-
-外国人人口は2012年7月分までが外国人登録者数、2012年8月分以降が住民基本台帳上の人口で、
-世帯数もこのとき外国人世帯を含むようになった。7月分と8月分の間の増減はこの制度変更を
-含むため、そのまま人口動態として読まない。外国人の男女別人口と世帯数の国籍別内訳は
-原典の様式追加により2012年9月分以降のみで、それ以前は NULL。
-
-原典の癖はステージングで吸収している。集計行（区部・市部・郡部・島部）は表の先頭と
-各ブロックの見出しに2回現れるため 月 × 地域コード で1行に落とす（値は同一で、
-2011年10月分までは郡部の見出しが「西多摩郡」名で載る）。2001年分は西多摩郡4町村の
-地域コードが1つずつずれており（檜原村と奥多摩町がどちらも 13308）、2002年1月分以降の
-原典と同じコードに直している。「地域階層」列は2020年1月〜2022年2月分だけ番号体系が
-変わるため使わず、地域コードから区分を導出している。数値は原典のまま保持し、'-' は NULL。
-
-## テーブル: stats.foreign_population
-
-国籍・地域別外国人人口（57,204行）。1行 = 年 × 地域 × 国籍・地域で、1979年から
-各年1月1日現在の外国人人口を収録する。地域コードは全国地方公共団体コードの上5桁で、
-resident_population・census・boundary・lg_code と直結する。
-
-- year: 年（西暦）
-- as_of_date: 現在日（各年1月1日）
-- area_code: 地域コード（全国地方公共団体コードの上5桁。集計行と支庁は都が付す地域コード）
-- area_name: 地域
-- area_type: 地域区分（総数 / 地域区分 / 支庁 / 区市町村。地域コードから導出）
-- nationality: 国籍・地域（原典の区分名。総数・その他を含む24区分）
-- population: 外国人人口（人）
-
-地域は区市町村（53）と島部の支庁（4）に、総数・区部・市部・町村部・郡部・島部の
-集計行を加えた63地域。島部の町村は支庁単位でしか載らないため、都内を漏れなく分けるときは
-`area_type in ('区市町村', '支庁')` で絞る。全年でこの合計が総数の行と一致することを
-確認している。
-
-国籍・地域は総数の行を持つので、国籍・地域を足して総数を作らない。1990年までは
-ドイツが東ドイツと西ドイツの合計で、3区分を足すとその分が二重に数えられる
-（1991年以降は国籍・地域の合計が総数と一致する）。2016年までの「中国（平成28年まで）」は
-台湾を含み、「韓国・朝鮮（平成28年まで）」は韓国と朝鮮を合わせた区分で、2017年からは
-中国・台湾・韓国・朝鮮の4区分に分かれる。値は2012年までが外国人登録者数、
-2013年からが住民基本台帳上の人口。
-
-原典は列が和暦の年の横持ちで、パイプラインが西暦の縦持ちに直している。
-国籍・地域の区分が無い年（2017年より前の台湾など）は行が無い。
-
-## テーブル: stats.labour_earnings
-
-毎月勤労統計調査（地方調査）の月間現金給与額（10,400行）。1行 = 年 × 月（または年平均）×
-事業所規模 × 産業で、2013年から各月と年平均の常用労働者1人平均の額を収録する。
-
-- year: 年（西暦）
-- period_type: 期間区分（月次 / 年平均）
-- month: 月（1〜12。年平均の行は NULL）
-- establishment_size: 事業所規模（5人以上 / 30人以上）
-- industry_code: 産業符号（TL は調査産業計、英字1字は大分類、TK・TT は特掲産業）
-- industry_name: 産業
-- cash_earnings / cash_earnings_male / cash_earnings_female: 現金給与総額（計・男・女。円）
-- contractual_earnings / contractual_earnings_male / contractual_earnings_female: きまって支給する給与（計・男・女。円）
-- scheduled_earnings: 所定内給与（円）
-- overtime_earnings: 所定外給与（円）
-- special_earnings / special_earnings_male / special_earnings_female: 特別に支払われた給与（計・男・女。円）
-
-各年の値はその年の年報から取っている。年報には過去の年の年平均も載るが、その行は取り込まない。
-2013年以降の年について、後の年報に載る年平均がその年の年報の値とすべて一致することを確認している。
-事業所規模の5人以上は30人以上の事業所を含むため、2区分を足さない。
-
-産業は2013年〜2016年が53区分、2017年が52区分（鉱業が無い）で、大分類に加えて製造業の中分類・
-特掲産業などを含む。2018年からは調査産業計と大分類の17区分。年をまたいで産業を比べるときは
-industry_code でそろえる。産業名は年報によって読点の全角・半角と注記の番号が揺れるため、
-注記を落として半角の読点にそろえている。
-
-原典で秘匿（×）または該当なし（－）の値は NULL。現金給与総額 = きまって支給する給与 +
-特別に支払われた給与、きまって支給する給与 = 所定内給与 + 所定外給与 が全行で成り立つことを
-dbt のテスト（tests/stats_labour_earnings_breakdown.sql）で確かめている。
-
-## テーブル: stats.labour_earnings_by_employment_type
-
-毎月勤労統計調査（地方調査）の就業形態別月間現金給与額（5,720行）。1行 = 年 × 月（または年平均）×
-事業所規模 × 産業で、2013年から各月と年平均の常用労働者1人平均の額を一般労働者とパートタイム労働者に
-分けて収録する。年報の第2-1表（事業所規模5人以上）・第2-2表（事業所規模30人以上）から取る。
-
-- year / period_type / month / establishment_size / industry_code / industry_name: stats.labour_earnings と同じ
-- general_cash_earnings / part_time_cash_earnings: 現金給与総額（一般労働者・パートタイム労働者。円）
-- general_contractual_earnings / part_time_contractual_earnings: きまって支給する給与（円）
-- general_scheduled_earnings / part_time_scheduled_earnings: 所定内給与（円）
-- general_overtime_earnings / part_time_overtime_earnings: 所定外給与（円）
-- general_special_earnings / part_time_special_earnings: 特別に支払われた給与（円）
-
-パートタイム労働者は、常用労働者のうち1日の所定労働時間が一般の労働者より短い者、または1日の所定労働時間が
-同じで1週の所定労働日数が少ない者。一般労働者はそれ以外の常用労働者。就業形態を合わせた計の額は
-stats.labour_earnings にあり、year・month・establishment_size・industry_code で結合できる。
-
-産業は調査産業計と大分類の17区分（2017年は鉱業が無く16区分）で、stats.labour_earnings にある製造業の
-中分類・特掲産業は無い。各年の値の取り方と産業名のそろえ方は stats.labour_earnings と同じ。
-
-原典で秘匿（×・x）または該当なし（－）の値は NULL。現金給与総額 = きまって支給する給与 +
-特別に支払われた給与、きまって支給する給与 = 所定内給与 + 所定外給与 が一般労働者・パートタイム労働者の
-全行で成り立つことを dbt のテスト（tests/stats_labour_earnings_by_employment_type_breakdown.sql）で確かめている。
-
-## テーブル: stats.labour_hours
-
-毎月勤労統計調査（地方調査）の月間出勤日数・実労働時間（10,400行）。1行 = 年 × 月（または年平均）×
-事業所規模 × 産業で、2013年から各月と年平均の常用労働者1人平均の値を収録する。
-年報の第6-1表（事業所規模5人以上）・第6-2表（事業所規模30人以上）から取る。
-
-- year / period_type / month / establishment_size / industry_code / industry_name: stats.labour_earnings と同じ
-- days_worked / days_worked_male / days_worked_female: 出勤日数（計・男・女。日）
-- total_hours / total_hours_male / total_hours_female: 総実労働時間（計・男・女。時間）
-- scheduled_hours / scheduled_hours_male / scheduled_hours_female: 所定内労働時間（計・男・女。時間）
-- overtime_hours / overtime_hours_male / overtime_hours_female: 所定外労働時間（計・男・女。時間）
-
-値は原典の小数1桁のまま DECIMAL で持つ。行の区分（年・月・事業所規模・産業）は stats.labour_earnings と
-全行で一致し、year・month・establishment_size・industry_code で結合できる。各年の値の取り方と
-産業の区分の変わり方も stats.labour_earnings と同じで、後の年報に載る過去年の年平均（2,402行）は
-その年の年報の値とすべて一致する。
-
-原典で秘匿（×・x）または該当なし（－）の値は NULL。総実労働時間 = 所定内労働時間 + 所定外労働時間
-が計・男・女のすべてで成り立つことを dbt のテスト（tests/stats_labour_hours_breakdown.sql）で確かめている。
-
-## テーブル: stats.labour_hours_by_employment_type
-
-毎月勤労統計調査（地方調査）の就業形態別月間出勤日数・実労働時間（5,720行）。1行 = 年 × 月（または年平均）×
-事業所規模 × 産業で、2013年から各月と年平均の常用労働者1人平均の値を一般労働者とパートタイム労働者に
-分けて収録する。年報の第7-1表（事業所規模5人以上）・第7-2表（事業所規模30人以上）から取る。
-
-- year / period_type / month / establishment_size / industry_code / industry_name: stats.labour_earnings と同じ
-- general_days_worked / part_time_days_worked: 出勤日数（一般労働者・パートタイム労働者。日）
-- general_total_hours / part_time_total_hours: 総実労働時間（時間）
-- general_scheduled_hours / part_time_scheduled_hours: 所定内労働時間（時間）
-- general_overtime_hours / part_time_overtime_hours: 所定外労働時間（時間）
-
-値は原典の小数1桁のまま DECIMAL で持つ。就業形態を合わせた計の値は stats.labour_hours にあり、
-year・month・establishment_size・industry_code で結合できる。stats.labour_earnings_by_employment_type とも
-同じキーで結合でき、就業形態別の時間あたりの給与を求められる。
-
-産業は調査産業計と大分類の17区分（2017年は鉱業が無く16区分）で、stats.labour_hours にある製造業の
-中分類・特掲産業は無い。各年の値の取り方と産業名のそろえ方は stats.labour_earnings と同じ。
-
-原典で秘匿（×・x）または該当なし（－）の値は NULL。総実労働時間 = 所定内労働時間 + 所定外労働時間 が
-一般労働者・パートタイム労働者の全行で成り立つことを dbt のテスト
-（tests/stats_labour_hours_by_employment_type_breakdown.sql）で確かめている。
-
-## テーブル: stats.labour_employment
-
-毎月勤労統計調査（地方調査）の常用労働者数（推計）とパートタイム労働者比率（10,400行）。1行 = 年 × 月
-（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均の値を収録する。
-年報の第10-1表（事業所規模5人以上）・第10-2表（事業所規模30人以上）から取る。
-
-- year / period_type / month / establishment_size / industry_code / industry_name: stats.labour_earnings と同じ
-- employees_start / employees_start_male / employees_start_female: 前月末労働者数（計・男・女。人）
-- employees_added / employees_added_male / employees_added_female: 本月中の増加労働者数（計・男・女。人）
-- employees_removed / employees_removed_male / employees_removed_female: 本月中の減少労働者数（計・男・女。人）
-- employees / employees_male / employees_female: 本月末労働者数（計・男・女。人）
-- part_time_ratio / part_time_ratio_male / part_time_ratio_female: パートタイム労働者比率（計・男・女。％）
-
-労働者数は INTEGER、比率は原典の小数1桁のまま DECIMAL で持つ。年平均の行の労働者数は各月の平均。
-行の区分（年・月・事業所規模・産業）は stats.labour_earnings と全行で一致し、year・month・
-establishment_size・industry_code で結合できる。男女の値は別に推計されているため、計が男と女の和と
-一致しない行がある（390行）。
-
-原典で秘匿（×・x）または該当なし（－）の値は NULL。月次の行で 本月末労働者数 = 前月末労働者数 +
-増加労働者数 − 減少労働者数 が計・男・女のすべてで成り立つことを dbt のテスト
-（tests/stats_labour_employment_flow.sql）で確かめている。
-
-## テーブル: stats.labour_employment_by_employment_type
-
-毎月勤労統計調査（地方調査）の就業形態別常用労働者数（5,707行）。1行 = 年 × 月（または年平均）×
-事業所規模 × 産業で、2013年から各月と年平均の常用労働者数（推計）を一般労働者とパートタイム労働者に
-分けて収録する。年報の第11-1表（事業所規模5人以上）・第11-2表（事業所規模30人以上）から取る。
-
-- year / period_type / month / establishment_size / industry_code / industry_name: stats.labour_earnings と同じ
-- general_employees_start / part_time_employees_start: 前月末労働者数（一般労働者・パートタイム労働者。人）
-- general_employees_added / part_time_employees_added: 本月中の増加労働者数（人）
-- general_employees_removed / part_time_employees_removed: 本月中の減少労働者数（人）
-- general_employees / part_time_employees: 本月末労働者数（人）
-
-労働者数は INTEGER で持ち、年平均の行は各月の平均。産業は調査産業計と大分類の17区分（2017年は鉱業が無く
-16区分）で、stats.labour_employment にある製造業の中分類・特掲産業は無い。2016年報の第11-1表は鉱業の
-13行で「年平均・月」が空欄（値はすべて「－」）なので、その13行は収録しない。
-
-一般労働者とパートタイム労働者の本月末労働者数の和は stats.labour_employment の employees と全行で一致し、
-year・month・establishment_size・industry_code で結合できる。月次の行で 本月末労働者数 = 前月末労働者数 +
-増加労働者数 − 減少労働者数 は2つの就業形態を合わせた値では成り立つが、就業形態ごとには成り立たない
-（差は一般労働者とパートタイム労働者で大きさが同じで符号が逆）。この2つの関係を dbt のテスト
-（tests/stats_labour_employment_by_employment_type_total.sql）で確かめている。原典で秘匿（×・x）または
-該当なし（－）の値は NULL。
-
-## テーブル: stats.labour_earnings_by_size
-
-毎月勤労統計調査（地方調査）の規模別月間現金給与額（676行）。1行 = 年 × 月（または年平均）×
-事業所規模で、2013年から各月と年平均の常用労働者1人平均の額を収録する。年報の第3表から取る。
-
-- year / period_type / month: stats.labour_earnings と同じ
-- establishment_size: 事業所規模（5〜29人 / 30〜99人 / 100〜499人 / 500人以上）
-- cash_earnings ほかの金額の列: stats.labour_earnings と同じ（円）
-
-産業は調査産業計だけ。事業所規模の4区分は重ならず、stats.labour_earnings の「5人以上」「30人以上」とは
-区分の切り方が違う。各年の値の取り方は stats.labour_earnings と同じ。現金給与総額 = きまって支給する給与 +
-特別に支払われた給与、きまって支給する給与 = 所定内給与 + 所定外給与 が全行で成り立つことを dbt のテスト
-（tests/stats_labour_earnings_by_size_breakdown.sql）で確かめている。
-
-## テーブル: stats.labour_hours_by_size
-
-毎月勤労統計調査（地方調査）の規模別月間出勤日数・実労働時間（676行）。1行 = 年 × 月（または年平均）×
-事業所規模で、2013年から各月と年平均の常用労働者1人平均の値を収録する。年報の第8表から取る。
-
-- year / period_type / month / establishment_size: stats.labour_earnings_by_size と同じ
-- days_worked ほかの日数・時間の列: stats.labour_hours と同じ（日・時間）
-
-値は原典の小数1桁のまま DECIMAL で持つ。産業は調査産業計だけで、事業所規模の4区分は重ならない。
-行の区分は stats.labour_earnings_by_size と全行で一致し、year・month・establishment_size で結合できる。
-各年の値の取り方は stats.labour_earnings と同じ。総実労働時間 = 所定内労働時間 + 所定外労働時間 が
-計・男・女のすべてで成り立つことを dbt のテスト（tests/stats_labour_hours_by_size_breakdown.sql）で確かめている。
-
-## テーブル: stats.labour_hours_by_size_and_employment_type
-
-毎月勤労統計調査（地方調査）の規模・就業形態別月間出勤日数・実労働時間（676行）。1行 = 年 × 月（または年平均）×
-事業所規模で、2013年から各月と年平均の常用労働者1人平均の値を、一般労働者とパートタイム労働者に分けて収録する。
-年報の第9表から取る。
-
-- year / period_type / month / establishment_size: stats.labour_hours_by_size と同じ
-- general_* / part_time_* の日数・時間の列: stats.labour_hours_by_employment_type と同じ（日・時間）
-
-値は原典の小数1桁のまま DECIMAL で持つ。産業は調査産業計だけで、事業所規模の4区分は重ならない。
-行の区分は stats.labour_hours_by_size と全行で一致し、year・month・establishment_size で結合できる。
-各年の値の取り方は stats.labour_earnings と同じ。総実労働時間 = 所定内労働時間 + 所定外労働時間 が
-一般労働者・パートタイム労働者のすべてで成り立つことを dbt のテスト
-（tests/stats_labour_hours_by_size_and_employment_type_breakdown.sql）で確かめている。
-
-## テーブル: stats.labour_earnings_by_size_and_employment_type
-
-毎月勤労統計調査（地方調査）の規模・就業形態別月間現金給与額（676行）。1行 = 年 × 月（または年平均）×
-事業所規模で、2013年から各月と年平均の常用労働者1人平均の額を、一般労働者とパートタイム労働者に分けて収録する。
-年報の第4表から取る。
-
-- year / period_type / month / establishment_size: stats.labour_earnings_by_size と同じ
-- general_* / part_time_* の金額の列: stats.labour_earnings_by_employment_type と同じ（円）
-
-産業は調査産業計だけで、事業所規模の4区分は重ならない。行の区分は stats.labour_earnings_by_size と全行で一致し、
-year・month・establishment_size で結合できる。各年の値の取り方は stats.labour_earnings と同じ。
-現金給与総額 = きまって支給する給与 + 特別に支払われた給与、きまって支給する給与 = 所定内給与 + 所定外給与 が
-一般労働者・パートタイム労働者のすべてで成り立つことを dbt のテスト
-（tests/stats_labour_earnings_by_size_and_employment_type_breakdown.sql）で確かめている。
-
-### データ更新手順
-
-パイプライン実行時に以下を行う。ビルドは `bash scripts/build.sh` で実行する（Queria に公開する）。
-
-- pipelines/ckan.py: CKAN API からカタログメタデータ全量を取得し NDJSON で data/catalog/ に保存（毎回洗い替え）
-- pipelines/childcare.py: catalog のメタデータから「社会福祉施設等一覧」の最新版を解決し、
-  認可保育所・児童館の CSV をダウンロードして cp932 から UTF-8 に変換し data/childcare/ に保存。
-  取り込んだ版・パッケージ・URL は data/childcare/source.ndjson に記録する（catalog の後に実行する）
-- pipelines/hokenjo.py: 保健所台帳の配布ページから台帳ごとの CSV のリンクと時点を解決し、
-  ダウンロードして共通キーに正規化し data/hokenjo/ に保存する。リンクの URL は更新のたびに
-  変わるため固定せず、台帳名をページの本文から引き当てる。6種すべてが揃わなければ止める
-  （ジオコーディングの前に実行する）
-- pipelines/resident_population.py: catalog のメタデータから公開済みの最新月を解決し、
-  2001年1月分からその月までの月次 CSV をダウンロードして共通キーに正規化し
-  data/resident_population/ に保存する（catalog の後に実行する）。公開済みの月にも
-  遡及訂正が入るため直近36か月分は毎回取得し直し、それより古い月は取得済みのファイルを使う。
-  取り込んだ月・URL・行数は data/resident_population/source.ndjson に記録する
-- pipelines/foreign_population.py: 外国人人口の時系列 CSV（1979年からの全年が1ファイル）を
-  毎回ダウンロードし、和暦の年の列を西暦の縦持ちに直して data/foreign_population/ に保存する。
-  取得元 URL と行数は data/foreign_population/source.ndjson に記録する
-- pipelines/labour_earnings.py: 毎月勤労統計調査の年報の一覧ページから各年の年報を解決し、
-  第1-1表・第1-2表の CSV をダウンロードして公表年の行を data/labour_earnings/ に保存する。
-  ファイル名の付け方が年によって違うため URL は固定せず、表題の行で表を確かめる。
-  取り込んだ年報・表・URL・行数は data/labour_earnings/source.ndjson に記録する
-- pipelines/labour_hours.py: 同じ年報から第6-1表・第6-2表の CSV をダウンロードし、公表年の行を
-  data/labour_hours/ に保存する。表は年報のページに並ぶ順番で選び、表題の行で確かめる
-  （2024年報はファイル名の番号が1つずれている）
-- pipelines/labour_employment.py: 同じ年報から第10-1表・第10-2表の CSV をダウンロードし、公表年の行を
-  data/labour_employment/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
-- pipelines/labour_earnings_by_employment_type.py: 同じ年報から第2-1表・第2-2表の CSV をダウンロードし、
-  公表年の行を data/labour_earnings_by_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
-- pipelines/labour_hours_by_employment_type.py: 同じ年報から第7-1表・第7-2表の CSV をダウンロードし、
-  公表年の行を data/labour_hours_by_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
-- pipelines/labour_employment_by_employment_type.py: 同じ年報から第11-1表・第11-2表の CSV をダウンロードし、
-  公表年の行を data/labour_employment_by_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
-- pipelines/labour_earnings_by_size.py: 同じ年報から第3表の CSV をダウンロードし、
-  公表年の行を data/labour_earnings_by_size/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
-- pipelines/labour_hours_by_size.py: 同じ年報から第8表の CSV をダウンロードし、
-  公表年の行を data/labour_hours_by_size/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
-- pipelines/labour_hours_by_size_and_employment_type.py: 同じ年報から第9表の CSV をダウンロードし、
-  公表年の行を data/labour_hours_by_size_and_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
-- pipelines/labour_earnings_by_size_and_employment_type.py: 同じ年報から第4表の CSV をダウンロードし、
-  公表年の行を data/labour_earnings_by_size_and_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
-
-## テスト
-
-取り込みの判定ロジック（pipelines/）と、重複解消の規則（macros/）の単体テスト。
-ネットワークにも DuckLake にもつながず、packages.ndjson の小さな実例や、
-DuckDB のインメモリ DB に組み立てた数行で確かめる。
-
-```bash
-uv run --group dev pytest tests/pipelines -q
+# 東京都オープンデータ
+
+[東京都オープンデータカタログ](https://catalog.data.metro.tokyo.lg.jp/)で公開されているデータを、SQL で検索・集計・地図表示できるテーブルにしたデータセットです。カタログに登録されたデータセットの一覧、都内の区市町村が公開する自治体標準オープンデータセットを種類ごとに統合したテーブル、都の施設の一覧と保健所台帳、都の統計を収録しています。
+
+## 出典と利用条件
+
+| 原典 | スキーマ |
+| --- | --- |
+| 東京都オープンデータカタログの CKAN API（データセット・組織・分野分類のメタデータ） | `catalog` |
+| 都内の区市町村・東京都が公開する自治体標準オープンデータセットの CSV | `ods` |
+| 東京都福祉局「社会福祉施設等一覧」のうち認可保育所と児童館（[提供組織](https://catalog.data.metro.tokyo.lg.jp/organization/t000054)） | `childcare` |
+| 東京都保健医療局の[保健所台帳](https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho)のうち食品関係営業台帳と環境衛生施設台帳 | `hokenjo` |
+| 東京都総務局統計部「[住民基本台帳による世帯と人口](https://www.toukei.metro.tokyo.lg.jp/juukim/jm-index.htm)」と「[毎月勤労統計調査](https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm)」の年報 | `stats` |
+
+- [クリエイティブ・コモンズ 表示 4.0 国際（CC BY 4.0）](https://creativecommons.org/licenses/by/4.0/deed.ja)に従います。使うときは、使った資料の出典（「社会福祉施設等一覧」（東京都福祉局）など）と、Queria が加工したものであることを書いてください
+- `ods` の各行の出典は、その行を公開した自治体です。どのファイルから取り込んだかは `ods.source_files` にあります
+
+## テーブル
+
+| スキーマ | 内容 |
+| --- | --- |
+| `catalog` | 東京都オープンデータカタログに登録された全データセット（約 9,600 件）のメタデータ。データセット・リソース・提供組織・分野分類・タグ |
+| `ods` | 自治体標準オープンデータセット 22 種類（AED・避難場所・公共施設・子育て施設・介護サービス事業所・人口など）を、種類ごとに区市町村をまたいで統合したもの。取り込みの結果は `ods.source_files` |
+| `childcare` | 都内の認可保育所（`nursery_school`）と児童館（`children_center`） |
+| `hokenjo` | 保健所台帳の食品関係営業（`food_establishment`）と環境衛生施設（`sanitation_facility`） |
+| `stats` | 住民基本台帳の世帯と人口（`resident_population`）、国籍・地域別外国人人口（`foreign_population`）、毎月勤労統計調査の給与・労働時間・労働者数（`labour_*`） |
+
+## 使い方
+
+区市町村ごとの最新月の人口:
+
+```sql
+SELECT area_name, population_total, foreign_total
+FROM metro_tokyo.stats.resident_population
+WHERE area_type = '区市町村'
+  AND year_month = (SELECT max(year_month) FROM metro_tokyo.stats.resident_population)
+ORDER BY population_total DESC;
 ```
 
-dev グループは `default-groups = []` で既定から外してある。ビルドは
-`uv run queria sync` を通るので、既定に入れるとビルド環境にテスト依存が混ざる。
+自治体標準オープンデータセットの種類ごとに、取り込めた組織の数を確認する:
 
-tests/generic/ の .sql は dbt の generic test で、こちらは dbt が実行する。
+```sql
+SELECT dataset_id, count(DISTINCT org_code) AS organizations
+FROM metro_tokyo.ods.source_files
+WHERE status = 'ok'
+GROUP BY dataset_id
+ORDER BY organizations DESC;
+```
 
-## ライセンス
+## catalog の注意
 
-クリエイティブ・コモンズ 表示 4.0 国際（CC BY 4.0）に従う。出典データは加工して利用している。
+- 毎回 CKAN API から全件を取得し直します
+- 組織コードは全国地方公共団体コードに準拠しています（t000xxx=都庁各局、t131xxx=特別区、t132xxx=市、t133xxx=町村）
+- リソースの URL は都の共有ストレージや各自治体のサイトに分散していて、ファイルの更新で変わることがあります。`catalog.resources` の最新の URL を使ってください
 
-- 出典: 東京都福祉局「社会福祉施設等一覧」、東京都総務局統計部「住民基本台帳による世帯と人口」「毎月勤労統計調査」、
-  東京都保健医療局「食品関係営業台帳」「環境衛生施設台帳」（いずれも東京都オープンデータカタログ）
-- ライセンス: https://creativecommons.org/licenses/by/4.0/deed.ja
+## ods の注意
+
+- 公開している自治体は種類ごとに一部だけです。どの自治体のどのファイルを取り込んだか、取り込めなかった理由（リンク切れ・ヘッダーの不一致・CSV 以外の形式だけの登録など）は `ods.source_files` にあります
+- 新標準（データセット定義書A）と旧推奨データセット形式の両方の列名を、英語の共通の列名に統一しています。標準の列に当てはまらなかった元データの列は `extras`（JSON）にあります
+- 元データの値は原典のままです。分別区分・営業の種類・介護サービスの種類・水利の種類などは、統制語彙が無いか、あっても自治体ごとに表記が違います（燃やすごみ / 可燃ごみ、防火水槽 / 防火水そう など）
+- ID や事業所番号を Excel の指数表記（1.31025E+11）のまま公開している自治体があり、その行は元の ID を復元できません。同じ ID が複数の施設に付いている自治体もあります
+- 日付は自治体ごとに表記が違うため DATE に正規化しています。「4月頃」「毎年1月1日」のような自由記述は NULL です。文化財の指定日は、日が不明なものを 99 で埋めた表記（1982-04-99 など）があるため文字列のままです
+- 名称が空の行（表の末尾のバージョン表記など）は除いています。名称と所在地の両方を当てはめられないファイルは、別の種類のファイルとみなして取り込んでいません
+- 標準形式でない独自の様式（1 歳刻みの人口、町丁目ごとに学校名を並べた通学区域、管轄・水利番号の一覧など）は収録していません
+
+種類ごとの注意:
+
+- `population`: 町丁字ごとに公開する自治体（区部・練馬区など）と、自治体全体の 1 行だけの自治体があります。同じファイルに複数の調査年月日を追記する自治体があるので、時系列は `survey_date` で比べてください。月次で公開する自治体では、新しい月のリソースが前の月と同じファイルを指していたり URL が失効していたりして、その月が収録されないことがあります。同じ地域・調査年月日が複数のリソースから入ったときは、リソースの更新が新しいものだけを残しています
+- `hospital`: 東京都保健医療局が公開する都全域のデータを含むため、区市町村のデータと同じ医療機関が重複することがあります。`medical_institution_code` か名称と所在地で照合してください
+- `bicycle_parking`: 新標準の分割形式では住所が施設情報のファイルに分かれるため、住所が空で緯度経度だけの自治体があります
+- `polling_place`: 期日前投票所を含みます（`polling_place_type`）。住所や位置の無い自治体も多くあります
+- `care_service`: 全国の事業所は `mhlw.kaigo.establishment`（介護サービス情報公表システム）にあります。こちらは区市町村が独自に公開した分です。緯度経度・定員は推奨項目のため、掲載していない自治体があります
+- `food_business`: 廃業した施設を一覧から除いている自治体があり、掲載範囲は自治体ごとに違います。緯度経度は推奨項目のため、掲載していない自治体があります
+- `cultural_property`: 無形文化財や個人所有で住所非公開のものは位置がありません
+- `event`: 各自治体が公開している時点のファイルの内容で、過去のイベントを蓄積したものではありません
+- `fire_hydrant`: 名称の列を持たず、種類（消火栓・防火水槽など）で水利を見分けます
+- `garbage_separation`: 1 行が 1 自治体の 1 品目です。一部の自治体では、元データで分別区分と品目名が入れ替わったまま公開されています
+- `school_district`・`school_lunch`: 学校の位置は持ちません（`nlftp.facility.school` にあります）。給食の栄養価やアレルゲンは空欄の自治体が多く、学校 ID が空欄の自治体では学校名で学校を見分けます
+- `open_data_list`: 各自治体が自ら公開しているオープンデータの目録で、自治体ごとに収録範囲・粒度・鮮度が違います。カタログ全体の一覧は `catalog.datasets` にあります
+- `support_system`: 制度名（`title`）で制度を見分けます。金額や条件、産業分類・ライフステージなどのタグは `extras` にあります
+
+## 位置の列
+
+`ods` の緯度経度を持つ 16 種類と `childcare` の 2 テーブルには、原典の `lat`・`lon` のほかに、地図に表示するための列があります。`hokenjo` は台帳に緯度経度が無いので、位置はすべて所在地から求めたものです。
+
+- `geo_lat`・`geo_lon`: 採用した座標です。採用できなければ NULL です
+- `geo_source`: 座標の由来です。`source`（原典のまま）/ `source_swapped`（緯度と経度が入れ替わっていたので入れ替えた）/ `abr`（原典に使える座標が無く、住所から求めた）/ NULL
+- `geo_level`: 座標の粒度です。原典由来は `source`、住所から求めたものは細かい順に `residential_detail`（住居番号）/ `residential_block`（街区）/ `machiaza_detail`（丁目）/ `machiaza`（町字）です。市区町村の代表点は位置の情報にならないため採用していません
+- `geometry`: `geo_lat`・`geo_lon` の POINT です
+
+原典の `lat`・`lon` は自治体が公開した値のままです。緯度と経度が入れ替わったまま公開している自治体（`cultural_property` の豊島区、`public_wireless_lan` の世田谷区など）や、経度の小数点が欠落している行（`event` の狛江市）があります。どちらとも解釈できない値は採用しないので、`lat IS NOT NULL AND geo_lat IS NULL` で取り出せます。
+
+採用する座標の範囲は日本全域（緯度 20.0〜46.0、経度 122.0〜154.5）です。区市町村が都外に持つ保養所など、都外の所在地の行があるためです。住所から求める座標は、住所を[アドレス・ベース・レジストリ](https://www.digital.go.jp/policies/base_registry_address)で照合したもので、原典の座標を常に優先します。`hokenjo.food_establishment` の住所の 13% は町字の代表点までしか照合できないので、店舗ごとの距離を測るときは `geo_level` を確認してください。
+
+## childcare の注意
+
+- 「社会福祉施設等一覧」は年 2 回（5 月時点・10 月時点）新しいデータセットとして公開され、そのたびに最新のものを取り込みます。どの時点かは `source_edition` にあります
+- 所在地は都道府県名を含みません（「千代田区外神田…」の形式）。座標系は JGD2011 です
+- 児童館の定員は、原典がすべて「-」なので全行 NULL です
+
+## hokenjo の注意
+
+- 東京都が設置する保健所の管轄だけで、八王子市・町田市を除く多摩地域と島しょが対象です。23 区・八王子市・町田市はそれぞれが保健所を設置しているため含みません
+- 台帳は毎月更新されます。台帳の時点は `source_as_of` にあります
+- 区市町村が自ら公開する `ods.food_business` とは出所が別で、収録範囲が重なる市があります
+
+`food_establishment`:
+
+- 1 行が 1 施設・1 つの営業の種類で、複数の種類の許可を受けた施設は行が分かれます（最多で 13 行）。施設の数は `count(DISTINCT (name, address))` で数えてください（38,707 行に対して 31,089 施設）
+- 収録は平成29年1月以降の新規許可と同年4月以降の更新で、それ以前に許可を受けて以降更新のない施設は入っていません。`permit_date` は初回の許可日なので、これより古い日付も入ります（最も古いのは 1956 年）
+- 2021 年 6 月の食品衛生法の改正で、一部の業種は届出だけで営業できるようになりました。飲食店は許可、コンビニエンスストアや食料品の販売は届出に入るので、業態を数えるときは `permit_type` の両方を見てください
+- 移動販売・自動販売機・行商、廃止・休止した施設、公表を希望しない施設は含みません
+
+`sanitation_facility`:
+
+- 理容所・美容所・旅館・クリーニング所の一覧です。旅館は休止している施設を含み、クリーニング所は無店舗取次店を含みます
+
+## stats の注意
+
+`stats` は東京都総務局統計部の統計で、区市町村をまたいで揃えた都の公式の集計です。自治体ごとの公開状況に左右される `ods` とは、収録範囲の性格が違います。
+
+`resident_population`（住民基本台帳による世帯と人口）:
+
+- 2001 年 1 月分から、毎月 1 日の人口と世帯数です。地域コードは全国地方公共団体コードの上 5 桁です
+- 区市町村（62）のほかに、総数・区部・市部・町村部・郡部・島部・支庁の集計行を含みます。区市町村だけを見るときは `area_type = '区市町村'` で絞ってください。2001 年 1 月分だけは西東京市（13229）が無く、合併前の田無市（13216）・保谷市（13217）が入ります
+- 外国人の人口は 2012 年 7 月分まで外国人登録者数、2012 年 8 月分から住民基本台帳の人口で、世帯数もこのときから外国人の世帯を含みます。7 月分と 8 月分の間の増減はこの制度の変更を含みます。外国人の男女別人口と、世帯数の国籍別の内訳は 2012 年 9 月分からです
+
+`foreign_population`（国籍・地域別外国人人口）:
+
+- 1979 年から各年 1 月 1 日の値です。値は 2012 年までが外国人登録者数、2013 年からが住民基本台帳の人口です
+- 地域は区市町村（53）と島部の支庁（4）に、総数・区部・市部・町村部・郡部・島部の集計行を加えた 63 地域です。島部の町村は支庁の単位でしか載らないので、都内を漏れなく分けるときは `area_type IN ('区市町村', '支庁')` で絞ってください
+- 国籍・地域は総数・その他を含む 24 区分で、総数の行があります。国籍・地域を足して総数を作らないでください。1990 年まではドイツが東ドイツと西ドイツの合計で、3 区分を足すと二重に数えます
+- 2016 年までの「中国（平成28年まで）」は台湾を含み、「韓国・朝鮮（平成28年まで）」は韓国と朝鮮を合わせた区分です。2017 年からは中国・台湾・韓国・朝鮮の 4 区分に分かれます。区分の無い年（2017 年より前の台湾など）は行がありません
+
+毎月勤労統計調査（`labour_*`）:
+
+- 地方調査の東京都の値で、2013 年から各月と年平均を収録しています。各年の値はその年の年報から取っています。後の年報に載る過去の年の年平均は取り込んでいません（その年の年報の値とすべて一致します）
+- 原典で秘匿（×）または該当なし（－）の値は NULL です。日数・時間・比率は原典の小数 1 桁のままです
+- 事業所規模の「5人以上」は「30人以上」の事業所を含むので、2 つの区分を足さないでください。`*_by_size` の 4 区分（5〜29人・30〜99人・100〜499人・500人以上）は重ならず、産業は調査産業計だけです
+- 産業は、2013〜2016 年が 53 区分、2017 年が 52 区分（鉱業が無い）で、大分類に加えて製造業の中分類・特掲産業などを含みます。2018 年からは調査産業計と大分類の 17 区分です。年をまたいで比べるときは `industry_code` で揃えてください。産業名は年報によって読点の全角・半角と注記の番号が違うため、注記を外して半角の読点に統一しています
+- 就業形態別（`*_by_employment_type`）は調査産業計と大分類の 17 区分（2017 年は鉱業が無く 16 区分）だけです。パートタイム労働者は、常用労働者のうち 1 日の所定労働時間が一般の労働者より短い者、または 1 日の所定労働時間が同じで 1 週の所定労働日数が少ない者で、一般労働者はそれ以外の常用労働者です
+- 給与・労働時間・労働者数のテーブルは `year`・`month`・`establishment_size`・`industry_code`（規模別は `industry_code` を除く）で結合できます。給与と労働時間を結合すると、時間あたりの給与を求められます
+- 現金給与総額 = きまって支給する給与 + 特別に支払われた給与、きまって支給する給与 = 所定内給与 + 所定外給与、総実労働時間 = 所定内労働時間 + 所定外労働時間 が全行で成り立ちます
+- 常用労働者数の年平均の行は各月の平均です。男女の値は別に推計されているため、計が男と女の和と一致しない行があります（390 行）。月次の行では 本月末労働者数 = 前月末労働者数 + 増加労働者数 − 減少労働者数 が成り立ちますが、就業形態別では 2 つを合わせた値でだけ成り立ちます
+- 2016 年の 5 人以上の鉱業の就業形態別労働者数は、原典で年平均・月が空欄なので収録していません
+
+## ビルド
+
+```bash
+git submodule update --init
+uv sync
+bash scripts/build.sh
+```
+
+取り込みの仕組みと各パイプラインの説明は、リポジトリの MAINTAINING.md にあります。

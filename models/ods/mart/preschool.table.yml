@@ -1,13 +1,12 @@
 schema: ods
 name: preschool
 title: 子育て施設
-description: '都内区市町村が公開する「子育て施設一覧」（自治体標準オープンデータセット）を
+description: |-
+  都内の区市町村が公開する「子育て施設一覧」（自治体標準オープンデータセット）を統合したものです。施設の種別・収容定員・受入年齢・一時預かりの有無を持ちます。
 
-  横断統合したテーブル。施設種別・収容定員・受入年齢・一時預かり/病児保育の有無を持つ。
-
-  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
-
-  都全域の認可保育所・児童館は childcare スキーマ（東京都福祉局）にもある。'
+  - 公開している自治体は一部だけです。どの自治体のファイルを収録したかは `ods.source_files` にあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
+  - 都内全域の認可保育所・児童館は `childcare` にあります
 keywords:
   - 東京都
   - 子育て
@@ -24,7 +23,7 @@ fields:
     semantic: { role: entity, name: city }
   - name: facility_id
     title: ID
-    description: 自治体内で一意の施設 ID（元データの ID / NO 列）。1.31025E+11 のような Excel の指数表記のまま公開する自治体があり、その行は元の ID を復元できない
+    description: 元データの ID / NO 列。Excel の指数表記のまま復元できない値がある
   - name: name
     title: 名称
   - name: name_kana
@@ -49,27 +48,19 @@ fields:
     title: 経度
   - name: geo_lat
     title: 緯度（地図表示用）
-    description: 'Queria が付与。原典の緯度経度が使えればその値、緯度と経度が入れ替わっていれば入れ替えた値。
-
-      原典に使える座標が無い行は住所から求めた座標。採用できなければ NULL。由来は geo_source を見る'
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
   - name: geo_lon
     title: 経度（地図表示用）
     description: Queria が付与。geo_lat と対になる経度
   - name: geo_source
     title: 座標の由来
-    description: 'source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が入れ替わっていたので入れ替えて採用、
-
-      abr=原典に使える座標が無く住所から求めた座標を採用、NULL=採用できる座標が無い'
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
   - name: geo_level
     title: 座標の粒度
-    description: '原典由来は source。住所から求めた座標は abr-geocoder の粒度で、細かい順に
-
-      residential_detail（住居番号）/ residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
-
-      市区町村の代表点は位置の情報にならないため採用していない'
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: access
     title: アクセス方法
   - name: parking

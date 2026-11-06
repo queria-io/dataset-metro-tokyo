@@ -1,15 +1,11 @@
 schema: ods
 name: fire_hydrant
 title: 消防水利施設
-description: '都内区市町村が公開する「消防水利施設一覧」（自治体標準オープンデータセット）を
+description: |-
+  都内の区市町村が公開する「消防水利施設一覧」（自治体標準オープンデータセット）を統合したものです。1 行が 1 水利で、消火栓・防火水槽などの位置と口径を持ちます。
 
-  横断統合したテーブル。1行=1水利で、消火栓・防火水槽・プール・河川など消防が
-
-  消火用水として使える水利の位置と口径を持つ。名称の列は定義上持たず、種別で識別する。
-
-  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
-
-  標準形式ではない独自様式（管轄・水利番号の一覧など）は収録していない。'
+  - 公開している自治体は一部だけです。どの自治体のファイルを収録したかは `ods.source_files` にあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
 keywords:
   - 東京都
   - 防災
@@ -31,7 +27,7 @@ fields:
     description: 自治体内で一意の施設 ID（元データの ID / NO 列）。付番していない自治体は NULL
   - name: facility_type
     title: 種別
-    description: 消火栓・防火水槽・プール・河川など水利の種類。統制語彙が無く自治体ごとに表記が揺れる（防火水槽 / 防火水そう など）ため生値のまま
+    description: 消火栓・防火水槽・プール・河川など。表記は自治体ごとに違う
   - name: organization_name
     title: 地方公共団体名
   - name: address
@@ -60,27 +56,19 @@ fields:
     title: 経度
   - name: geo_lat
     title: 緯度（地図表示用）
-    description: 'Queria が付与。原典の緯度経度が使えればその値、緯度と経度が入れ替わっていれば入れ替えた値。
-
-      原典に使える座標が無い行は住所から求めた座標。採用できなければ NULL。由来は geo_source を見る'
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
   - name: geo_lon
     title: 経度（地図表示用）
     description: Queria が付与。geo_lat と対になる経度
   - name: geo_source
     title: 座標の由来
-    description: 'source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が入れ替わっていたので入れ替えて採用、
-
-      abr=原典に使える座標が無く住所から求めた座標を採用、NULL=採用できる座標が無い'
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
   - name: geo_level
     title: 座標の粒度
-    description: '原典由来は source。住所から求めた座標は abr-geocoder の粒度で、細かい順に
-
-      residential_detail（住居番号）/ residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
-
-      市区町村の代表点は位置の情報にならないため採用していない'
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: diameter
     title: 口径
     description: 対応する口径（ミリメートル）。記載のない水利は NULL
