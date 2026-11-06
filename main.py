@@ -16,7 +16,8 @@
 14. stats:    都の統計データ取得（毎月勤労統計調査の規模別月間現金給与額）
 15. stats:    都の統計データ取得（毎月勤労統計調査の規模別月間出勤日数・実労働時間）
 16. stats:    都の統計データ取得（毎月勤労統計調査の規模・就業形態別月間出勤日数・実労働時間）
-17. dbt:      dbt ビルド
+17. stats:    都の統計データ取得（毎月勤労統計調査の規模・就業形態別月間現金給与額）
+18. dbt:      dbt ビルド
 """
 
 import logging
@@ -33,6 +34,9 @@ from pipelines.labour_earnings_by_employment_type import (
     download_labour_earnings_by_employment_type,
 )
 from pipelines.labour_earnings_by_size import download_labour_earnings_by_size
+from pipelines.labour_earnings_by_size_and_employment_type import (
+    download_labour_earnings_by_size_and_employment_type,
+)
 from pipelines.labour_employment import download_labour_employment
 from pipelines.labour_employment_by_employment_type import (
     download_labour_employment_by_employment_type,
@@ -70,77 +74,83 @@ def dbt_build():
 
 def main():
     # 1. カタログメタデータ（CKAN API）
-    logger.info("1/17: catalog (カタログメタデータ)")
+    logger.info("1/18: catalog (カタログメタデータ)")
     download_catalog("data/catalog")
 
     # 2. 自治体標準オープンデータセット（catalog のメタデータから対象を判定）
-    logger.info("2/17: ods (自治体標準オープンデータセット)")
+    logger.info("2/18: ods (自治体標準オープンデータセット)")
     download_and_normalize()
 
     # 3. 都の保健所台帳（配布ページから CSV のリンクを解決）
-    logger.info("3/17: hokenjo (保健所台帳)")
+    logger.info("3/18: hokenjo (保健所台帳)")
     download_hokenjo("data/hokenjo")
 
     # 4. 住所のジオコーディング（ods と hokenjo が書いた NDJSON の住所を読む）
-    logger.info("4/17: geocode (住所のジオコーディング)")
+    logger.info("4/18: geocode (住所のジオコーディング)")
     geocode()
 
     # 5. 子育て施設データ（catalog のメタデータから最新版の一覧を解決）
-    logger.info("5/17: childcare (子育て施設データ)")
+    logger.info("5/18: childcare (子育て施設データ)")
     download_childcare("data/childcare")
 
     # 6. 都の統計データ（catalog のメタデータから最新月を解決）
-    logger.info("6/17: stats (住民基本台帳による世帯と人口)")
+    logger.info("6/18: stats (住民基本台帳による世帯と人口)")
     download_resident_population("data/resident_population")
 
     # 7. 都の統計データ（外国人人口の時系列。1ファイルに全年が入る）
-    logger.info("7/17: stats (外国人人口)")
+    logger.info("7/18: stats (外国人人口)")
     download_foreign_population("data/foreign_population")
 
     # 8. 都の統計データ（毎月勤労統計調査。年報の一覧から各年の表を解決する）
-    logger.info("8/17: stats (毎月勤労統計調査)")
+    logger.info("8/18: stats (毎月勤労統計調査)")
     download_labour_earnings("data/labour_earnings")
 
     # 9. 都の統計データ（毎月勤労統計調査の第6表。第1表と同じ年報から取る）
-    logger.info("9/17: stats (毎月勤労統計調査の労働時間)")
+    logger.info("9/18: stats (毎月勤労統計調査の労働時間)")
     download_labour_hours("data/labour_hours")
 
     # 10. 都の統計データ（毎月勤労統計調査の第10表。第1表と同じ年報から取る）
-    logger.info("10/17: stats (毎月勤労統計調査の常用労働者数)")
+    logger.info("10/18: stats (毎月勤労統計調査の常用労働者数)")
     download_labour_employment("data/labour_employment")
 
     # 11. 都の統計データ（毎月勤労統計調査の第2表。第1表と同じ年報から取る）
-    logger.info("11/17: stats (毎月勤労統計調査の就業形態別現金給与額)")
+    logger.info("11/18: stats (毎月勤労統計調査の就業形態別現金給与額)")
     download_labour_earnings_by_employment_type(
         "data/labour_earnings_by_employment_type"
     )
 
     # 12. 都の統計データ（毎月勤労統計調査の第7表。第1表と同じ年報から取る）
-    logger.info("12/17: stats (毎月勤労統計調査の就業形態別労働時間)")
+    logger.info("12/18: stats (毎月勤労統計調査の就業形態別労働時間)")
     download_labour_hours_by_employment_type("data/labour_hours_by_employment_type")
 
     # 13. 都の統計データ（毎月勤労統計調査の第11表。第1表と同じ年報から取る）
-    logger.info("13/17: stats (毎月勤労統計調査の就業形態別常用労働者数)")
+    logger.info("13/18: stats (毎月勤労統計調査の就業形態別常用労働者数)")
     download_labour_employment_by_employment_type(
         "data/labour_employment_by_employment_type"
     )
 
     # 14. 都の統計データ（毎月勤労統計調査の第3表。第1表と同じ年報から取る）
-    logger.info("14/17: stats (毎月勤労統計調査の規模別現金給与額)")
+    logger.info("14/18: stats (毎月勤労統計調査の規模別現金給与額)")
     download_labour_earnings_by_size("data/labour_earnings_by_size")
 
     # 15. 都の統計データ（毎月勤労統計調査の第8表。第1表と同じ年報から取る）
-    logger.info("15/17: stats (毎月勤労統計調査の規模別労働時間)")
+    logger.info("15/18: stats (毎月勤労統計調査の規模別労働時間)")
     download_labour_hours_by_size("data/labour_hours_by_size")
 
     # 16. 都の統計データ（毎月勤労統計調査の第9表。第1表と同じ年報から取る）
-    logger.info("16/17: stats (毎月勤労統計調査の規模・就業形態別労働時間)")
+    logger.info("16/18: stats (毎月勤労統計調査の規模・就業形態別労働時間)")
     download_labour_hours_by_size_and_employment_type(
         "data/labour_hours_by_size_and_employment_type"
     )
 
-    # 17. dbt ビルド
-    logger.info("17/17: dbt build")
+    # 17. 都の統計データ（毎月勤労統計調査の第4表。第1表と同じ年報から取る）
+    logger.info("17/18: stats (毎月勤労統計調査の規模・就業形態別現金給与額)")
+    download_labour_earnings_by_size_and_employment_type(
+        "data/labour_earnings_by_size_and_employment_type"
+    )
+
+    # 18. dbt ビルド
+    logger.info("18/18: dbt build")
     dbt_build()
 
 
