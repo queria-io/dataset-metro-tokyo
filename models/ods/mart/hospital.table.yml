@@ -1,13 +1,11 @@
 schema: ods
 name: hospital
 title: 医療機関
-description: '「医療機関一覧」（自治体標準オープンデータセット）を横断統合したテーブル。
+description: |-
+  都内の区市町村と東京都保健医療局が公開する「医療機関一覧」（自治体標準オープンデータセット）を統合したものです。診療科目・病床数・診療日時を持ちます。
 
-  東京都保健医療局が公開する都全域の医療機関データを含むため、区市町村独自公開分と
-
-  同一機関が重複しうる（medical_institution_code や名称+所在地で識別可能）。
-
-  診療科目・病床数・診療日時・災害拠点分類を持つ。'
+  - 東京都の都全域のデータと区市町村のデータで、同じ医療機関が重複することがあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
 keywords:
   - 東京都
   - 医療
@@ -48,27 +46,19 @@ fields:
     title: 経度
   - name: geo_lat
     title: 緯度（地図表示用）
-    description: 'Queria が付与。原典の緯度経度が使えればその値、緯度と経度が入れ替わっていれば入れ替えた値。
-
-      原典に使える座標が無い行は住所から求めた座標。採用できなければ NULL。由来は geo_source を見る'
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
   - name: geo_lon
     title: 経度（地図表示用）
     description: Queria が付与。geo_lat と対になる経度
   - name: geo_source
     title: 座標の由来
-    description: 'source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が入れ替わっていたので入れ替えて採用、
-
-      abr=原典に使える座標が無く住所から求めた座標を採用、NULL=採用できる座標が無い'
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
   - name: geo_level
     title: 座標の粒度
-    description: '原典由来は source。住所から求めた座標は abr-geocoder の粒度で、細かい順に
-
-      residential_detail（住居番号）/ residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
-
-      市区町村の代表点は位置の情報にならないため採用していない'
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: corporate_name
     title: 法人の名称
   - name: medical_institution_code

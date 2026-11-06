@@ -1,17 +1,12 @@
 schema: ods
 name: polling_place
 title: 投票所
-description: '都内区市町村が公開する「投票所一覧」（自治体標準オープンデータセット）を
+description: |-
+  都内の区市町村が公開する「投票所一覧」（自治体標準オープンデータセット）を統合したものです。期日前投票所を含み、`polling_place_type` で区別します。
 
-  横断統合したテーブル。選挙の投票所に加え、期日前投票所も投票所区分で区別して
-
-  収録する（polling_place_type を参照）。名称・投票区名を軸に、緯度経度や
-
-  住所を持つ自治体もある。標準フォーマットは名称・投票区名・緯度経度が中心で、
-
-  住所や座標を欠く自治体も多い。
-
-  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+  - 公開している自治体は一部だけです。どの自治体のファイルを収録したかは `ods.source_files` にあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
+  - 住所や位置の無い自治体も多くあります
 keywords:
   - 東京都
   - 選挙
@@ -70,27 +65,19 @@ fields:
     title: 経度
   - name: geo_lat
     title: 緯度（地図表示用）
-    description: 'Queria が付与。原典の緯度経度が使えればその値、緯度と経度が入れ替わっていれば入れ替えた値。
-
-      原典に使える座標が無い行は住所から求めた座標。採用できなければ NULL。由来は geo_source を見る'
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
   - name: geo_lon
     title: 経度（地図表示用）
     description: Queria が付与。geo_lat と対になる経度
   - name: geo_source
     title: 座標の由来
-    description: 'source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が入れ替わっていたので入れ替えて採用、
-
-      abr=原典に使える座標が無く住所から求めた座標を採用、NULL=採用できる座標が無い'
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
   - name: geo_level
     title: 座標の粒度
-    description: '原典由来は source。住所から求めた座標は abr-geocoder の粒度で、細かい順に
-
-      residential_detail（住居番号）/ residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
-
-      市区町村の代表点は位置の情報にならないため採用していない'
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: crs
     title: 座標参照系
   - name: crs_code

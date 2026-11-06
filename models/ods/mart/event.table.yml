@@ -1,17 +1,12 @@
 schema: ods
 name: event
 title: イベント
-description: '都内区市町村が公開する「イベント一覧」（自治体標準オープンデータセット）を横断統合した
+description: |-
+  都内の区市町村が公開する「イベント一覧」（自治体標準オープンデータセット）を統合したものです。祭り・講座・展示などの開催日時・会場・料金・申込方法を持ちます。
 
-  テーブル。祭り・講座・展示などの開催日時・会場・料金・申込方法を収録する。
-
-  過去のイベントも含む蓄積データではなく、各自治体が公開している時点のファイルの内容で、
-
-  収録期間は自治体ごとに異なる。公開しているのは一部の自治体のみ
-
-  （カバレッジは ods.source_files を参照）。
-
-  会場の施設情報は ods.public_facility、観光資源は ods.tourism も併せて参照する。'
+  - 公開している自治体は一部だけです。どの自治体のファイルを収録したかは `ods.source_files` にあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
+  - 各自治体が公開している時点のファイルの内容で、収録期間は自治体ごとに違います
 keywords:
   - 東京都
   - イベント
@@ -107,33 +102,25 @@ fields:
     title: 建物名等(方書)
   - name: lat
     title: 緯度
-    description: 十進度。元データの生値で、緯度と経度が入れ替わっている自治体・小数点が欠落している自治体がある。地図に出すときは geo_lat / geo_lon を使う
+    description: 原典の値。入れ替わりや誤りがあるので地図には geo_lat を使う
   - name: lon
     title: 経度
-    description: 十進度。元データの生値で、緯度と経度が入れ替わっている自治体・小数点が欠落している自治体がある。地図に出すときは geo_lat / geo_lon を使う
+    description: 原典の値。入れ替わりや誤りがあるので地図には geo_lon を使う
   - name: geo_lat
     title: 緯度（地図表示用）
-    description: 'Queria が付与。原典の緯度経度が使えればその値、緯度と経度が入れ替わっていれば入れ替えた値。
-
-      原典に使える座標が無い行は住所から求めた座標。採用できなければ NULL。由来は geo_source を見る'
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
   - name: geo_lon
     title: 経度（地図表示用）
     description: Queria が付与。geo_lat と対になる経度
   - name: geo_source
     title: 座標の由来
-    description: 'source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が入れ替わっていたので入れ替えて採用、
-
-      abr=原典に使える座標が無く住所から求めた座標を採用、NULL=採用できる座標が無い'
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
   - name: geo_level
     title: 座標の粒度
-    description: '原典由来は source。住所から求めた座標は abr-geocoder の粒度で、細かい順に
-
-      residential_detail（住居番号）/ residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
-
-      市区町村の代表点は位置の情報にならないため採用していない'
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: access
     title: アクセス方法
   - name: parking

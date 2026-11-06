@@ -1,11 +1,11 @@
 schema: ods
 name: public_wireless_lan
 title: 公衆無線LAN
-description: '都内区市町村が公開する「公衆無線LANアクセスポイント一覧」（自治体標準オープン
+description: |-
+  都内の区市町村が公開する「公衆無線LANアクセスポイント一覧」（自治体標準オープンデータセット）を統合したものです。SSID・提供エリア・設置者を持ちます。
 
-  データセット）を横断統合したテーブル。SSID・提供エリア・設置者を持つ。
-
-  公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+  - 公開している自治体は一部だけです。どの自治体のファイルを収録したかは `ods.source_files` にあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
 keywords:
   - 東京都
   - Wi-Fi
@@ -22,7 +22,7 @@ fields:
     semantic: { role: entity, name: city }
   - name: facility_id
     title: ID
-    description: 自治体内で一意の施設 ID（元データの ID / NO 列）。1.31025E+11 のような Excel の指数表記のまま公開する自治体があり、その行は元の ID を復元できない
+    description: 元データの ID / NO 列。Excel の指数表記のまま復元できない値がある
   - name: name
     title: 名称
     description: アクセスポイント（設置施設）の名称
@@ -45,27 +45,19 @@ fields:
     title: 経度
   - name: geo_lat
     title: 緯度（地図表示用）
-    description: 'Queria が付与。原典の緯度経度が使えればその値、緯度と経度が入れ替わっていれば入れ替えた値。
-
-      原典に使える座標が無い行は住所から求めた座標。採用できなければ NULL。由来は geo_source を見る'
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
   - name: geo_lon
     title: 経度（地図表示用）
     description: Queria が付与。geo_lat と対になる経度
   - name: geo_source
     title: 座標の由来
-    description: 'source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が入れ替わっていたので入れ替えて採用、
-
-      abr=原典に使える座標が無く住所から求めた座標を採用、NULL=採用できる座標が無い'
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
   - name: geo_level
     title: 座標の粒度
-    description: '原典由来は source。住所から求めた座標は abr-geocoder の粒度で、細かい順に
-
-      residential_detail（住居番号）/ residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
-
-      市区町村の代表点は位置の情報にならないため採用していない'
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: installer
     title: 設置者
   - name: ssid

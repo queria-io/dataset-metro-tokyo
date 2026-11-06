@@ -1,13 +1,8 @@
 schema: catalog
 name: datasets
 title: データセット一覧
-description: '東京都オープンデータカタログ (catalog.data.metro.tokyo.lg.jp) に登録された
-
-  全データセットのメタデータ一覧（約9,600件）。都庁各局と都内62区市町村が提供する
-
-  オープンデータの台帳で、タイトル・提供組織・ライセンス・更新頻度・リソース数を持つ。
-
-  CKAN API (package_search) から毎回全量を取得して洗い替える。'
+description: |-
+  東京都オープンデータカタログに登録されたデータセットの一覧（約 9,600 件）です。都庁各局と都内 62 区市町村のデータセットのタイトル・提供組織・ライセンス・更新頻度を持ちます。
 keywords:
   - 東京都
   - オープンデータ
@@ -20,7 +15,7 @@ sources:
 fields:
   - name: package_id
     title: データセットID
-    description: CKAN の内部 UUID。resources / dataset_tags / dataset_groups との結合キー
+    description: CKAN の内部 UUID。resources などとの結合キー
   - name: dataset_code
     title: データセットコード
     description: カタログ上の識別名（例 t132071d3100000006）。先頭が組織コード

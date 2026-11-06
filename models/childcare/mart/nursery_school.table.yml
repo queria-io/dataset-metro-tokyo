@@ -1,13 +1,11 @@
 schema: childcare
 name: nursery_school
 title: 認可保育所
-description: '東京都内の認可保育所の一覧（ポイント）。設置主体・施設名・所在地・緯度経度・
+description: |-
+  東京都福祉局「社会福祉施設等一覧」の都内の認可保育所の一覧です。施設名・設置主体・所在地・位置・認可定員を持ちます。
 
-  認可定員を持つ。東京都福祉局「社会福祉施設等一覧」。一覧は年2回（5月時点・10月時点）
-
-  更新され、常に最新版を取り込む。どの時点かは source_edition を見る。
-
-  座標系は JGD2011。所在地は都道府県名を含まない（「千代田区外神田…」形式）。'
+  - 年 2 回（5 月時点・10 月時点）更新される一覧の最新のものを取り込みます（`source_edition`）
+  - 所在地は都道府県名を含みません
 keywords:
   - 東京都
   - 子育て
@@ -44,23 +42,19 @@ fields:
     description: 元データに記載された座標系（JGD2011）
   - name: geo_lat
     title: 緯度（地図表示用）
-    description: 'Queria が付与。原典の緯度経度が日本の値域に収まればその値、緯度と経度が
-
-      入れ替わっていれば入れ替えた値。採用できなければ NULL。由来は geo_source を見る'
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
   - name: geo_lon
     title: 経度（地図表示用）
     description: Queria が付与。geo_lat と対になる経度
   - name: geo_source
     title: 座標の由来
-    description: 'source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が
-
-      入れ替わっていたので入れ替えて採用、NULL=採用できる座標が無い'
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
   - name: geo_level
     title: 座標の粒度
-    description: 原典由来の座標なので source。採用できる座標が無い行は NULL。語彙は ods スキーマと揃えてある
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: phone_number
     title: 電話番号
   - name: capacity

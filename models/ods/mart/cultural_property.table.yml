@@ -1,15 +1,12 @@
 schema: ods
 name: cultural_property
 title: 文化財
-description: '都内区市町村が公開する「文化財一覧」（自治体標準オープンデータセット）を横断統合した
+description: |-
+  都内の区市町村が公開する「文化財一覧」（自治体標準オープンデータセット）を統合したものです。分類・種類・所有者・指定日・所在地を持ちます。
 
-  テーブル。文化財保護法および地方公共団体の文化財保護条例に基づき指定・登録・選定された
-
-  文化財を、分類（重要文化財・都指定文化財・区登録有形文化財等）・種類・所有者・指定日・
-
-  所在地とともに収録する。無形文化財や個人所有で住所非公開のものを含むため、緯度経度が
-
-  入らない行がある。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。'
+  - 公開している自治体は一部だけです。どの自治体のファイルを収録したかは `ods.source_files` にあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
+  - 無形文化財や住所非公開のものは位置がありません
 keywords:
   - 東京都
   - 文化財
@@ -28,7 +25,7 @@ fields:
     semantic: { role: entity, name: city }
   - name: facility_id
     title: ID
-    description: 自治体内で一意の ID（元データの ID / NO 列）。1.31025E+11 のような Excel の指数表記のまま公開する自治体があり、その行は元の ID を復元できない
+    description: 元データの ID / NO 列。Excel の指数表記のまま復元できない値がある
   - name: name
     title: 名称
   - name: name_kana
@@ -62,37 +59,25 @@ fields:
     title: 電話番号
   - name: lat
     title: 緯度
-    description: '十進度。無形文化財・住所非公開のものは NULL。
-
-      元データの生値で、緯度と経度が入れ替わっている自治体がある（豊島区の全行）。
-
-      地図に出すときは geo_lat を使う'
+    description: 原典の値。入れ替わりや誤りがあるので地図には geo_lat を使う
   - name: lon
     title: 経度
     description: 十進度。緯度と同じく元データの生値。地図に出すときは geo_lon を使う
   - name: geo_lat
     title: 緯度（地図表示用）
-    description: 'Queria が付与。原典の緯度経度が使えればその値、緯度と経度が入れ替わっていれば入れ替えた値。
-
-      原典に使える座標が無い行は住所から求めた座標。採用できなければ NULL。由来は geo_source を見る'
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
   - name: geo_lon
     title: 経度（地図表示用）
     description: Queria が付与。geo_lat と対になる経度
   - name: geo_source
     title: 座標の由来
-    description: 'source=原典の緯度経度をそのまま採用、source_swapped=原典で緯度と経度が入れ替わっていたので入れ替えて採用、
-
-      abr=原典に使える座標が無く住所から求めた座標を採用、NULL=採用できる座標が無い'
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
   - name: geo_level
     title: 座標の粒度
-    description: '原典由来は source。住所から求めた座標は abr-geocoder の粒度で、細かい順に
-
-      residential_detail（住居番号）/ residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
-
-      市区町村の代表点は位置の情報にならないため採用していない'
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: quantity
     title: 員数（数）
     description: 数値化できない表記は NULL
@@ -108,7 +93,7 @@ fields:
     description: 所有者・管理者・保護団体等。個人所有は「個人」と記載される
   - name: designated_date
     title: 文化財指定日
-    description: 原典の文字列のまま。日不明を 99 で埋める表記（1982-04-99 等）があるため日付型にしていない
+    description: 原典の文字列のまま。日が不明なものは 99（1982-04-99 など）
   - name: available_days
     title: 利用可能曜日
     description: 公開している文化財のみ

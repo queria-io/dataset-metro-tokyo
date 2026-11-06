@@ -2,13 +2,10 @@ schema: hokenjo
 name: sanitation_facility
 title: 環境衛生施設台帳
 description: |-
-  生活衛生関係営業の施設一覧（ポイント）。理容所・美容所・旅館・クリーニング所の
-  施設名・所在地・確認日を持つ。東京都保健医療局「環境衛生施設台帳」。
-  収録は東京都が設置する保健所の管轄のみで、八王子市・町田市を除く多摩地域と島しょが
-  対象。23区・八王子市・町田市はそれぞれが保健所を設置しているため含まれない。
-  旅館は休止している施設を含み、クリーニング所は無店舗取次店を含む。
-  緯度経度は台帳に無いため、所在地から ABR（アドレス・ベース・レジストリ）で求めた
-  値を geo_lat / geo_lon に持つ。
+  東京都保健医療局「環境衛生施設台帳」の理容所・美容所・旅館・クリーニング所の一覧です。
+
+  - 東京都が設置する保健所の管轄（八王子市・町田市を除く多摩地域と島しょ）だけで、23 区・八王子市・町田市は含みません
+  - 位置は所在地から Queria が求めたものです
 keywords:
   - 東京都
   - 生活衛生
@@ -58,7 +55,7 @@ fields:
     title: 法人代表者氏名
   - name: city_code
     title: 市区町村コード
-    description: 所在地から求めた5桁の市区町村コード。e_stat.code.municipality や境界データと直結できる
+    description: 所在地から求めた 5 桁の市区町村コード
     semantic: { role: entity, name: city }
   - name: geo_lat
     title: 緯度
@@ -71,11 +68,7 @@ fields:
     description: abr（所在地から求めた）または空
   - name: geo_level
     title: 座標の粒度
-    description: |-
-      abr-geocoder の粒度。細かい順に residential_detail（住居番号）/
-      residential_block（街区）/ machiaza_detail（丁目）/ machiaza（町字）。
-      市区町村の代表点は位置の情報にならないため採用していない。
-      住所の 13% は町字の代表点までしか解決しないので、店舗単位の距離を測る用途では粒度を見る
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
   - name: geometry
     title: ジオメトリ
-    description: Queria が付与。geo_lat / geo_lon から作った POINT。座標が無い行は NULL
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
