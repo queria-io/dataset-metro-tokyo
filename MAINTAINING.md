@@ -144,6 +144,8 @@ zip として読めないファイルが残っていれば、その先頭と取�
   公表年の行を data/labour_hours_by_size_and_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
 - pipelines/labour_earnings_by_size_and_employment_type.py: 同じ年報から第4表の CSV をダウンロードし、
   公表年の行を data/labour_earnings_by_size_and_employment_type/ に保存する。表の選び方は pipelines/labour_hours.py と同じ
+- pipelines/labour_bonus.py: 同じ年報から第5表の CSV をダウンロードし、産業ごとの行に年報の公表年を付けて
+  data/labour_bonus/ に保存する。表に年・月の列が無いので、共有の _parse の代わりに専用の関数で読む。表の選び方は pipelines/labour_hours.py と同じ
 
 ## テスト
 

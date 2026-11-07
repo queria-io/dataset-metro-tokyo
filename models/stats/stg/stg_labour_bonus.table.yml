@@ -1,0 +1,6 @@
+schema: stats
+name: stg_labour_bonus
+description: '毎月勤労統計調査（夏季・冬季賞与）のステージング。支給額を INTEGER、割合・前年比・支給月数を DECIMAL に型変換し（「×」と「－」は NULL）、
+
+  産業を符号と名前に分ける。'
+published: false

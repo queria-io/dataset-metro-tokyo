@@ -18,6 +18,7 @@ keywords:
   - 世帯
   - 外国人
   - 賃金
+  - 賞与
   - 労働時間
   - パートタイム
   - 雇用
@@ -104,6 +105,13 @@ ai_context:
     分けた出勤日数・労働時間で、labour_hours_by_size と同じキーで結合できる。
     labour_earnings_by_size_and_employment_type は labour_earnings_by_size を一般労働者とパートタイム労働者に
     分けた現金給与額で、labour_earnings_by_size と同じキーで結合できる。
+    labour_bonus は同じ調査の夏季賞与（6〜8月支給）と冬季賞与（11月〜翌年1月支給）の支給状況で、
+    1行 = 年 × 産業。事業所規模は30人以上だけで、月の列は無い。1人平均支給額は賞与を支給した
+    事業所の労働者1人あたりの額で、支給しなかった事業所を含む平均ではない。
+    labour_earnings と並べるときは period_type = '年平均' の行と year・establishment_size・industry_code で結合する
+    （月次の行まで結合すると賞与の1行が13行に増える）。
+    labour_earnings の special_earnings（特別に支払われた給与）は賞与以外も含み、支給しなかった
+    事業所も分母に入るので、この表の額とは一致しない。
     元データの値は補正せず原典のまま入れている。lat / lon は自治体が公開した生値で、
     緯度と経度が入れ替わったまま公開されている自治体（ods.cultural_property の豊島区、
     ods.public_wireless_lan の世田谷区など）や、経度の小数点が欠落している行がある。
