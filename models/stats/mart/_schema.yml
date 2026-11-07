@@ -296,3 +296,29 @@ models:
       - name: part_time_scheduled_earnings
       - name: part_time_overtime_earnings
       - name: part_time_special_earnings
+  - name: labour_bonus
+    description: |
+      毎月勤労統計調査（地方調査）による東京都の夏季賞与・冬季賞与の支給状況。
+      1行 = 年 × 事業所規模 × 産業で、2013年から収録する。事業所規模は30人以上のみ。
+      夏季賞与はその年の6〜8月、冬季賞与はその年の11月〜翌年1月に支払われた「特別に支払われた給与」の
+      うち賞与として支給されたもの。表に年の列が無いため、年は年報の公表年を付けている。
+      産業は2017年までは製造業の中分類・特掲産業などを含み、2018年からは調査産業計と大分類の17区分。
+      原典で秘匿（×）または該当なし（－）の値は NULL。
+    access: public
+    columns:
+      - name: year
+      - name: establishment_size
+      - name: industry_code
+      - name: industry_name
+      - name: summer_bonus
+      - name: summer_bonus_change_rate
+      - name: summer_paying_establishment_ratio
+      - name: summer_receiving_employee_ratio
+      - name: summer_bonus_months
+      - name: summer_bonus_months_change
+      - name: winter_bonus
+      - name: winter_bonus_change_rate
+      - name: winter_paying_establishment_ratio
+      - name: winter_receiving_employee_ratio
+      - name: winter_bonus_months
+      - name: winter_bonus_months_change
