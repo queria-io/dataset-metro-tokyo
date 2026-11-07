@@ -1,0 +1,6 @@
+schema: stats
+name: raw_labour_bonus
+description: '毎月勤労統計調査（東京都）年報の第5表の生データ。全列 VARCHAR で取り込む。
+
+  表に年の列が無いので、年は年報の公表年を付けている。'
+published: false

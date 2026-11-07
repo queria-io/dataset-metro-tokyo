@@ -3,7 +3,7 @@
     try_cast(nullif(nullif(trim({{ column }}), ''), '-') as integer)
 {%- endmacro %}
 
-{% macro stats_decimal(column) -%}
-    {#- 統計表の小数1桁の数値列（日数・時間）を DECIMAL にする。原典の '－'（該当なし）・'×'（秘匿）と空欄は NULL。 -#}
-    try_cast(nullif(trim({{ column }}), '') as decimal(5, 1))
+{% macro stats_decimal(column, scale=1) -%}
+    {#- 統計表の小数の数値列（日数・時間・割合）を小数 scale 桁の DECIMAL にする。原典の '－'（該当なし）・'×'（秘匿）と空欄は NULL。 -#}
+    try_cast(nullif(trim({{ column }}), '') as decimal(5, {{ scale }}))
 {%- endmacro %}

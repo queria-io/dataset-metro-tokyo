@@ -1,0 +1,70 @@
+schema: stats
+name: labour_bonus
+title: 毎月勤労統計調査 夏季・冬季賞与
+description: |-
+  毎月勤労統計調査（地方調査）の、東京都の事業所規模 30 人以上の夏季賞与と冬季賞与の支給状況です。1 行が 1 年・産業で、2013 年からです。
+
+  - 夏季賞与はその年の 6〜8 月、冬季賞与はその年の 11 月〜翌年 1 月に支払われた賞与です
+  - 1 人平均支給額は、賞与を支給した事業所の常用労働者 1 人あたりの額です。賞与を支給しなかった事業所の労働者は分母に入りません
+  - 産業の区分は 2018 年から 17 区分に減りました。年をまたいで比べるときは `industry_code` で揃えてください
+keywords:
+  - 東京都
+  - 毎月勤労統計
+  - 賞与
+  - ボーナス
+  - 夏季賞与
+  - 冬季賞与
+  - 産業
+  - 時系列
+published: true
+themes: [labour]
+sources:
+  - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
+fields:
+  - name: year
+    title: 年
+    description: 対象年（西暦）。冬季賞与はこの年の 11 月から翌年 1 月までの支給分
+  - name: establishment_size
+    title: 事業所規模
+    description: 30人以上のみ
+  - name: industry_code
+    title: 産業符号
+    description: 原典の産業符号。TL は調査産業計、英字 1 字は大分類
+  - name: industry_name
+    title: 産業
+  - name: summer_bonus
+    title: 夏季賞与 1 人平均支給額
+    description: 賞与を支給した事業所の常用労働者 1 人あたりの平均支給額（円）
+  - name: summer_bonus_change_rate
+    title: 夏季賞与 1 人平均支給額 前年比
+    description: ％。原典の公表値
+  - name: summer_paying_establishment_ratio
+    title: 夏季賞与 支給事業所数割合
+    description: 賞与を支給した事業所数を全事業所数で割った値（％）
+  - name: summer_receiving_employee_ratio
+    title: 夏季賞与 支給労働者数割合
+    description: 賞与を支給した事業所の常用労働者数を全事業所の常用労働者数で割った値（％）
+  - name: summer_bonus_months
+    title: 夏季賞与 平均支給月数
+    description: 支給した事業所ごとの賞与の所定内給与に対する割合を単純平均した値（か月）
+  - name: summer_bonus_months_change
+    title: 夏季賞与 平均支給月数 前年差
+    description: か月。原典の公表値
+  - name: winter_bonus
+    title: 冬季賞与 1 人平均支給額
+    description: 賞与を支給した事業所の常用労働者 1 人あたりの平均支給額（円）
+  - name: winter_bonus_change_rate
+    title: 冬季賞与 1 人平均支給額 前年比
+    description: ％。原典の公表値
+  - name: winter_paying_establishment_ratio
+    title: 冬季賞与 支給事業所数割合
+    description: 賞与を支給した事業所数を全事業所数で割った値（％）
+  - name: winter_receiving_employee_ratio
+    title: 冬季賞与 支給労働者数割合
+    description: 賞与を支給した事業所の常用労働者数を全事業所の常用労働者数で割った値（％）
+  - name: winter_bonus_months
+    title: 冬季賞与 平均支給月数
+    description: 支給した事業所ごとの賞与の所定内給与に対する割合を単純平均した値（か月）
+  - name: winter_bonus_months_change
+    title: 冬季賞与 平均支給月数 前年差
+    description: か月。原典の公表値

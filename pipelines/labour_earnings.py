@@ -18,6 +18,7 @@ import json
 import logging
 import re
 import unicodedata
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urljoin
@@ -157,10 +158,12 @@ def download_annual_tables(
     header: list[str],
     value_keys: list[str],
     output_filename: str,
+    parse: Callable[[str, int, list[str], list[str]], list[dict]] = _parse,
 ) -> None:
     """各年の年報から指定の表を取得し、公表年の行を NDJSON に出力する。
 
     tables は年報のページに並ぶ CSV の (並び位置, 表番号)。表番号は CSV の表題の行で確かめる。
+    parse は CSV から公表年の行を取り出す関数で、既定は年・月の列を持つ表向けの _parse。
     取り込んだ年報・表・URL・行数は source.ndjson に記録する。
     """
     dest = Path(dest_dir)
@@ -181,7 +184,7 @@ def download_annual_tables(
             table = _table_name(list(csv.reader(text.splitlines())))
             if table != expected:
                 raise RuntimeError(f"{url} は {expected} ではありません（{table}）")
-            parsed = _parse(text, report_year, header, value_keys)
+            parsed = parse(text, report_year, header, value_keys)
             if not parsed:
                 raise RuntimeError(f"{report_year}年の行を取り出せません: {url}")
             records.extend(parsed)
