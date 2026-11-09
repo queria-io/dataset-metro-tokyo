@@ -1,0 +1,46 @@
+schema: stats
+name: labour_turnover
+title: 毎月勤労統計調査 産業別入職率・離職率
+description: |-
+  毎月勤労統計調査（地方調査）の、東京都の常用労働者の入職率と離職率です。1 行が 1 年・月（または年平均）・事業所規模・産業で、2013 年からです。
+
+  - 入職率・離職率は、前月末の常用労働者数に対する月中の増加・減少労働者数の割合（％）です
+  - 事業所規模の「5人以上」は「30人以上」の事業所を含みます。2 つの区分を足さないでください
+  - 産業は調査産業計と大分類の 17 区分です（2017 年は鉱業が無く 16 区分）
+keywords:
+  - 東京都
+  - 毎月勤労統計
+  - 雇用
+  - 入職率
+  - 離職率
+  - 労働異動率
+  - 産業
+  - 時系列
+published: true
+themes: [labour]
+sources:
+  - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
+fields:
+  - name: year
+    title: 年
+    description: 対象年（西暦）
+  - name: period_type
+    title: 期間区分
+    description: 月次 / 年平均
+  - name: month
+    title: 月
+    description: 対象月（1〜12）。年平均の行は NULL
+  - name: establishment_size
+    title: 事業所規模
+    description: 5人以上 / 30人以上。5人以上は30人以上の事業所を含む
+  - name: industry_code
+    title: 産業符号
+    description: 原典の産業符号。TL は調査産業計、英字 1 字は大分類。labour_employment の産業符号と同じ
+  - name: industry_name
+    title: 産業
+  - name: hiring_rate
+    title: 入職率
+    description: 前月末の常用労働者数に対する、月中に採用・転入などで増えた労働者数の割合（％）。年平均の行は各月の平均
+  - name: separation_rate
+    title: 離職率
+    description: 前月末の常用労働者数に対する、月中に退職・転出などで減った労働者数の割合（％）。年平均の行は各月の平均
