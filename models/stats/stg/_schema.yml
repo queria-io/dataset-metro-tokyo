@@ -55,3 +55,7 @@ models:
     description: |
       毎月勤労統計調査（夏季・冬季賞与）のステージング。支給額を INTEGER、割合・前年比・支給月数を DECIMAL に型変換し（「×」と「－」は NULL）、
       産業を符号と名前に分ける。
+  - name: stg_labour_turnover
+    description: |
+      毎月勤労統計調査（労働異動率）のステージング。入職率・離職率を DECIMAL に型変換し（「×」と「－」は NULL）、
+      「年平均・月」を月の番号に直し、産業を符号と名前に分ける。

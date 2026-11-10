@@ -22,6 +22,8 @@ keywords:
   - 労働時間
   - パートタイム
   - 雇用
+  - 入職率
+  - 離職率
   - 食品衛生
   - 営業許可
   - 飲食店
@@ -112,6 +114,9 @@ ai_context:
     （月次の行まで結合すると賞与の1行が13行に増える）。
     labour_earnings の special_earnings（特別に支払われた給与）は賞与以外も含み、支給しなかった
     事業所も分母に入るので、この表の額とは一致しない。
+    labour_turnover は同じ調査の入職率・離職率（前月末の常用労働者数に対する月中の増加・減少労働者数の割合、％）で、
+    labour_employment と year・period_type・month・establishment_size・industry_code で結合できる。
+    産業は調査産業計と大分類だけ。年平均の行は各月の率の平均で、労働者数の年平均から計算した値とは一致しない。
     元データの値は補正せず原典のまま入れている。lat / lon は自治体が公開した生値で、
     緯度と経度が入れ替わったまま公開されている自治体（ods.cultural_property の豊島区、
     ods.public_wireless_lan の世田谷区など）や、経度の小数点が欠落している行がある。
