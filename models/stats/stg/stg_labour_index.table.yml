@@ -1,0 +1,6 @@
+schema: stats
+name: stg_labour_index
+description: '毎月勤労統計調査（規模、産業別の指数）のステージング。指数と前年比・前年同月比を DECIMAL に型変換し（「×」と「－」は NULL）、
+
+  「年平均・月」を月の番号に直し、産業を符号と名前に分ける。'
+published: false
