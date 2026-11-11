@@ -1,0 +1,4 @@
+schema: stats
+name: stg_labour_force
+description: 東京の労働力（年平均の第1表）のステージング。区分を分類と区分に分け、値を DECIMAL に型変換する（「…」と「-」は NULL）。
+published: false

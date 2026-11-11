@@ -1,0 +1,51 @@
+schema: stats
+name: labour_force
+title: 東京の労働力 就業状態・産業別就業者数・完全失業率
+description: |-
+  労働力調査の東京都分を東京都が集計した「東京の労働力」の年平均の第 1 表です。15 歳以上人口の就業状態、主な産業別の就業者数と雇用者数、従業者規模別の雇用者数、年齢階級別の完全失業率、就業率、労働力人口比率を男女別に持ちます。1 行が 1 年・分類・区分・男女で、2004 年からです。
+
+  - 区分は原典の見出しを「／」でつないだもので、上位の区分を含みます。「労働力人口／就業者数」は労働力人口の内訳です
+  - 前年の値は、基準人口を切り替えた年（2012・2017・2022 年）と産業分類を改定した年（2009 年）は前年の表の実数と違います。年をまたぐ増減は change と change_rate を使ってください
+  - 産業の区分は 2009 年に変わりました。正規・非正規の職員・従業員は 2013 年から、就業率は 2011 年からです
+keywords:
+  - 東京都
+  - 労働力調査
+  - 就業者
+  - 雇用者
+  - 完全失業率
+  - 失業率
+  - 就業率
+  - 非正規雇用
+  - 産業
+  - 時系列
+published: true
+themes: [labour]
+sources:
+  - path: https://www.toukei.metro.tokyo.lg.jp/roudou/rd-index.htm
+fields:
+  - name: year
+    title: 年
+    description: 対象年（西暦）。値は 1〜12 月の平均
+  - name: category
+    title: 分類
+    description: 原典の〔〕の見出し。15 歳以上人口は「就業状態」に入れている
+  - name: item
+    title: 区分
+    description: 原典の見出しを「／」でつないだもの。上位の区分を含む
+  - name: sex
+    title: 男女
+    description: 男女計・男・女
+  - name: unit
+    title: 単位
+    description: 千人または %
+  - name: value
+    title: 実数
+  - name: previous_year_value
+    title: 前年
+    description: その年の表に載る前年の値。基準人口の切り替えや産業分類の改定があった年は、前年の表の実数と違う
+  - name: change
+    title: 対前年増減数
+    description: 千人。率の区分はポイント
+  - name: change_rate
+    title: 対前年増減率
+    description: ％。率の区分には無い
