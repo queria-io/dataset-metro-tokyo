@@ -339,3 +339,23 @@ models:
       - name: industry_name
       - name: hiring_rate
       - name: separation_rate
+  - name: labour_index
+    description: |
+      毎月勤労統計調査（地方調査）による東京都の名目賃金指数・実質賃金指数・労働時間指数・常用雇用指数。
+      1行 = 指数の種類 × 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
+      各年の値はその年の年報から取っている。指数の基準年は年報によって違い（2013〜2016年は2010年、
+      2017〜2021年は2015年、2022年からは2020年）、base_year が違う行の指数どうしは比べられない。
+      事業所規模の区分は labour_employment と同じで、5人以上は30人以上の事業所を含む。
+      原典で秘匿（×）または該当なし（－）の値は NULL。
+    access: public
+    columns:
+      - name: index_type
+      - name: year
+      - name: period_type
+      - name: month
+      - name: establishment_size
+      - name: industry_code
+      - name: industry_name
+      - name: base_year
+      - name: index_value
+      - name: change_rate

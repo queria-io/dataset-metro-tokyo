@@ -148,6 +148,8 @@ zip として読めないファイルが残っていれば、その先頭と取�
   data/labour_bonus/ に保存する。表に年・月の列が無いので、共有の _parse の代わりに専用の関数で読む。表の選び方は pipelines/labour_hours.py と同じ
 - pipelines/labour_turnover.py: 同じ年報から第12表の CSV をダウンロードし、横持ちの産業の列を産業ごとの行に分けて
   data/labour_turnover/ に保存する。表に産業符号が無いので、産業名からほかの表と同じ符号を付ける。表の選び方は pipelines/labour_hours.py と同じ
+- pipelines/labour_index.py: 同じ年報から第13〜21表の CSV をダウンロードし、横持ちの産業の列を産業ごとの行に分け、指数と前年比・前年同月比の行を1行にまとめて
+  data/labour_index/ に保存する。指数の種類は表番号から、基準年は表の注記の行から取る。表の選び方は pipelines/labour_hours.py と同じ
 
 ## テスト
 
