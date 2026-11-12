@@ -12,15 +12,13 @@ keywords:
   - 給食
   - 食育
   - 自治体標準オープンデータセット
-published: true
-themes: [education_culture]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 情報の管理主体の全国地方公共団体コード
-    semantic: { role: entity, name: city }
+    annotations: { queria: { semantic: { role: entity, name: city } } }
   - name: school_id
     title: 学校ID
     description: 自治体内で一意の学校 ID。空欄の自治体もある
@@ -45,7 +43,7 @@ fields:
     description: 政令指定都市の場合のみ
   - name: school_municipality_code
     title: 学校所在地_全国地方公共団体コード
-    semantic: { role: entity, name: city }
+    annotations: { queria: { semantic: { role: entity, name: city } } }
   - name: provided_date
     title: 提供年月日
     description: 献立を提供した年月日
@@ -164,3 +162,6 @@ fields:
     description: catalog.datasets との結合キー
   - name: source_url
     title: 取得元URL
+annotations:
+  queria:
+    themes: [education_culture]

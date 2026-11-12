@@ -7,4 +7,6 @@ description: '住民基本台帳による世帯と人口のステージング。
   1行にまとめ、2001年分の西多摩郡4町村の地域コードのずれを原典の現行コードに直し、
 
   年により番号体系が変わる「地域階層」の代わりに地域コードから区分を導出する。'
-published: false
+annotations:
+  queria:
+    published: false

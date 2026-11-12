@@ -15,8 +15,6 @@ keywords:
   - 就業形態
   - 事業所規模
   - 時系列
-published: true
-themes: [labour]
 sources:
   - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 fields:
@@ -56,3 +54,6 @@ fields:
   - name: part_time_overtime_hours
     title: 所定外労働時間（パートタイム労働者）
     description: 時間
+annotations:
+  queria:
+    themes: [labour]

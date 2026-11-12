@@ -1,4 +1,6 @@
-spec_version: "0.1"
+# この dataset.yml は fdl commit が読む（FDL の dataset.json を YAML で書いたもの）。
+# 表の説明は models/ の *.table.yml に書く。表と列の型・NULL・行数は fdl commit がカタログから埋める。
+# Queria だけの項目（テーマ・カバー・AI 向けの説明）は annotations.queria に書く。
 name: metro_tokyo
 title: 東京都オープンデータカタログ
 description: |-
@@ -36,8 +38,6 @@ keywords:
   - 入札
 homepage: https://github.com/queria-io/dataset-metro-tokyo
 language: ja
-themes: [social_security_health, labour, education_culture, population, government_finance, justice_safety_environment, commerce_services, transport_tourism, ict_science, international]
-
 licenses:
   - CC-BY-4.0
 
@@ -66,99 +66,6 @@ contributors:
 
 spatial_coverage: [JP]
 update_frequency: monthly
-cover: 🗼
-
-ai_context:
-  instructions: |
-    東京都と都内区市町村のオープンデータを横断で引くのに使う。3つのスキーマは性格が違う。
-    catalog はカタログ台帳（データセット9646件・提供組織98）で、東京都のポータルに
-    何が登録されているかのメタデータ。データの中身ではない。
-    リソースの URL はファイル更新で変わるので、常にこの表の最新 URL を見る。
-    ods は区市町村が公開する自治体標準オープンデータセットを種別ごとに横断統合したもの。
-    **公開している自治体は種別ごとに一部だけ**で、全62区市町村が揃っているわけではない。
-    どの自治体が入っているかは ods.source_files（取り込みの実行結果）で確認できる。
-    CSV 以外の形式でしか登録されていないパッケージも status=skipped /
-    reason=no_csv_resource として載るので、「取り込めていない」と「公開していない」を
-    この表で見分けられる。
-    件数を自治体間で比べるときは、まず収録の有無を確認する。
-    childcare は東京都福祉局の認可保育所・児童館で、こちらは都全域。
-    stats は東京都総務局統計部が公表する統計で、resident_population は
-    2001年1月からの月次人口・世帯数。都が全区市町村分をまとめて出しているため
-    収録の欠けが無く、区市町村を横に比べたり長期の推移を見るのはこちらを使う。
-    ods.population は自治体が個別に公開する年齢別人口で、年齢階級が要るときだけ使う。
-    resident_population は集計行（総数・区部・市部など）を含むので、区市町村だけなら
-    area_type = '区市町村' で絞る。外国人人口と世帯数は2012年7月分と8月分の間に
-    制度変更の段差がある。
-    foreign_population は1979年からの各年1月1日現在の外国人人口を国籍・地域別に持つ。
-    総数の行があるので、国籍・地域を足して総数を作らない（1990年まではドイツと
-    東西ドイツが重複し、2016年と2017年で中国・韓国の区分が変わる）。
-    labour_earnings は毎月勤労統計調査の常用労働者1人平均月間現金給与額で、2013年からの
-    各月と年平均を事業所規模（5人以上 / 30人以上）× 産業で持つ。5人以上は30人以上を
-    含むので2区分を足さない。産業の区分は2018年から大分類の17区分に減る。
-    labour_hours は同じ調査の月間出勤日数・実労働時間で、行の区分は labour_earnings と同じ。
-    year・month・establishment_size・industry_code で labour_earnings と結合できる。
-    labour_employment は同じ調査の常用労働者数（推計）とパートタイム労働者比率で、行の区分と
-    結合のキーは labour_earnings と同じ。労働者数の計は男と女の和と一致しない行がある。
-    labour_earnings_by_employment_type は labour_earnings を一般労働者とパートタイム労働者に
-    分けた額で、産業は調査産業計と大分類だけ。結合のキーは labour_earnings と同じ。
-    labour_hours_by_employment_type は labour_hours を同じく就業形態別に分けた出勤日数・労働時間で、
-    産業と結合のキーは labour_earnings_by_employment_type と同じ。
-    labour_employment_by_employment_type は labour_employment の常用労働者数を就業形態別に分けた人数で、
-    産業と結合のキーは labour_earnings_by_employment_type と同じ。一般とパートの本月末労働者数の和は
-    labour_employment の employees と一致する。月中の増減は就業形態ごとには月末の値と合わない。
-    labour_earnings_by_size は labour_earnings の調査産業計を事業所規模の4区分（5〜29人 / 30〜99人 /
-    100〜499人 / 500人以上）に分けた額で、区分は重ならない。産業の列は無いので、labour_earnings と比べるときは
-    industry_code = 'TL' の行と year・period_type・month で突き合わせる。
-    labour_hours_by_size は labour_hours の調査産業計を同じ事業所規模の4区分に分けた出勤日数・労働時間で、
-    labour_earnings_by_size と year・period_type・month・establishment_size で結合できる。
-    labour_hours_by_size_and_employment_type は labour_hours_by_size を一般労働者とパートタイム労働者に
-    分けた出勤日数・労働時間で、labour_hours_by_size と同じキーで結合できる。
-    labour_earnings_by_size_and_employment_type は labour_earnings_by_size を一般労働者とパートタイム労働者に
-    分けた現金給与額で、labour_earnings_by_size と同じキーで結合できる。
-    labour_bonus は同じ調査の夏季賞与（6〜8月支給）と冬季賞与（11月〜翌年1月支給）の支給状況で、
-    1行 = 年 × 産業。事業所規模は30人以上だけで、月の列は無い。1人平均支給額は賞与を支給した
-    事業所の労働者1人あたりの額で、支給しなかった事業所を含む平均ではない。
-    labour_earnings と並べるときは period_type = '年平均' の行と year・establishment_size・industry_code で結合する
-    （月次の行まで結合すると賞与の1行が13行に増える）。
-    labour_earnings の special_earnings（特別に支払われた給与）は賞与以外も含み、支給しなかった
-    事業所も分母に入るので、この表の額とは一致しない。
-    labour_turnover は同じ調査の入職率・離職率（前月末の常用労働者数に対する月中の増加・減少労働者数の割合、％）で、
-    labour_employment と year・period_type・month・establishment_size・industry_code で結合できる。
-    産業は調査産業計と大分類だけ。年平均の行は各月の率の平均で、労働者数の年平均から計算した値とは一致しない。
-    labour_index は同じ調査の名目・実質賃金指数、労働時間指数、常用雇用指数（9種類を index_type で分ける）。
-    基準年（base_year）は年によって 2010・2015・2020 と違い、基準年が違う年の index_value どうしは比べられない。
-    年をまたぐ変化は change_rate（年平均は前年比、月次は前年同月比、％）を使う。
-    labour_force は労働力調査の東京都分（東京の労働力）の年平均で、就業状態・主な産業別の就業者数と雇用者数・
-    年齢階級別の完全失業率などを男女別に持つ。毎月勤労統計調査（事業所の調査）と違い世帯の調査で、
-    自営業主や完全失業者も含む。区分は上位の区分を含むので、同じ分類の区分を足さない。
-    元データの値は補正せず原典のまま入れている。lat / lon は自治体が公開した生値で、
-    緯度と経度が入れ替わったまま公開されている自治体（ods.cultural_property の豊島区、
-    ods.public_wireless_lan の世田谷区など）や、経度の小数点が欠落している行がある。
-    **地図に出すときは lat / lon ではなく geo_lat / geo_lon / geometry を使う。**
-    これは Queria が付与した列で、ods の施設テーブルと childcare の2表が持つ。
-    値域に収まらない座標を落とし、緯度と経度が入れ替わっている行は入れ替えて採用してある。
-    さらに ods では、原典に使える座標が無い行を住所から ABR（アドレス・ベース・
-    レジストリ）でジオコーディングして補ってある（childcare は原典の座標だけを使う）。
-    採用した値の由来は geo_source（source / source_swapped / abr）、粒度は geo_level
-    で引ける。ABR 由来の粒度は residential_detail（住居番号）/ residential_block（街区）/
-    machiaza_detail（丁目）/ machiaza（町字）。市区町村の代表点は採用していない。
-    geometry は geo_lat / geo_lon から作った POINT で、座標の無い行は NULL。
-    日付は自治体ごとに表記が違うため DATE に正規化しているが、「4月頃」のような
-    自由記述は推測せず NULL にしている。
-    標準列にマッピングできない自治体独自の列は extras（JSON）に退避してある。
-    ods.school_district は施設一覧ではなく学校×通学区域で、所在地・緯度経度を持たない。
-    介護事業所を全国で見るなら mhlw.kaigo.establishment、学校の位置は nlftp.facility.school。
-    procurement は区市町村が公表した調達情報で、今は練馬区だけ。private_contracts は随意契約の
-    締結状況（令和2年12月以降、1行=1契約）。contract_amount は円で、単価契約は単価の合計額、
-    金額の記載が無い契約は NULL。planned_works / planned_goods は発注予定で、公開中の最新の半期だけ。
-    入札公告は kkj.tender.notices、国の落札は company_profile、国交省の入札結果は mlit にある。
-  synonyms: [東京都オープンデータ, 自治体標準オープンデータセット, ODS, CKAN, 区市町村]
-  examples:
-    - 区市町村別のAED設置数を出したい
-    - 保育所を地図に出して定員で色分けしたい
-    - 東京都のカタログにどんなデータセットがあるか探したい
-    - 練馬区の随意契約を契約者別に集計したい
-
 schemas:
   - name: catalog
     title: カタログ
@@ -172,3 +79,98 @@ schemas:
     title: 都の統計
   - name: procurement
     title: 調達情報
+
+annotations:
+  queria:
+    themes: [social_security_health, labour, education_culture, population, government_finance, justice_safety_environment, commerce_services, transport_tourism, ict_science, international]
+    cover: 🗼
+    ai_context:
+      instructions: |
+        東京都と都内区市町村のオープンデータを横断で引くのに使う。3つのスキーマは性格が違う。
+        catalog はカタログ台帳（データセット9646件・提供組織98）で、東京都のポータルに
+        何が登録されているかのメタデータ。データの中身ではない。
+        リソースの URL はファイル更新で変わるので、常にこの表の最新 URL を見る。
+        ods は区市町村が公開する自治体標準オープンデータセットを種別ごとに横断統合したもの。
+        **公開している自治体は種別ごとに一部だけ**で、全62区市町村が揃っているわけではない。
+        どの自治体が入っているかは ods.source_files（取り込みの実行結果）で確認できる。
+        CSV 以外の形式でしか登録されていないパッケージも status=skipped /
+        reason=no_csv_resource として載るので、「取り込めていない」と「公開していない」を
+        この表で見分けられる。
+        件数を自治体間で比べるときは、まず収録の有無を確認する。
+        childcare は東京都福祉局の認可保育所・児童館で、こちらは都全域。
+        stats は東京都総務局統計部が公表する統計で、resident_population は
+        2001年1月からの月次人口・世帯数。都が全区市町村分をまとめて出しているため
+        収録の欠けが無く、区市町村を横に比べたり長期の推移を見るのはこちらを使う。
+        ods.population は自治体が個別に公開する年齢別人口で、年齢階級が要るときだけ使う。
+        resident_population は集計行（総数・区部・市部など）を含むので、区市町村だけなら
+        area_type = '区市町村' で絞る。外国人人口と世帯数は2012年7月分と8月分の間に
+        制度変更の段差がある。
+        foreign_population は1979年からの各年1月1日現在の外国人人口を国籍・地域別に持つ。
+        総数の行があるので、国籍・地域を足して総数を作らない（1990年まではドイツと
+        東西ドイツが重複し、2016年と2017年で中国・韓国の区分が変わる）。
+        labour_earnings は毎月勤労統計調査の常用労働者1人平均月間現金給与額で、2013年からの
+        各月と年平均を事業所規模（5人以上 / 30人以上）× 産業で持つ。5人以上は30人以上を
+        含むので2区分を足さない。産業の区分は2018年から大分類の17区分に減る。
+        labour_hours は同じ調査の月間出勤日数・実労働時間で、行の区分は labour_earnings と同じ。
+        year・month・establishment_size・industry_code で labour_earnings と結合できる。
+        labour_employment は同じ調査の常用労働者数（推計）とパートタイム労働者比率で、行の区分と
+        結合のキーは labour_earnings と同じ。労働者数の計は男と女の和と一致しない行がある。
+        labour_earnings_by_employment_type は labour_earnings を一般労働者とパートタイム労働者に
+        分けた額で、産業は調査産業計と大分類だけ。結合のキーは labour_earnings と同じ。
+        labour_hours_by_employment_type は labour_hours を同じく就業形態別に分けた出勤日数・労働時間で、
+        産業と結合のキーは labour_earnings_by_employment_type と同じ。
+        labour_employment_by_employment_type は labour_employment の常用労働者数を就業形態別に分けた人数で、
+        産業と結合のキーは labour_earnings_by_employment_type と同じ。一般とパートの本月末労働者数の和は
+        labour_employment の employees と一致する。月中の増減は就業形態ごとには月末の値と合わない。
+        labour_earnings_by_size は labour_earnings の調査産業計を事業所規模の4区分（5〜29人 / 30〜99人 /
+        100〜499人 / 500人以上）に分けた額で、区分は重ならない。産業の列は無いので、labour_earnings と比べるときは
+        industry_code = 'TL' の行と year・period_type・month で突き合わせる。
+        labour_hours_by_size は labour_hours の調査産業計を同じ事業所規模の4区分に分けた出勤日数・労働時間で、
+        labour_earnings_by_size と year・period_type・month・establishment_size で結合できる。
+        labour_hours_by_size_and_employment_type は labour_hours_by_size を一般労働者とパートタイム労働者に
+        分けた出勤日数・労働時間で、labour_hours_by_size と同じキーで結合できる。
+        labour_earnings_by_size_and_employment_type は labour_earnings_by_size を一般労働者とパートタイム労働者に
+        分けた現金給与額で、labour_earnings_by_size と同じキーで結合できる。
+        labour_bonus は同じ調査の夏季賞与（6〜8月支給）と冬季賞与（11月〜翌年1月支給）の支給状況で、
+        1行 = 年 × 産業。事業所規模は30人以上だけで、月の列は無い。1人平均支給額は賞与を支給した
+        事業所の労働者1人あたりの額で、支給しなかった事業所を含む平均ではない。
+        labour_earnings と並べるときは period_type = '年平均' の行と year・establishment_size・industry_code で結合する
+        （月次の行まで結合すると賞与の1行が13行に増える）。
+        labour_earnings の special_earnings（特別に支払われた給与）は賞与以外も含み、支給しなかった
+        事業所も分母に入るので、この表の額とは一致しない。
+        labour_turnover は同じ調査の入職率・離職率（前月末の常用労働者数に対する月中の増加・減少労働者数の割合、％）で、
+        labour_employment と year・period_type・month・establishment_size・industry_code で結合できる。
+        産業は調査産業計と大分類だけ。年平均の行は各月の率の平均で、労働者数の年平均から計算した値とは一致しない。
+        labour_index は同じ調査の名目・実質賃金指数、労働時間指数、常用雇用指数（9種類を index_type で分ける）。
+        基準年（base_year）は年によって 2010・2015・2020 と違い、基準年が違う年の index_value どうしは比べられない。
+        年をまたぐ変化は change_rate（年平均は前年比、月次は前年同月比、％）を使う。
+        labour_force は労働力調査の東京都分（東京の労働力）の年平均で、就業状態・主な産業別の就業者数と雇用者数・
+        年齢階級別の完全失業率などを男女別に持つ。毎月勤労統計調査（事業所の調査）と違い世帯の調査で、
+        自営業主や完全失業者も含む。区分は上位の区分を含むので、同じ分類の区分を足さない。
+        元データの値は補正せず原典のまま入れている。lat / lon は自治体が公開した生値で、
+        緯度と経度が入れ替わったまま公開されている自治体（ods.cultural_property の豊島区、
+        ods.public_wireless_lan の世田谷区など）や、経度の小数点が欠落している行がある。
+        **地図に出すときは lat / lon ではなく geo_lat / geo_lon / geometry を使う。**
+        これは Queria が付与した列で、ods の施設テーブルと childcare の2表が持つ。
+        値域に収まらない座標を落とし、緯度と経度が入れ替わっている行は入れ替えて採用してある。
+        さらに ods では、原典に使える座標が無い行を住所から ABR（アドレス・ベース・
+        レジストリ）でジオコーディングして補ってある（childcare は原典の座標だけを使う）。
+        採用した値の由来は geo_source（source / source_swapped / abr）、粒度は geo_level
+        で引ける。ABR 由来の粒度は residential_detail（住居番号）/ residential_block（街区）/
+        machiaza_detail（丁目）/ machiaza（町字）。市区町村の代表点は採用していない。
+        geometry は geo_lat / geo_lon から作った POINT で、座標の無い行は NULL。
+        日付は自治体ごとに表記が違うため DATE に正規化しているが、「4月頃」のような
+        自由記述は推測せず NULL にしている。
+        標準列にマッピングできない自治体独自の列は extras（JSON）に退避してある。
+        ods.school_district は施設一覧ではなく学校×通学区域で、所在地・緯度経度を持たない。
+        介護事業所を全国で見るなら mhlw.kaigo.establishment、学校の位置は nlftp.facility.school。
+        procurement は区市町村が公表した調達情報で、今は練馬区だけ。private_contracts は随意契約の
+        締結状況（令和2年12月以降、1行=1契約）。contract_amount は円で、単価契約は単価の合計額、
+        金額の記載が無い契約は NULL。planned_works / planned_goods は発注予定で、公開中の最新の半期だけ。
+        入札公告は kkj.tender.notices、国の落札は company_profile、国交省の入札結果は mlit にある。
+      synonyms: [東京都オープンデータ, 自治体標準オープンデータセット, ODS, CKAN, 区市町村]
+      examples:
+        - 区市町村別のAED設置数を出したい
+        - 保育所を地図に出して定員で色分けしたい
+        - 東京都のカタログにどんなデータセットがあるか探したい
+        - 練馬区の随意契約を契約者別に集計したい

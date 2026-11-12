@@ -14,8 +14,6 @@ keywords:
   - 賞与
   - 産業
   - 時系列
-published: true
-themes: [labour]
 sources:
   - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 fields:
@@ -69,3 +67,6 @@ fields:
   - name: special_earnings_female
     title: 特別に支払われた給与（女）
     description: 円
+annotations:
+  queria:
+    themes: [labour]

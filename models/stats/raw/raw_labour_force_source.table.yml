@@ -1,4 +1,6 @@
 schema: stats
 name: raw_labour_force_source
 description: 東京の労働力（年平均の第1表）の取得元（1行=1ファイル）。年・表・取得元 URL・取得時刻・行数を記録する。
-published: false
+annotations:
+  queria:
+    published: false

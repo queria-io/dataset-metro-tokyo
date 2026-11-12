@@ -16,8 +16,6 @@ keywords:
   - 労働異動率
   - 産業
   - 時系列
-published: true
-themes: [labour]
 sources:
   - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 fields:
@@ -44,3 +42,6 @@ fields:
   - name: separation_rate
     title: 離職率
     description: 前月末の常用労働者数に対する、月中に退職・転出などで減った労働者数の割合（％）。年平均の行は各月の平均
+annotations:
+  queria:
+    themes: [labour]

@@ -16,8 +16,6 @@ keywords:
   - 冬季賞与
   - 産業
   - 時系列
-published: true
-themes: [labour]
 sources:
   - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 fields:
@@ -68,3 +66,6 @@ fields:
   - name: winter_bonus_months_change
     title: 冬季賞与 平均支給月数 前年差
     description: か月。原典の公表値
+annotations:
+  queria:
+    themes: [labour]

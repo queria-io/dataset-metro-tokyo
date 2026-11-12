@@ -10,8 +10,6 @@ keywords:
   - オープンデータ
   - カタログ
   - メタデータ
-published: true
-themes: [other]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:
@@ -41,3 +39,6 @@ fields:
   - name: resource_position
     title: 表示順
     description: データセット内での表示順（0始まり）
+annotations:
+  queria:
+    themes: [other]

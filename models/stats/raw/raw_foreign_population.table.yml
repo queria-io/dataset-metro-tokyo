@@ -5,4 +5,6 @@ description: '東京都「外国人人口」時系列（各年1月1日現在）�
   原典の横持ち（列 = 和暦の年）をパイプラインが 国籍・地域 × 地域 × 年 の縦持ちに直し、
 
   値の無い年（国籍・地域の区分が無い年）の行は出力しない。'
-published: false
+annotations:
+  queria:
+    published: false

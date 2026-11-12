@@ -13,15 +13,13 @@ keywords:
   - 随意契約
   - 契約
   - 調達
-published: true
-themes: [government_finance]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/dataset/t131202d0000000114
 fields:
   - name: org_code
     title: 全国地方公共団体コード
     description: 公表した区市町村の 6 桁のコード
-    semantic: { role: entity, name: city }
+    annotations: { queria: { semantic: { role: entity, name: city } } }
   - name: org_name
     title: 地方公共団体名
   - name: category
@@ -74,3 +72,6 @@ fields:
     description: 取り込んだカタログのリソース名
   - name: source_url
     title: 取得元URL
+annotations:
+  queria:
+    themes: [government_finance]

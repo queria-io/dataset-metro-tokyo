@@ -162,7 +162,7 @@ uv run --group dev pytest tests/pipelines -q
 ```
 
 dev グループは `default-groups = []` で既定から外してある。ビルドは
-`uv run queria sync` を通るので、既定に入れるとビルド環境にテスト依存が混ざる。
+scripts/build.sh（fdl でビルドして新しいバージョンにする）の中で `uv run` するので、既定に入れるとビルド環境にテスト依存が混ざる。
 
 tests/generic/ の .sql は dbt の generic test で、こちらは dbt が実行する。
 - pipelines/procurement.py: catalog のメタデータから調達情報のパッケージ（pipelines/procurement.py の PACKAGES）の
