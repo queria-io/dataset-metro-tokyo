@@ -20,12 +20,11 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: queria-io/dataset-shared/.github/workflows/sync.yml@f105231505e29dd4b833cb333eedfb5f22e2a959
+    uses: queria-io/dataset-shared/.github/workflows/sync.yml@67443c88b6ec355559c91bf866239e10073ccf83
     with:
       dataset_name: metro_tokyo
       # ODS の住所のジオコーディングに abr-geocoder（Node のツール）を使う。
       # 依存の better-sqlite3 が Node 24 でビルドできないので版を固定する
       node_version: "22"
     secrets:
-      QUERIA_TOKEN: ${{ secrets.QUERIA_TOKEN }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
