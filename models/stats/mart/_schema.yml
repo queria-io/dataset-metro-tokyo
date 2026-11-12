@@ -359,3 +359,23 @@ models:
       - name: base_year
       - name: index_value
       - name: change_rate
+  - name: labour_force
+    description: |
+      労働力調査の東京都分を東京都が集計した「東京の労働力」の年平均の第1表。
+      1行 = 年 × 分類 × 区分 × 男女で、2004年から収録する。
+      分類は就業状態・就業者の活動状態別内訳・就業者と雇用者の主な産業別内訳・非農林業雇用者の従業者規模別内訳
+      （単位は千人）と、完全失業率（年齢階級別）・就業率・労働力人口比率（単位は％）。
+      区分は原典の見出しを「／」でつないだもので、上位の区分を含む（「労働力人口／就業者数」は労働力人口の内訳）。
+      前年の値は前年の表の実数と違う年がある（2012・2017・2022年は基準人口の切り替え、2009年は産業分類の改定で遡って計算し直した値）。
+      原典で該当なし（…）または前年が無い区分（-）の値は NULL。
+    access: public
+    columns:
+      - name: year
+      - name: category
+      - name: item
+      - name: sex
+      - name: unit
+      - name: value
+      - name: previous_year_value
+      - name: change
+      - name: change_rate
