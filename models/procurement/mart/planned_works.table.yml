@@ -1,0 +1,70 @@
+schema: procurement
+name: planned_works
+title: 工事の発注予定
+description: |-
+  都内の区市町村が公表した工事（設計・測量・調査を含む）の発注予定です。1 行が 1 件で、件名・工事場所・工期・概要・入札方法・入札時期を持ちます。今は練馬区だけを収録しています。
+
+  - 区市町村は半期ごとに同じファイルを差し替えて公表するため、公開中の最新の半期だけを持ちます（`period_label`）
+  - 工期は原典が年月と年月日の両方で書くため、文字列のまま持ちます
+keywords:
+  - 東京都
+  - 練馬区
+  - 発注予定
+  - 工事
+  - 入札
+  - 調達
+published: true
+themes: [government_finance]
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/dataset/t131202d0000000114
+fields:
+  - name: org_code
+    title: 全国地方公共団体コード
+    semantic: { role: entity, name: city }
+  - name: org_name
+    title: 地方公共団体名
+  - name: category
+    title: 区分
+    description: 公表の区分（建築・機械・電気工事等 / 設計・測量・調査 / 土木工事等 など）
+  - name: period_label
+    title: 公表対象期間
+  - name: work_type
+    title: 工事種別
+    description: 設計・測量・調査では業種
+  - name: title
+    title: 件名
+  - name: location
+    title: 工事場所
+    description: 設計・測量・調査では履行場所
+  - name: location_prefecture
+    title: 工事場所の都道府県
+  - name: location_city
+    title: 工事場所の市区町村
+  - name: location_town
+    title: 工事場所の町字
+  - name: location_block
+    title: 工事場所の番地以下
+  - name: location_building
+    title: 建物名等
+  - name: lat
+    title: 緯度
+  - name: lon
+    title: 経度
+  - name: period_start
+    title: 工期の始期
+    description: YYYY-MM または YYYY-MM-DD
+  - name: period_end
+    title: 工期の終期
+    description: YYYY-MM または YYYY-MM-DD
+  - name: summary
+    title: 概要
+  - name: bidding_method
+    title: 入札方法
+  - name: bidding_timing
+    title: 入札時期（予定）
+  - name: note
+    title: 備考
+  - name: source_resource
+    title: リソース名
+  - name: source_url
+    title: 取得元URL

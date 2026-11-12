@@ -1,0 +1,39 @@
+schema: procurement
+name: source_files
+title: 調達情報の取り込み結果
+description: |-
+  調達情報の取り込みの結果です。1 行がカタログの 1 リソースで、取り込んだ行数と、取り込めなかった理由を持ちます。
+
+  - `status` は ok / skipped / error。リンク切れは error、中身が別の期間のリソースと同じものは skipped（reason=duplicate_content）です
+  - `period_label` は随意契約では表の表題から取った期間で、リソース名の期間と違うことがあります
+keywords:
+  - 東京都
+  - 調達
+published: true
+themes: [other]
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/dataset/t131202d0000000114
+fields:
+  - name: package_name
+    title: データセットID
+  - name: org_name
+    title: 提供組織名
+  - name: kind
+    title: 種別
+    description: private_contracts / planned_works / planned_goods
+  - name: category
+    title: 区分
+  - name: period_label
+    title: 公表対象期間
+  - name: resource_name
+    title: リソース名
+  - name: url
+    title: 取得元URL
+  - name: status
+    title: 結果
+  - name: reason
+    title: 理由
+  - name: rows
+    title: 行数
+  - name: fetched_at
+    title: 取得日時

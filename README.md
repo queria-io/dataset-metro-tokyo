@@ -1,6 +1,6 @@
 # 東京都オープンデータ
 
-[東京都オープンデータカタログ](https://catalog.data.metro.tokyo.lg.jp/)で公開されているデータを、SQL で検索・集計・地図表示できるテーブルにしたデータセットです。カタログに登録されたデータセットの一覧、都内の区市町村が公開する自治体標準オープンデータセットを種類ごとに統合したテーブル、都の施設の一覧と保健所台帳、都の統計を収録しています。
+[東京都オープンデータカタログ](https://catalog.data.metro.tokyo.lg.jp/)で公開されているデータを、SQL で検索・集計・地図表示できるテーブルにしたデータセットです。カタログに登録されたデータセットの一覧、都内の区市町村が公開する自治体標準オープンデータセットを種類ごとに統合したテーブル、都の施設の一覧と保健所台帳、都の統計、区市町村の調達情報を収録しています。
 
 ## 出典と利用条件
 
@@ -11,9 +11,10 @@
 | 東京都福祉局「社会福祉施設等一覧」のうち認可保育所と児童館（[提供組織](https://catalog.data.metro.tokyo.lg.jp/organization/t000054)） | `childcare` |
 | 東京都保健医療局の[保健所台帳](https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho)のうち食品関係営業台帳と環境衛生施設台帳 | `hokenjo` |
 | 東京都総務局統計部「[住民基本台帳による世帯と人口](https://www.toukei.metro.tokyo.lg.jp/juukim/jm-index.htm)」と「[毎月勤労統計調査](https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm)」の年報 | `stats` |
+| 練馬区「[調達情報](https://catalog.data.metro.tokyo.lg.jp/dataset/t131202d0000000114)」（工事・物品の発注予定、随意契約の締結状況） | `procurement` |
 
 - [クリエイティブ・コモンズ 表示 4.0 国際（CC BY 4.0）](https://creativecommons.org/licenses/by/4.0/deed.ja)に従います。使うときは、使った資料の出典（「社会福祉施設等一覧」（東京都福祉局）など）と、Queria が加工したものであることを書いてください
-- `ods` の各行の出典は、その行を公開した自治体です。どのファイルから取り込んだかは `ods.source_files` にあります
+- `ods` と `procurement` の各行の出典は、その行を公開した自治体です。どのファイルから取り込んだかは `ods.source_files` と `procurement.source_files` にあります
 
 ## テーブル
 
@@ -24,6 +25,7 @@
 | `childcare` | 都内の認可保育所（`nursery_school`）と児童館（`children_center`） |
 | `hokenjo` | 保健所台帳の食品関係営業（`food_establishment`）と環境衛生施設（`sanitation_facility`） |
 | `stats` | 住民基本台帳の世帯と人口（`resident_population`）、国籍・地域別外国人人口（`foreign_population`）、毎月勤労統計調査の給与・労働時間・労働者数・賞与・入職率と離職率・指数（`labour_*`）、労働力調査の就業状態・産業別就業者数・完全失業率（`labour_force`） |
+| `procurement` | 区市町村の随意契約の締結状況（`private_contracts`）、工事の発注予定（`planned_works`）、物品買入れの発注予定（`planned_goods`）。今は練馬区だけ。取り込みの結果は `procurement.source_files` |
 
 ## 使い方
 
@@ -155,6 +157,28 @@ ORDER BY organizations DESC;
 - 男女計は男と女の和、労働力人口は就業者数と完全失業者数の和と、千人単位の丸めの範囲（差 1 まで）で一致します。15 歳以上人口は就業状態不詳を含むので、労働力人口と非労働力人口の和より大きくなります。原典の 2007 年の「その他(上記以外のもの)」は男女の和が男女計と合いません
 - 前年の値（`previous_year_value`）はその年の表に載る値で、基準人口を切り替えた年（2012・2017・2022 年）と産業分類を改定した年（2009 年）は前年の表の実数と違います。年をまたぐ増減は `change` と `change_rate` を使ってください
 - 産業の区分は 2009 年から変わりました。雇用者の主な産業別内訳は 2005 年から、就業率は 2011 年から、正規・非正規の職員・従業員は 2013 年から、うち常雇は 2017 年までです
+
+## procurement の注意
+
+- 今は練馬区だけです。東京都オープンデータカタログで調達情報を公開している区市町村は練馬区だけです
+- 随意契約の締結状況は 4 か月ごとの公表分（令和2年12月以降）をすべて持ちます。1 行が 1 契約で、`category`（工事・設計等 / 物品・委託・賃貸借等）と `period_label` ごとに `seq_no` が振られます
+- 公表の抜けがあります。令和5年4月〜7月の工事・設計等はカタログに登録されていません。令和6年12月〜令和7年3月の物品・委託・賃貸借等は、カタログのリソースが令和5年12月〜令和6年3月の表を指しているため収録していません（`procurement.source_files` に reason=duplicate_content で残ります）。期間は表の表題から取っています
+- 単価契約の契約金額は単価の合計額です。金額の記載が無い契約（複数単価契約など）は `contract_amount` が NULL です。電気の単価など小数で書かれた金額は `contract_amount_text` にだけあります
+- 契約請求課（`requesting_section`）は令和4年4月以降の表にだけあります
+- 発注予定（`planned_works`・`planned_goods`）は半期ごとに同じファイルが差し替わるので、公開中の最新の半期だけを持ちます。工期は原典が年月（2026-12）と年月日（2026-11-01）の両方で書くため、文字列のままです
+
+区市町村別・年度別の随意契約の件数と金額:
+
+```sql
+SELECT org_name,
+       year(contract_date - INTERVAL 3 MONTH) AS fiscal_year,
+       category,
+       count(*) AS contracts,
+       sum(contract_amount) AS amount_yen
+FROM metro_tokyo.procurement.private_contracts
+GROUP BY ALL
+ORDER BY fiscal_year, category;
+```
 
 ## ビルド
 

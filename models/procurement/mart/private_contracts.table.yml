@@ -1,0 +1,76 @@
+schema: procurement
+name: private_contracts
+title: 随意契約の締結状況
+description: |-
+  都内の区市町村が公表した随意契約の締結状況です。1 行が 1 契約で、件名・業種・契約金額・契約年月日・履行期間・契約者・区内外・随意契約の理由を持ちます。今は練馬区（令和2年12月以降）だけを収録しています。
+
+  - 区市町村は 4 か月ごとに公表します。どの期間を取り込めたかは `procurement.source_files` にあります
+  - 単価契約の契約金額は単価の合計額です。複数単価契約など金額の記載が無い契約は `contract_amount` が NULL です。電気の単価など小数で書かれた金額は `contract_amount_text` にだけあります
+  - 見出しが「契約金額（契約変更後の金額含む）」の表（令和5年12月以降の一部）では、契約変更後の金額です
+keywords:
+  - 東京都
+  - 練馬区
+  - 随意契約
+  - 契約
+  - 調達
+published: true
+themes: [government_finance]
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/dataset/t131202d0000000114
+fields:
+  - name: org_code
+    title: 全国地方公共団体コード
+    description: 公表した区市町村の 6 桁のコード
+    semantic: { role: entity, name: city }
+  - name: org_name
+    title: 地方公共団体名
+  - name: category
+    title: 区分
+    description: 工事・設計等 / 物品・委託・賃貸借等
+  - name: period_label
+    title: 公表対象期間
+    description: 表題に書かれた対象期間（「令和3年4月から令和3年7月まで」）
+  - name: period_start_month
+    title: 公表対象期間の始まり
+    description: YYYY-MM
+  - name: period_end_month
+    title: 公表対象期間の終わり
+    description: YYYY-MM
+  - name: seq_no
+    title: 整理番号
+    description: 公表の表の中の番号。区分と公表対象期間ごとに 1 から振られる
+  - name: title
+    title: 件名
+  - name: business_type
+    title: 業種
+  - name: contract_amount
+    title: 契約金額
+    description: 円。金額の記載が無い契約と、小数で書かれた単価は NULL
+  - name: contract_amount_text
+    title: 契約金額（原典の表記）
+  - name: contract_date
+    title: 契約年月日
+  - name: contract_date_text
+    title: 契約年月日（原典の表記）
+  - name: performance_start
+    title: 履行期間の始期
+    description: 履行期間が 1 つの日付（納期）だけで書かれている契約は NULL
+  - name: performance_end
+    title: 履行期間の終期
+  - name: performance_period
+    title: 履行期間（原典の表記）
+  - name: contractor
+    title: 契約者
+  - name: contractor_area
+    title: 区内外
+    description: 原典の区分（区内 / 準区内 / 区外 / 都外）
+  - name: reason
+    title: 随意契約理由
+  - name: requesting_section
+    title: 契約請求課
+    description: 令和4年4月以降の表にだけある
+  - name: source_resource
+    title: リソース名
+    description: 取り込んだカタログのリソース名
+  - name: source_url
+    title: 取得元URL

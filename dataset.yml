@@ -2,7 +2,7 @@ spec_version: "0.1"
 name: metro_tokyo
 title: 東京都オープンデータカタログ
 description: |-
-  東京都オープンデータカタログのデータセットの一覧と、都内の区市町村が公開する自治体標準オープンデータセット（AED・避難場所・公共施設など 22 種類）を統合したものです。都の保育所・児童館、保健所台帳、住民基本台帳の人口、毎月勤労統計調査も収録しています。
+  東京都オープンデータカタログのデータセットの一覧と、都内の区市町村が公開する自治体標準オープンデータセット（AED・避難場所・公共施設など 22 種類）を統合したものです。都の保育所・児童館、保健所台帳、住民基本台帳の人口、毎月勤労統計調査、区市町村の調達情報（随意契約の締結状況・発注予定）も収録しています。
 
   出典：東京都オープンデータカタログ（東京都・都内区市町村）。Queria が加工したものです。
 keywords:
@@ -30,6 +30,10 @@ keywords:
   - 営業許可
   - 飲食店
   - 生活衛生
+  - 調達
+  - 随意契約
+  - 発注予定
+  - 入札
 homepage: https://github.com/queria-io/dataset-metro-tokyo
 language: ja
 themes: [social_security_health, labour, education_culture, population, government_finance, justice_safety_environment, commerce_services, transport_tourism, ict_science, international]
@@ -50,6 +54,8 @@ sources:
     path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
   - title: 保健所台帳（東京都保健医療局）
     path: https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho
+  - title: 調達情報（練馬区）
+    path: https://catalog.data.metro.tokyo.lg.jp/dataset/t131202d0000000114
 
 contributors:
   - title: 東京都
@@ -142,11 +148,16 @@ ai_context:
     標準列にマッピングできない自治体独自の列は extras（JSON）に退避してある。
     ods.school_district は施設一覧ではなく学校×通学区域で、所在地・緯度経度を持たない。
     介護事業所を全国で見るなら mhlw.kaigo.establishment、学校の位置は nlftp.facility.school。
+    procurement は区市町村が公表した調達情報で、今は練馬区だけ。private_contracts は随意契約の
+    締結状況（令和2年12月以降、1行=1契約）。contract_amount は円で、単価契約は単価の合計額、
+    金額の記載が無い契約は NULL。planned_works / planned_goods は発注予定で、公開中の最新の半期だけ。
+    入札公告は kkj.tender.notices、国の落札は company_profile、国交省の入札結果は mlit にある。
   synonyms: [東京都オープンデータ, 自治体標準オープンデータセット, ODS, CKAN, 区市町村]
   examples:
     - 区市町村別のAED設置数を出したい
     - 保育所を地図に出して定員で色分けしたい
     - 東京都のカタログにどんなデータセットがあるか探したい
+    - 練馬区の随意契約を契約者別に集計したい
 
 schemas:
   - name: catalog
@@ -159,3 +170,5 @@ schemas:
     title: 自治体標準データセット
   - name: stats
     title: 都の統計
+  - name: procurement
+    title: 調達情報

@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: stg_private_contracts
+    description: 随意契約の締結状況のステージング。整理番号を INTEGER、日付を DATE に型変換する。
+  - name: stg_planned_works
+    description: 工事の発注予定のステージング。緯度・経度を DOUBLE に型変換する。
+  - name: stg_planned_goods
+    description: 物品買入れの発注予定のステージング。

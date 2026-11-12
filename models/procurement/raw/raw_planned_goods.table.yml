@@ -1,0 +1,4 @@
+schema: procurement
+name: raw_planned_goods
+description: 区市町村が公表した物品買入れの発注予定の生データ（1行=1件）。
+published: false
