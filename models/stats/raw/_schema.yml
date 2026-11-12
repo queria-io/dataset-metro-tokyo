@@ -99,3 +99,9 @@ models:
       区分は原典の見出しを「／」でつないだ文字列のまま。男女計・男・女の列を男女ごとの行に分ける。
   - name: raw_labour_force_source
     description: 東京の労働力（年平均の第1表）の取得元（1行=1ファイル）。年・表・取得元 URL・取得時刻・行数を記録する。
+  - name: raw_labour_force_unemployment_rate
+    description: |
+      東京の労働力（東京都）年平均の参考表（東京都、南関東及び全国の完全失業率）の生データ。全列 VARCHAR で取り込む。
+      各年の表に載る全年分の実数を、地域 × 男女の行に分けて、どの年の表か（report_year）と合わせて持つ。
+  - name: raw_labour_force_unemployment_rate_source
+    description: 東京の労働力（年平均の参考表）の取得元（1行=1ファイル）。表の年・取得元 URL・取得時刻・行数を記録する。

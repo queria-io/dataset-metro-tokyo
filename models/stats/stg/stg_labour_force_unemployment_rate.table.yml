@@ -1,0 +1,6 @@
+schema: stats
+name: stg_labour_force_unemployment_rate
+description: 東京の労働力（年平均の参考表）のステージング。年ごとに最も新しい年の表の値を選び、完全失業率を DECIMAL に型変換する（「…」は NULL）。
+annotations:
+  queria:
+    published: false

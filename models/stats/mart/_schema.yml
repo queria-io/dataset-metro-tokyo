@@ -379,3 +379,15 @@ models:
       - name: previous_year_value
       - name: change
       - name: change_rate
+  - name: labour_force_unemployment_rate
+    description: |
+      「東京の労働力」の年平均に付く参考表で、東京都・南関東・全国の完全失業率を男女別に持つ。
+      1行 = 年 × 地域 × 男女で、1997年から収録する。南関東は埼玉県・千葉県・東京都・神奈川県。
+      同じ年の値は複数の年の表に載るので、最も新しい年の表の値を使い、その表の年を report_year に残す。
+    access: public
+    columns:
+      - name: year
+      - name: area
+      - name: sex
+      - name: unemployment_rate
+      - name: report_year
