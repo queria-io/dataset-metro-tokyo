@@ -16,7 +16,10 @@ jobs:
   pytest:
     runs-on: ubuntu-latest
     steps:
+      # pipelines は shared（submodule）の取得部品を import する
       - uses: actions/checkout@v5
+        with:
+          submodules: true
       - uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true

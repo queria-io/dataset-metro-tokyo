@@ -1,0 +1,6 @@
+schema: stats
+name: raw_labour_force_unemployment_rate
+description: 東京の労働力（東京都）年平均の参考表（東京都、南関東及び全国の完全失業率）の生データ。全列 VARCHAR で取り込む。各年の表に載る全年分を、どの年の表か（report_year）と合わせて持つ。
+annotations:
+  queria:
+    published: false
