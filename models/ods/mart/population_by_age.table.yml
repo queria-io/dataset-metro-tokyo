@@ -8,14 +8,12 @@ keywords:
   - 人口
   - 年齢別人口
   - 自治体標準オープンデータセット
-published: true
-themes: [population]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:
   - name: municipality_code
     title: 全国地方公共団体コード
-    semantic: { role: entity, name: city }
+    annotations: { queria: { semantic: { role: entity, name: city } } }
   - name: prefecture
     title: 都道府県名
   - name: city
@@ -34,3 +32,6 @@ fields:
     description: 男性 / 女性
   - name: population
     title: 人口
+annotations:
+  queria:
+    themes: [population]

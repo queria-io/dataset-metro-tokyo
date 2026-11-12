@@ -5,4 +5,6 @@ description: '東京都「住民基本台帳による世帯と人口」（月次
   2012年8月分までと2012年9月分以降で原典の様式が違うため、パイプラインが共通キーに
 
   割り当てたうえで出力する（旧様式に無い列は NULL）。'
-published: false
+annotations:
+  queria:
+    published: false

@@ -16,10 +16,16 @@ concurrency:
 
 jobs:
   sync:
-    uses: queria-io/dataset-shared/.github/workflows/sync.yml@main
+    # Queria への書き込みは GitHub Actions の OIDC で 1 時間のトークンを取って行う
+    permissions:
+      contents: read
+      id-token: write
+    uses: queria-io/dataset-shared/.github/workflows/sync.yml@f105231505e29dd4b833cb333eedfb5f22e2a959
     with:
       dataset_name: metro_tokyo
       # ODS の住所のジオコーディングに abr-geocoder（Node のツール）を使う。
       # 依存の better-sqlite3 が Node 24 でビルドできないので版を固定する
       node_version: "22"
-    secrets: inherit
+    secrets:
+      QUERIA_TOKEN: ${{ secrets.QUERIA_TOKEN }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}

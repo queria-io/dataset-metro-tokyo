@@ -1,4 +1,6 @@
 schema: procurement
 name: stg_planned_works
 description: planned_works のステージング。
-published: false
+annotations:
+  queria:
+    published: false

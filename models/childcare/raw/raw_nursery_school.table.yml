@@ -1,4 +1,6 @@
 schema: childcare
 name: raw_nursery_school
 description: 東京都福祉局「社会福祉施設等一覧」の認可保育所の生データ。全列 VARCHAR で取り込む。
-published: false
+annotations:
+  queria:
+    published: false

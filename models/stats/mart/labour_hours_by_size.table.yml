@@ -13,8 +13,6 @@ keywords:
   - 出勤日数
   - 事業所規模
   - 時系列
-published: true
-themes: [labour]
 sources:
   - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 fields:
@@ -66,3 +64,6 @@ fields:
   - name: overtime_hours_female
     title: 所定外労働時間（女）
     description: 時間
+annotations:
+  queria:
+    themes: [labour]

@@ -14,15 +14,13 @@ keywords:
   - 観光
   - 自治体標準オープンデータセット
   - GIS
-published: true
-themes: [education_culture]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
-    semantic: { role: entity, name: city }
+    annotations: { queria: { semantic: { role: entity, name: city } } }
   - name: facility_id
     title: ID
     description: 元データの ID / NO 列。Excel の指数表記のまま復元できない値がある
@@ -54,7 +52,7 @@ fields:
     title: 建物名等(方書)
   - name: postal_code
     title: 郵便番号
-    semantic: { role: entity, name: postal_code }
+    annotations: { queria: { semantic: { role: entity, name: postal_code } } }
   - name: phone_number
     title: 電話番号
   - name: lat
@@ -87,7 +85,7 @@ fields:
   - name: corporate_number
     title: 法人番号
     description: 所有者・管理者・保護団体等の法人番号（元データの表記のまま）
-    semantic: { role: entity, name: corporate_number }
+    annotations: { queria: { semantic: { role: entity, name: corporate_number } } }
   - name: owner
     title: 所有者等
     description: 所有者・管理者・保護団体等。個人所有は「個人」と記載される
@@ -133,3 +131,6 @@ fields:
     description: catalog.datasets との結合キー
   - name: source_url
     title: 取得元URL
+annotations:
+  queria:
+    themes: [education_culture]

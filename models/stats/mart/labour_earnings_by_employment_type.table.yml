@@ -15,8 +15,6 @@ keywords:
   - 就業形態
   - 産業
   - 時系列
-published: true
-themes: [labour]
 sources:
   - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 fields:
@@ -67,3 +65,6 @@ fields:
   - name: part_time_special_earnings
     title: 特別に支払われた給与（パートタイム労働者）
     description: 円。賞与などを含む
+annotations:
+  queria:
+    themes: [labour]

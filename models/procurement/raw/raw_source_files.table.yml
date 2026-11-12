@@ -1,4 +1,6 @@
 schema: procurement
 name: raw_source_files
 description: 調達情報の取得結果（1行=1リソース）。
-published: false
+annotations:
+  queria:
+    published: false

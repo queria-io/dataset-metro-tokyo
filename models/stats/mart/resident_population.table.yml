@@ -12,8 +12,6 @@ keywords:
   - 世帯
   - 住民基本台帳
   - 時系列
-published: true
-themes: [population]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/organization/t000003
 fields:
@@ -26,7 +24,7 @@ fields:
   - name: area_code
     title: 地域コード
     description: 全国地方公共団体コードの上5桁。集計行は都が付す地域コード（総数13000・区部13100など）
-    semantic: { role: entity, name: city }
+    annotations: { queria: { semantic: { role: entity, name: city } } }
   - name: area_name
     title: 地域
   - name: area_type
@@ -66,3 +64,6 @@ fields:
   - name: household_mixed
     title: 複数国籍世帯数
     description: 日本人と外国人が同居する世帯数。2012年9月分以降のみ
+annotations:
+  queria:
+    themes: [population]

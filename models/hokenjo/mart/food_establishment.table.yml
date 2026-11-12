@@ -14,8 +14,6 @@ keywords:
   - 飲食店
   - 施設
   - GIS
-published: true
-themes: [commerce_services, social_security_health]
 sources:
   - path: https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho
 fields:
@@ -51,7 +49,7 @@ fields:
   - name: city_code
     title: 市区町村コード
     description: 所在地から求めた 5 桁の市区町村コード
-    semantic: { role: entity, name: city }
+    annotations: { queria: { semantic: { role: entity, name: city } } }
   - name: geo_lat
     title: 緯度
     description: 所在地から求めた十進度（JGD2011）
@@ -67,3 +65,6 @@ fields:
   - name: geometry
     title: ジオメトリ
     description: geo_lat / geo_lon の POINT。座標が無い行は NULL
+annotations:
+  queria:
+    themes: [commerce_services, social_security_health]

@@ -3,4 +3,6 @@ name: raw_labour_turnover
 description: '毎月勤労統計調査（東京都）年報の第12-1表・第12-2表の生データ。全列 VARCHAR で取り込む。
 
   各年の年報から公表年の行（各月と年平均）だけを取り出し、横持ちの産業の列を産業ごとの行に分ける。'
-published: false
+annotations:
+  queria:
+    published: false

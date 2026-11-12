@@ -8,8 +8,6 @@ keywords:
   - オープンデータ
   - カタログ
   - メタデータ
-published: true
-themes: [other]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:
@@ -19,3 +17,6 @@ fields:
   - name: group_code
     title: グループコード
     description: groups との結合キー
+annotations:
+  queria:
+    themes: [other]

@@ -8,8 +8,6 @@ keywords:
   - オープンデータ
   - カタログ
   - メタデータ
-published: true
-themes: [other]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:
@@ -21,3 +19,6 @@ fields:
     title: 説明
   - name: dataset_count
     title: データセット数
+annotations:
+  queria:
+    themes: [other]

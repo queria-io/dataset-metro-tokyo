@@ -1,4 +1,6 @@
 schema: catalog
 name: raw_groups
 description: CKAN API group_list(all_fields) の生データ。全列 VARCHAR で取り込む。
-published: false
+annotations:
+  queria:
+    published: false

@@ -14,8 +14,6 @@ keywords:
   - パートタイム
   - 産業
   - 時系列
-published: true
-themes: [labour]
 sources:
   - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 fields:
@@ -81,3 +79,6 @@ fields:
   - name: part_time_ratio_female
     title: パートタイム労働者比率（女）
     description: ％
+annotations:
+  queria:
+    themes: [labour]

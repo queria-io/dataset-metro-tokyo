@@ -12,14 +12,12 @@ keywords:
   - バリアフリー
   - 自治体標準オープンデータセット
   - GIS
-published: true
-themes: [government_finance]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:
   - name: municipality_code
     title: 全国地方公共団体コード
-    semantic: { role: entity, name: city }
+    annotations: { queria: { semantic: { role: entity, name: city } } }
   - name: facility_id
     title: ID
   - name: name
@@ -100,3 +98,6 @@ fields:
     description: catalog.datasets との結合キー
   - name: source_url
     title: 取得元URL
+annotations:
+  queria:
+    themes: [government_finance]

@@ -9,8 +9,6 @@ description: |-
 keywords:
   - 東京都
   - 調達
-published: true
-themes: [other]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/dataset/t131202d0000000114
 fields:
@@ -37,3 +35,6 @@ fields:
     title: 行数
   - name: fetched_at
     title: 取得日時
+annotations:
+  queria:
+    themes: [other]

@@ -12,8 +12,6 @@ keywords:
   - 国籍
   - 人口
   - 時系列
-published: true
-themes: [population, international]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/organization/t000003
 fields:
@@ -26,7 +24,7 @@ fields:
   - name: area_code
     title: 地域コード
     description: 全国地方公共団体コードの上 5 桁。集計行と支庁は都が付すコード
-    semantic: { role: entity, name: city }
+    annotations: { queria: { semantic: { role: entity, name: city } } }
   - name: area_name
     title: 地域
   - name: area_type
@@ -38,3 +36,6 @@ fields:
   - name: population
     title: 外国人人口
     description: 2012年までは外国人登録者数、2013年からは住民基本台帳上の人口（人）
+annotations:
+  queria:
+    themes: [population, international]

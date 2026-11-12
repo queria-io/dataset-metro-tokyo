@@ -19,8 +19,6 @@ keywords:
   - 常用雇用指数
   - 産業
   - 時系列
-published: true
-themes: [labour]
 sources:
   - path: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
 fields:
@@ -53,3 +51,6 @@ fields:
   - name: change_rate
     title: 前年比・前年同月比
     description: 年平均の行は前年比、月次の行は前年同月比（％）。基準年の切り替えをまたいでも比べられるように原典が計算した値
+annotations:
+  queria:
+    themes: [labour]

@@ -12,8 +12,6 @@ keywords:
   - 児童館
   - 施設
   - GIS
-published: true
-themes: [social_security_health]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/organization/t000054
 fields:
@@ -27,7 +25,7 @@ fields:
     title: 施設名
   - name: postal_code
     title: 郵便番号
-    semantic: { role: entity, name: postal_code }
+    annotations: { queria: { semantic: { role: entity, name: postal_code } } }
   - name: address
     title: 所在地
     description: 都道府県名を含まない所在地（「千代田区外神田…」形式）
@@ -60,3 +58,6 @@ fields:
   - name: capacity
     title: 定員
     description: 定員（人）。原典の「-」や空欄は NULL
+annotations:
+  queria:
+    themes: [social_security_health]

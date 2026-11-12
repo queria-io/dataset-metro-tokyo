@@ -7,4 +7,6 @@ description: '認可保育所のステージング。列名を英語化し、経
   所在地は都道府県名を含まない（「千代田区外神田…」形式）。
 
   取り込んだ一覧の版を source_edition として付与する。'
-published: false
+annotations:
+  queria:
+    published: false

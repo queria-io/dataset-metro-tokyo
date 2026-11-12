@@ -185,7 +185,7 @@ ORDER BY fiscal_year, category;
 ```bash
 git submodule update --init
 uv sync
-bash scripts/build.sh
+FDL_TOKEN=... bash scripts/build.sh
 ```
 
 取り込みの仕組みと各パイプラインの説明は、リポジトリの MAINTAINING.md にあります。

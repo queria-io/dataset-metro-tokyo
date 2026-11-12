@@ -11,15 +11,13 @@ keywords:
   - 公共施設
   - 自治体標準オープンデータセット
   - GIS
-published: true
-themes: [government_finance]
 sources:
   - path: https://catalog.data.metro.tokyo.lg.jp/
 fields:
   - name: municipality_code
     title: 全国地方公共団体コード
     description: 6桁の全国地方公共団体コード（元データの表記のまま。5桁の場合もある）
-    semantic: { role: entity, name: city }
+    annotations: { queria: { semantic: { role: entity, name: city } } }
   - name: facility_id
     title: ID
     description: 元データの ID / NO 列。Excel の指数表記のまま復元できない値がある
@@ -40,7 +38,7 @@ fields:
     title: 市区町村
   - name: postal_code
     title: 郵便番号
-    semantic: { role: entity, name: postal_code }
+    annotations: { queria: { semantic: { role: entity, name: postal_code } } }
   - name: phone_number
     title: 電話番号
   - name: lat
@@ -66,7 +64,7 @@ fields:
     description: geo_lat / geo_lon の POINT。座標が無い行は NULL
   - name: corporate_number
     title: 法人番号
-    semantic: { role: entity, name: corporate_number }
+    annotations: { queria: { semantic: { role: entity, name: corporate_number } } }
   - name: corporate_name
     title: 団体名
     description: 運営主体（指定管理者等）の名称
@@ -101,3 +99,6 @@ fields:
     description: catalog.datasets との結合キー
   - name: source_url
     title: 取得元URL
+annotations:
+  queria:
+    themes: [government_finance]
