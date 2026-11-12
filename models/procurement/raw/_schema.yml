@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: raw_private_contracts
+    description: 区市町村が公表した随意契約の締結状況の生データ（1行=1契約）。
+  - name: raw_planned_works
+    description: 区市町村が公表した工事の発注予定の生データ（1行=1件）。
+  - name: raw_planned_goods
+    description: 区市町村が公表した物品買入れの発注予定の生データ（1行=1件）。
+  - name: raw_source_files
+    description: 調達情報の取得結果（1行=1リソース）。

@@ -1,0 +1,4 @@
+schema: procurement
+name: raw_private_contracts
+description: 区市町村が公表した随意契約の締結状況の生データ（1行=1契約）。
+published: false

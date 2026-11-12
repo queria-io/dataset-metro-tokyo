@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: private_contracts
+    description: |
+      区市町村が公表した随意契約の締結状況（1行=1契約）。件名・業種・契約金額・
+      契約年月日・履行期間・契約者・区内外・随意契約理由を持つ。4 か月ごとの公表分を
+      すべて取り込む。今は練馬区だけ。
+    access: public
+    data_tests:
+      - unique_key:
+          arguments:
+            columns: [org_code, category, period_label, seq_no]
+    columns:
+      - name: org_code
+        data_tests: [not_null]
+      - name: title
+        data_tests: [not_null]
+      - name: contract_date
+        data_tests: [not_null]
+  - name: planned_works
+    description: |
+      区市町村が公表した工事の発注予定（1行=1件）。公開中の最新の半期だけを持つ。
+    access: public
+    columns:
+      - name: title
+        data_tests: [not_null]
+  - name: planned_goods
+    description: |
+      区市町村が公表した物品買入れ契約（一般競争入札）の発注予定（1行=1件）。
+      公開中の最新の半期だけを持つ。
+    access: public
+    columns:
+      - name: title
+        data_tests: [not_null]
+  - name: procurement_source_files
+    description: 調達情報の取得結果（1行=1リソース）。取り込めなかったリソースと理由も持つ。
+    access: public

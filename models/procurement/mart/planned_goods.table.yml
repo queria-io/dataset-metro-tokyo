@@ -1,0 +1,49 @@
+schema: procurement
+name: planned_goods
+title: 物品買入れの発注予定
+description: |-
+  都内の区市町村が公表した物品買入れ契約（一般競争入札）の発注予定です。1 行が 1 件で、種目・件名・納入場所・納期・概要・入札時期を持ちます。今は練馬区だけを収録しています。
+
+  - 区市町村は半期ごとに同じファイルを差し替えて公表するため、公開中の最新の半期だけを持ちます（`period_label`）
+keywords:
+  - 東京都
+  - 練馬区
+  - 発注予定
+  - 物品
+  - 入札
+  - 調達
+published: true
+themes: [government_finance]
+sources:
+  - path: https://catalog.data.metro.tokyo.lg.jp/dataset/t131202d0000000114
+fields:
+  - name: org_code
+    title: 全国地方公共団体コード
+    semantic: { role: entity, name: city }
+  - name: org_name
+    title: 地方公共団体名
+  - name: category
+    title: 区分
+  - name: period_label
+    title: 公表対象期間
+  - name: item_type
+    title: 種目
+  - name: title
+    title: 件名
+  - name: delivery_place
+    title: 納入場所
+  - name: delivery_deadline
+    title: 納期
+    description: 原典の表記（「令和9年3月」）
+  - name: summary
+    title: 概要
+  - name: bidding_method
+    title: 入札方法（予定）
+  - name: bidding_timing
+    title: 入札時期（予定）
+  - name: note
+    title: 備考
+  - name: source_resource
+    title: リソース名
+  - name: source_url
+    title: 取得元URL
