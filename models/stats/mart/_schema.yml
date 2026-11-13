@@ -391,3 +391,17 @@ models:
       - name: sex
       - name: unemployment_rate
       - name: report_year
+  - name: labour_force_activity
+    description: |
+      「東京の労働力」の年平均の第2表。15歳以上人口を就業状態・就業者の活動状態・従業上の地位・
+      非労働力人口の活動状態で分けた人数（千人）と、労働力人口比率・就業率・完全失業率（％）を男女別に持つ。
+      1行 = 年 × 男女 × 区分で、1997年から収録する。区分は原典の見出しを「／」でつないだもので、上位の区分を含む。
+      同じ年の値は複数の年の表に載るので、値のある最も新しい年の表の値を使い、その表の年を report_year に残す。
+    access: public
+    columns:
+      - name: year
+      - name: sex
+      - name: item
+      - name: unit
+      - name: value
+      - name: report_year
