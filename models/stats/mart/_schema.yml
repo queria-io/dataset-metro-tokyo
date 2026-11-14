@@ -405,3 +405,18 @@ models:
       - name: unit
       - name: value
       - name: report_year
+  - name: labour_force_by_age
+    description: |
+      「東京の労働力」の年平均の第3表。15歳以上人口・労働力人口・就業者数・完全失業者数・非労働力人口（千人）と、
+      労働力人口比率・就業率・完全失業率（％）を年齢階級別・男女別に持つ。
+      1行 = 年 × 男女 × 年齢階級 × 区分で、1997年から収録する。
+      同じ年の値は複数の年の表に載るので、値のある最も新しい年の表の値を使い、その表の年を report_year に残す。
+    access: public
+    columns:
+      - name: year
+      - name: sex
+      - name: age_group
+      - name: item
+      - name: unit
+      - name: value
+      - name: report_year

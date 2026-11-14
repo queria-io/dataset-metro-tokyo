@@ -112,3 +112,10 @@ models:
       区分は原典の見出しのまま。
   - name: raw_labour_force_activity_source
     description: 東京の労働力（年平均の第2表）の取得元（1行=1ファイル）。表の年・取得元 URL・取得時刻・行数を記録する。
+  - name: raw_labour_force_by_age
+    description: |
+      東京の労働力（東京都）年平均の第3表（年齢階級別就業状態）の生データ。全列 VARCHAR で取り込む。
+      男女計・男・女の3ファイルの実数を、男女 × 年 × 年齢階級 × 区分の行に分けて、どの年の表か（report_year）と合わせて持つ。
+      年齢階級は原典の見出しのまま。
+  - name: raw_labour_force_by_age_source
+    description: 東京の労働力（年平均の第3表）の取得元（1行=1ファイル）。表の年・男女・取得元 URL・取得時刻・行数を記録する。
