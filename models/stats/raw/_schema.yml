@@ -112,3 +112,10 @@ models:
       区分は原典の見出しのまま。
   - name: raw_labour_force_activity_source
     description: 東京の労働力（年平均の第2表）の取得元（1行=1ファイル）。表の年・取得元 URL・取得時刻・行数を記録する。
+  - name: raw_labour_force_by_occupation
+    description: |
+      東京の労働力（東京都）年平均の第6表（主な職業別就業者数）の生データ。全列 VARCHAR で取り込む。
+      各年の表に載る全年分の実数を、男女 × 年 × 職業の行に分けて、どの年の表か（report_year）と合わせて持つ。
+      職業は原典の見出しを NFKC で正規化して「（千人）」を外したもの。
+  - name: raw_labour_force_by_occupation_source
+    description: 東京の労働力（年平均の第6表）の取得元（1行=1ファイル）。表の年・取得元 URL・取得時刻・行数を記録する。

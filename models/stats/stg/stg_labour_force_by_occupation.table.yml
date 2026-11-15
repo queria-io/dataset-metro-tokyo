@@ -1,0 +1,6 @@
+schema: stats
+name: stg_labour_force_by_occupation
+description: 東京の労働力（年平均の第6表）のステージング。値を INTEGER に型変換し、年ごとに値のある最も新しい年の表の値を選ぶ。
+annotations:
+  queria:
+    published: false
