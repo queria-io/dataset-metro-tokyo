@@ -79,3 +79,7 @@ models:
     description: |
       東京の労働力（年平均の第6表）のステージング。職業の「その他(左記以外のもの)」を「その他」にし、
       値を INTEGER に型変換し、年ごとに値のある最も新しい年の表の値を選ぶ。
+  - name: stg_labour_force_by_employment_type
+    description: |
+      東京の労働力（年平均の第8表）のステージング。値を INTEGER に型変換し、
+      年ごとに値のある最も新しい年の表の値を選ぶ。

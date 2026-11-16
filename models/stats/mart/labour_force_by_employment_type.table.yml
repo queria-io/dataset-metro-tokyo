@@ -1,0 +1,43 @@
+schema: stats
+name: labour_force_by_employment_type
+title: 東京の労働力 年齢階級・雇用形態別の役員を除く雇用者数
+description: |-
+  労働力調査の東京都分を東京都が集計した「東京の労働力」の年平均の第 8 表です。役員を除く雇用者数を、雇用形態（正規の職員・従業員／非正規の職員・従業員）別・年齢階級（15〜24 歳から 65 歳以上までの 6 区分と総数）別・男女別に持ちます。1 行が 1 年・男女・雇用形態・年齢階級で、2013 年からです。
+
+  - 年齢階級の「総数」は 15 歳以上の全体です。総数は labour_force の雇用者数のうち正規・非正規の職員・従業員と全行で一致します。2016・2021 年は labour_force の翌年の行の前年の値（previous_year_value）と比べてください
+  - 総数と年齢階級の和は、千人単位の丸めで 2 まで違います。男女計は男と女の和と、差 1 までで一致します
+  - 同じ年の値は複数の年の表に載ります。値のある最も新しい年の表の値を使い、その表の年を report_year に入れています。2016・2021 年の値は、基準人口を切り替えた翌年の表が新しい基準で計算し直した値です。それ以外の年は計算し直していないので、2015 年と 2016 年の間、2020 年と 2021 年の間のように基準の違う年をまたぐ増減には、基準の差が含まれます
+keywords:
+  - 東京都
+  - 労働力調査
+  - 雇用形態
+  - 正規の職員・従業員
+  - 非正規の職員・従業員
+  - 非正規雇用
+  - 雇用者
+  - 年齢階級
+  - 時系列
+sources:
+  - path: https://www.toukei.metro.tokyo.lg.jp/roudou/rd-index.htm
+fields:
+  - name: year
+    title: 年
+    description: 対象年（西暦）。値は 1〜12 月の平均
+  - name: sex
+    title: 男女
+    description: 男女計・男・女
+  - name: employment_type
+    title: 雇用形態
+    description: 正規（正規の職員・従業員）・非正規（非正規の職員・従業員）
+  - name: age_group
+    title: 年齢階級
+    description: 総数・15～24歳・25～34歳・35～44歳・45～54歳・55～64歳・65歳以上
+  - name: value
+    title: 役員を除く雇用者数
+    description: 千人
+  - name: report_year
+    title: 表の年
+    description: 値を取った「東京の労働力」の年平均の表の年
+annotations:
+  queria:
+    themes: [labour]
