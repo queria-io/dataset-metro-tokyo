@@ -26,5 +26,7 @@ jobs:
       # ODS の住所のジオコーディングに abr-geocoder（Node のツール）を使う。
       # 依存の better-sqlite3 が Node 24 でビルドできないので版を固定する
       node_version: "22"
+      # 成功ランの実測は最大 87 分で、既定の 90 分では打ち切られることがある
+      timeout_minutes: 150
     secrets:
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
