@@ -379,6 +379,24 @@ models:
       - name: previous_year_value
       - name: change
       - name: change_rate
+  - name: labour_force_quarterly
+    description: |
+      「東京の労働力」の四半期平均の第1表。区分は年平均の labour_force と同じ。
+      1行 = 年 × 四半期 × 分類 × 区分 × 男女で、2003年7〜9月期から収録する。
+      前年同期の値は前年の表の実数と違う年がある（2012・2017・2022年は基準人口の切り替え、2009年は産業分類の改定）。
+      原典で該当なし（…）または前年同期が無い区分（-）の値は NULL。
+    access: public
+    columns:
+      - name: year
+      - name: quarter
+      - name: category
+      - name: item
+      - name: sex
+      - name: unit
+      - name: value
+      - name: previous_year_value
+      - name: change
+      - name: change_rate
   - name: labour_force_unemployment_rate
     description: |
       「東京の労働力」の年平均に付く参考表で、東京都・南関東・全国の完全失業率を男女別に持つ。
@@ -418,5 +436,17 @@ models:
       - name: age_group
       - name: item
       - name: unit
+      - name: value
+      - name: report_year
+  - name: labour_force_by_occupation
+    description: |
+      「東京の労働力」の年平均の第6表。就業者数（千人）を主な職業7区分別・男女別に持つ。
+      1行 = 年 × 男女 × 職業で、2010年から収録する。
+      同じ年の値は複数の年の表に載るので、値のある最も新しい年の表の値を使い、その表の年を report_year に残す。
+    access: public
+    columns:
+      - name: year
+      - name: sex
+      - name: occupation
       - name: value
       - name: report_year
