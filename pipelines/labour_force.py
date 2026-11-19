@@ -65,16 +65,16 @@ def _table_name(rows: list[list[str]]) -> str | None:
     return None
 
 
-def _check_header(headers: list[str]) -> None:
+# 年平均の表の値の見出し。四半期平均の表は「前年同期」「対前年同期」になる
+ANNUAL_VALUE_HEADERS = ("実数", "前年", "対前年／増減", "対前年／")
+
+
+def _check_header(headers: list[str], value_headers: tuple[str, ...]) -> None:
     """区分の後に 男女計・男・女 × 実数・前年・増減数・増減率 の12列が並ぶことを確かめる。
 
     増減数・増減率の見出しは年によって「増減」「比」と揺れるので、男女と並びだけを見る。
     """
-    expected = [
-        f"{sex}／{kind}"
-        for sex in _SEXES
-        for kind in ("実数", "前年", "対前年／増減", "対前年／")
-    ]
+    expected = [f"{sex}／{kind}" for sex in _SEXES for kind in value_headers]
     if (
         len(headers) < 13
         or headers[0] != "区分"
@@ -83,7 +83,9 @@ def _check_header(headers: list[str]) -> None:
         raise ValueError(f"ヘッダーを認識できません: {headers}")
 
 
-def _parse(text: str, year: int) -> list[dict]:
+def _parse(
+    text: str, year: int, value_headers: tuple[str, ...] = ANNUAL_VALUE_HEADERS
+) -> list[dict]:
     """第1表の CSV から区分ごとの行を取り出し、男女ごとの行に分ける。
 
     表末尾の空行・表題・注記の行は値の列が空なので落ちる。値は原典の文字列のまま
@@ -92,7 +94,7 @@ def _parse(text: str, year: int) -> list[dict]:
     rows = list(csv.reader(text.splitlines()))
     if not rows:
         raise ValueError("空のファイルです")
-    _check_header([h.strip() for h in rows[0]])
+    _check_header([h.strip() for h in rows[0]], value_headers)
 
     records = []
     for row in rows[1:]:
