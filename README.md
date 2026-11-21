@@ -11,6 +11,7 @@
 | 東京都福祉局「社会福祉施設等一覧」のうち認可保育所と児童館（[提供組織](https://catalog.data.metro.tokyo.lg.jp/organization/t000054)） | `childcare` |
 | 東京都保健医療局の[保健所台帳](https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho)のうち食品関係営業台帳と環境衛生施設台帳 | `hokenjo` |
 | 東京都総務局統計部「[住民基本台帳による世帯と人口](https://www.toukei.metro.tokyo.lg.jp/juukim/jm-index.htm)」と「[毎月勤労統計調査](https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm)」の年報 | `stats` |
+| 東京都総務局統計部「[第3次産業活動指数](https://www.toukei.metro.tokyo.lg.jp/ssisuu/ss-index.htm)」（月次、平成27年=100） | `industry` |
 | 練馬区「[調達情報](https://catalog.data.metro.tokyo.lg.jp/dataset/t131202d0000000114)」（工事・物品の発注予定、随意契約の締結状況） | `procurement` |
 
 - [クリエイティブ・コモンズ 表示 4.0 国際（CC BY 4.0）](https://creativecommons.org/licenses/by/4.0/deed.ja)に従います。使うときは、使った資料の出典（「社会福祉施設等一覧」（東京都福祉局）など）と、Queria が加工したものであることを書いてください
@@ -25,6 +26,7 @@
 | `childcare` | 都内の認可保育所（`nursery_school`）と児童館（`children_center`） |
 | `hokenjo` | 保健所台帳の食品関係営業（`food_establishment`）と環境衛生施設（`sanitation_facility`） |
 | `stats` | 住民基本台帳の世帯と人口（`resident_population`）、国籍・地域別外国人人口（`foreign_population`）、毎月勤労統計調査の給与・労働時間・労働者数・賞与・入職率と離職率・指数（`labour_*`）、労働力調査の就業状態・産業別就業者数・完全失業率（`labour_force`）とその四半期平均（`labour_force_quarterly`）、東京都・南関東・全国の完全失業率（`labour_force_unemployment_rate`）、就業状態・活動状態別15歳以上人口（`labour_force_activity`）、年齢階級別就業状態（`labour_force_by_age`）、主な職業別就業者数（`labour_force_by_occupation`） |
+| `industry` | 第3次産業活動指数の月次（`tertiary_activity_index`）。業種別の原指数と季節調整済指数を、2013年1月から持つ |
 | `procurement` | 区市町村の随意契約の締結状況（`private_contracts`）、工事の発注予定（`planned_works`）、物品買入れの発注予定（`planned_goods`）。今は練馬区だけ。取り込みの結果は `procurement.source_files` |
 
 ## 使い方

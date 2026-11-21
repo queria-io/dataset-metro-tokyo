@@ -47,6 +47,13 @@ models:
         +materialized: table
       mart:
         +materialized: table
+    industry:
+      raw:
+        +materialized: table
+      stg:
+        +materialized: table
+      mart:
+        +materialized: table
     procurement:
       raw:
         +materialized: table

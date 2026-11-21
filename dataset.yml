@@ -77,6 +77,8 @@ schemas:
     title: 自治体標準データセット
   - name: stats
     title: 都の統計
+  - name: industry
+    title: 産業活動指数
   - name: procurement
     title: 調達情報
 
