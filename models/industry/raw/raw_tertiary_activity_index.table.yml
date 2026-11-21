@@ -1,0 +1,6 @@
+schema: industry
+name: raw_tertiary_activity_index
+description: 東京都第3次産業活動指数（月次）の生データ。全列 VARCHAR で取り込む。原指数と季節調整済指数を、業種 × 月 × 指数の種類の行に分けて持つ。
+annotations:
+  queria:
+    published: false
