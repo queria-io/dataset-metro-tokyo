@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: stg_tertiary_activity_index
+    description: |
+      東京都第3次産業活動指数（月次）のステージング。年・月・ウェイト・指数を数値に型変換し、
+      値が「―」の月は NULL にする。

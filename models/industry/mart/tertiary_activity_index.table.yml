@@ -1,0 +1,51 @@
+schema: industry
+name: tertiary_activity_index
+title: 東京都第3次産業活動指数（月次）
+description: |-
+  東京都総務局統計部が公表する第3次産業活動指数（平成27年=100）の月次です。電気・ガス・熱供給・水道業、情報通信業、運輸業、卸売・小売業、金融・保険業、不動産業、サービス業などの業種別に、原指数と季節調整済指数を持ちます。1 行が 1 か月・業種・指数の種類で、2013 年 1 月からです。
+
+  - index_type は original（原指数）と seasonally_adjusted（季節調整済指数）です。月ごとの変化を見るときは季節調整済、前年同月と比べるときは原指数を使います
+  - item_class は品目の階層です。0 は第3次産業総合、1〜5 は大分類・中分類・小分類・細分類・細々分類で、11・12 は原典の再編集系列です。階層をまたいで足すと二重に数えます
+  - weight は第3次産業総合を 10000 としたウェイトです
+  - 業種の系列がまだ無い月の index_value は空です
+keywords:
+  - 東京都
+  - 第3次産業
+  - 産業活動指数
+  - サービス業
+  - 景気
+  - 指数
+  - 時系列
+sources:
+  - path: https://www.toukei.metro.tokyo.lg.jp/ssisuu/ss-index.htm
+fields:
+  - name: year
+    title: 年
+    description: 対象年（西暦）
+  - name: month
+    title: 月
+    description: 対象月（1〜12）
+  - name: index_type
+    title: 指数の種類
+    description: original（原指数）または seasonally_adjusted（季節調整済指数）
+  - name: item_code
+    title: 品目番号
+    description: 原典の品目番号。K1D000000I は第3次産業総合
+  - name: item_name
+    title: 品目名
+    description: 業種名（日本語）
+  - name: item_name_en
+    title: 品目名（英語）
+    description: 業種名（英語）
+  - name: item_class
+    title: 品目階層
+    description: 0 = 総合、1〜5 = 大分類から細々分類、11・12 = 再編集系列
+  - name: weight
+    title: ウェイト
+    description: 第3次産業総合を 10000 としたウェイト
+  - name: index_value
+    title: 指数
+    description: 平成27年（2015年）= 100
+annotations:
+  queria:
+    themes: [commerce_services]

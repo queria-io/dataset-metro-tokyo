@@ -1,0 +1,6 @@
+schema: industry
+name: stg_tertiary_activity_index
+description: 第3次産業活動指数（月次）のステージング。年・月・ウェイト・指数を数値に型変換する（「―」は NULL）。
+annotations:
+  queria:
+    published: false

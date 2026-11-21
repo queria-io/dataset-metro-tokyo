@@ -1,0 +1,6 @@
+schema: industry
+name: raw_tertiary_activity_index_source
+description: 第3次産業活動指数の取得元（1行=1ファイル）。指数の種類・取得元 URL・取得時刻・行数を記録する。
+annotations:
+  queria:
+    published: false
