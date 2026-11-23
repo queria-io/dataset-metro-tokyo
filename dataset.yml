@@ -153,6 +153,8 @@ annotations:
         季節調整をしていない原数値なので、変化は前年同期との比較（change・change_rate）で見る。
         labour_force_unemployment_rate は同じ「東京の労働力」の参考表で、東京都・南関東・全国の完全失業率を
         1997年から男女別に持つ。年ごとに最も新しい年の表の値を使い、その表の年を report_year に入れている。
+        labour_force_unemployment_rate_quarterly は同じ参考表の四半期平均で、1997年1〜3月期から四半期ごとに持つ。
+        四半期ごとに最も新しい表の値を使い、その表の年と四半期を report_year・report_quarter に入れている。
         labour_force_activity は同じ「東京の労働力」の第2表で、15歳以上人口を就業状態・活動状態・従業上の地位で
         分けた人数と労働力人口比率・就業率・完全失業率を1997年から男女別に持つ。値の選び方は参考表と同じ。
         labour_force_by_age は同じ「東京の労働力」の第3表で、15歳以上人口・労働力人口・就業者数・完全失業者数・

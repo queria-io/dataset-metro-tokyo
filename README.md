@@ -25,7 +25,7 @@
 | `ods` | 自治体標準オープンデータセット 22 種類（AED・避難場所・公共施設・子育て施設・介護サービス事業所・人口など）を、種類ごとに区市町村をまたいで統合したもの。取り込みの結果は `ods.source_files` |
 | `childcare` | 都内の認可保育所（`nursery_school`）と児童館（`children_center`） |
 | `hokenjo` | 保健所台帳の食品関係営業（`food_establishment`）と環境衛生施設（`sanitation_facility`） |
-| `stats` | 住民基本台帳の世帯と人口（`resident_population`）、国籍・地域別外国人人口（`foreign_population`）、毎月勤労統計調査の給与・労働時間・労働者数・賞与・入職率と離職率・指数（`labour_*`）、労働力調査の就業状態・産業別就業者数・完全失業率（`labour_force`）とその四半期平均（`labour_force_quarterly`）、東京都・南関東・全国の完全失業率（`labour_force_unemployment_rate`）、就業状態・活動状態別15歳以上人口（`labour_force_activity`）、年齢階級別就業状態（`labour_force_by_age`）、主な職業別就業者数（`labour_force_by_occupation`）、年齢階級・雇用形態別の役員を除く雇用者数（`labour_force_by_employment_type`） |
+| `stats` | 住民基本台帳の世帯と人口（`resident_population`）、国籍・地域別外国人人口（`foreign_population`）、毎月勤労統計調査の給与・労働時間・労働者数・賞与・入職率と離職率・指数（`labour_*`）、労働力調査の就業状態・産業別就業者数・完全失業率（`labour_force`）とその四半期平均（`labour_force_quarterly`）、東京都・南関東・全国の完全失業率（`labour_force_unemployment_rate`）とその四半期平均（`labour_force_unemployment_rate_quarterly`）、就業状態・活動状態別15歳以上人口（`labour_force_activity`）、年齢階級別就業状態（`labour_force_by_age`）、主な職業別就業者数（`labour_force_by_occupation`）、年齢階級・雇用形態別の役員を除く雇用者数（`labour_force_by_employment_type`） |
 | `industry` | 第3次産業活動指数の月次（`tertiary_activity_index`）。業種別の原指数と季節調整済指数を、2013年1月から持つ |
 | `procurement` | 区市町村の随意契約の締結状況（`private_contracts`）、工事の発注予定（`planned_works`）、物品買入れの発注予定（`planned_goods`）。今は練馬区だけ。取り込みの結果は `procurement.source_files` |
 
@@ -174,6 +174,12 @@ ORDER BY organizations DESC;
 - 「東京の労働力」の年平均に付く参考表で、東京都・南関東（埼玉県・千葉県・東京都・神奈川県）・全国の完全失業率（％）を男女別に持ちます。1 行が 1 年・地域・男女で、1997 年からです
 - 各年の表には直近の約 10 年分が載るので、同じ年の値が複数の表にあります。年ごとに最も新しい年の表の値を使い、その表の年を `report_year` に入れています。2011 年と 2016 年の一部の値は、その年の表と後の年の表とで違います（2011 年の表は全国の値が無く、岩手県・宮城県・福島県を除く値だけが載ります）
 - 東京都の値は、`labour_force` の完全失業率（年齢階級別）の総数と一致します。2011 年の女だけは、その年の表の 4.6 に対してこの表は後の年の表の 4.7 です
+
+`labour_force_unemployment_rate_quarterly`（東京の労働力の四半期平均の参考表）:
+
+- 「東京の労働力」の四半期平均に付く参考表で、東京都・南関東（埼玉県・千葉県・東京都・神奈川県）・全国の完全失業率（％）を男女別に持ちます。1 行が 1 四半期・地域・男女で、1997 年 1〜3 月期からです。`quarter` は 1 が 1〜3 月、4 が 10〜12 月です
+- 季節調整をしていない原数値です。各四半期の表には 1997 年からの四半期の値が載るので、四半期ごとに最も新しい表の値を使い、その表の年と四半期を `report_year`・`report_quarter` に入れています
+- 東京都の値は、`labour_force_quarterly` の完全失業率（年齢階級別）の総数と一致します。表の改訂で違うのは 13 件（2011 年 1〜4 期の 6 件、2015 年 4 期、2016 年 2・4 期、2021 年 1〜3 期の 4 件）で、この表は後の表の値です。2011 年の表は全国の値が無く、岩手県・宮城県・福島県を除く値だけが載ります
 
 `labour_force_activity`（東京の労働力の第 2 表）:
 
