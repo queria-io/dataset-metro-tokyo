@@ -68,6 +68,9 @@ from pipelines.labour_force_quarterly import download_labour_force_quarterly
 from pipelines.labour_force_unemployment_rate import (
     download_labour_force_unemployment_rate,
 )
+from pipelines.labour_force_unemployment_rate_quarterly import (
+    download_labour_force_unemployment_rate_quarterly,
+)
 from pipelines.labour_index import download_labour_index
 from pipelines.labour_turnover import download_labour_turnover
 from pipelines.ods import download_and_normalize
@@ -208,9 +211,12 @@ def main():
     logger.info("26/30: stats (東京の労働力の年齢階級・雇用形態別の役員を除く雇用者数)")
     download_labour_force_by_employment_type("data/labour_force_by_employment_type")
 
-    # 27. 都の統計データ（東京の労働力。四半期平均の一覧から各四半期の第1表を解決する）
-    logger.info("27/30: stats (東京の労働力の四半期平均)")
+    # 27. 都の統計データ（東京の労働力。四半期平均の一覧から各四半期の第1表と参考表を解決する）
+    logger.info("27/30: stats (東京の労働力の四半期平均と完全失業率の比較)")
     download_labour_force_quarterly("data/labour_force_quarterly")
+    download_labour_force_unemployment_rate_quarterly(
+        "data/labour_force_unemployment_rate_quarterly"
+    )
 
     # 28. 東京都第3次産業活動指数（CKAN のパッケージから月次の2ファイルを解決する）
     logger.info("28/30: industry (第3次産業活動指数)")

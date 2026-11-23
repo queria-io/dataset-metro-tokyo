@@ -1,0 +1,6 @@
+schema: stats
+name: stg_labour_force_unemployment_rate_quarterly
+description: 東京の労働力（四半期平均の参考表）のステージング。四半期ごとに最も新しい表の値を選び、完全失業率を DECIMAL に型変換する（「…」は NULL）。
+annotations:
+  queria:
+    published: false

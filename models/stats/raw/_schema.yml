@@ -111,6 +111,12 @@ models:
       各年の表に載る全年分の実数を、地域 × 男女の行に分けて、どの年の表か（report_year）と合わせて持つ。
   - name: raw_labour_force_unemployment_rate_source
     description: 東京の労働力（年平均の参考表）の取得元（1行=1ファイル）。表の年・取得元 URL・取得時刻・行数を記録する。
+  - name: raw_labour_force_unemployment_rate_quarterly
+    description: |
+      東京の労働力（東京都）四半期平均の参考表（東京都、南関東及び全国の完全失業率）の生データ。全列 VARCHAR で取り込む。
+      各四半期の表に載る全四半期分の実数を、地域 × 男女の行に分けて、どの年・四半期の表か（report_year・report_quarter）と合わせて持つ。
+  - name: raw_labour_force_unemployment_rate_quarterly_source
+    description: 東京の労働力（四半期平均の参考表）の取得元（1行=1ファイル）。表の年・四半期・取得元 URL・取得時刻・行数を記録する。
   - name: raw_labour_force_activity
     description: |
       東京の労働力（東京都）年平均の第2表（就業状態、活動状態別15歳以上人口）の生データ。全列 VARCHAR で取り込む。
