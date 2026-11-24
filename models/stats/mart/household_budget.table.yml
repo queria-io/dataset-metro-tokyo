@@ -1,0 +1,42 @@
+schema: stats
+name: household_budget
+title: 都民のくらしむき 1世帯当たり年平均1か月間の家計収支（全世帯）
+description: |-
+  東京都生計分析調査（都民のくらしむき）の年報にある長期時系列表1で、東京都内の全世帯の1世帯当たり年平均1か月間の支出を、1975 年から項目別に持ちます。1 行が 1 年・1 項目で、生計支出を消費支出、食料、住居などの大分類と中分類に分けた金額と、対前年の増加率（名目・実質）を並べています。
+
+  - 項目は原典の見出しを「／」でつないだもので、上位の項目を含みます（「生計支出／消費支出／食料／外食」など）。調査世帯数・世帯人員・有業人員・世帯主平均年齢と、エンゲル係数などの係数も同じ形で入っています。単位は unit 列にあります
+  - 実質増加率は消費支出とその内訳にあり、生計支出・土地家屋購入・その他の消費支出（とその内訳のうち、こづかい・交際費・仕送り金）・生地・糸類にはありません
+  - 2018 年の家計簿の改正と、2019 年からの農林漁家世帯の調査対象への追加で、2018 年と 2019 年の対前年増加率には調査の変更による変動が含まれ得ます
+keywords:
+  - 東京都
+  - 家計
+  - 家計調査
+  - 生計支出
+  - 消費支出
+  - エンゲル係数
+  - 世帯
+  - 時系列
+sources:
+  - path: https://www.toukei.metro.tokyo.lg.jp/seikei/sb-index.htm
+fields:
+  - name: year
+    title: 年
+    description: 対象年（西暦）。値は 1〜12 月の年平均
+  - name: item
+    title: 項目
+    description: 原典の見出しを「／」でつないだ項目名。上位の項目を含む
+  - name: unit
+    title: 単位
+    description: value の単位。円・人・世帯・歳・％
+  - name: value
+    title: 実数
+    description: 1世帯当たり年平均1か月間の金額・人数など。該当なしは空
+  - name: nominal_growth_rate
+    title: 対前年名目増加率
+    description: ％。1976 年から。該当なしは空
+  - name: real_growth_rate
+    title: 対前年実質増加率
+    description: ％。物価の変動を除いた増加率。該当なしは空
+annotations:
+  queria:
+    themes: [economy]

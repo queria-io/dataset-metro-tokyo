@@ -463,3 +463,16 @@ models:
       - name: age_group
       - name: value
       - name: report_year
+  - name: household_budget
+    description: |
+      東京都生計分析調査（都民のくらしむき）の年報の長期時系列表1。全世帯の1世帯当たり年平均1か月間の支出を
+      項目別に持ち、対前年の名目・実質の増加率を並べる。1行 = 年 × 項目で、1975年から収録する。
+      項目は原典の見出しを「／」でつないだもので、上位の項目を含む。
+    access: public
+    columns:
+      - name: year
+      - name: item
+      - name: unit
+      - name: value
+      - name: nominal_growth_rate
+      - name: real_growth_rate

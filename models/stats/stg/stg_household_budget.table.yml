@@ -1,0 +1,6 @@
+schema: stats
+name: stg_household_budget
+description: 都民のくらしむき（長期時系列表1）のステージング。指標ごとの行を年 × 項目の1行にそろえ、値を DECIMAL に型変換する（「-」は NULL）。
+annotations:
+  queria:
+    published: false

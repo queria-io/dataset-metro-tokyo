@@ -1,0 +1,6 @@
+schema: stats
+name: raw_household_budget_source
+description: 都民のくらしむき（長期時系列表1）の取得元（1行=1ファイル）。年報の年・取得元 URL・取得時刻・行数を記録する。
+annotations:
+  queria:
+    published: false

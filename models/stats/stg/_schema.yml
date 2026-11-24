@@ -91,3 +91,7 @@ models:
     description: |
       東京の労働力（年平均の第8表）のステージング。値を INTEGER に型変換し、
       年ごとに値のある最も新しい年の表の値を選ぶ。
+  - name: stg_household_budget
+    description: |
+      都民のくらしむき（長期時系列表1）のステージング。指標ごとの行を年 × 項目の1行にそろえ、
+      値を DECIMAL に型変換する（「-」は NULL）。

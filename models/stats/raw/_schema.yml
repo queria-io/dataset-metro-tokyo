@@ -139,3 +139,9 @@ models:
       雇用形態は「正規」「非正規」、年齢階級は原典の見出しから「（千人）」を外したもの。
   - name: raw_labour_force_by_employment_type_source
     description: 東京の労働力（年平均の第8表）の取得元（1行=1ファイル）。表の年・取得元 URL・取得時刻・行数を記録する。
+  - name: raw_household_budget
+    description: |
+      東京都生計分析調査（都民のくらしむき）の長期時系列表1（主な支出及び対前年増加率、全世帯）の生データ。全列 VARCHAR で取り込む。
+      年報の表の列（項目）を行に分けて、年 × 指標（実数・対前年名目増加率・対前年実質増加率）× 項目の行にしたもの。項目は原典の見出しから単位を外したもの。
+  - name: raw_household_budget_source
+    description: 都民のくらしむき（長期時系列表1）の取得元（1行=1ファイル）。年報の年・取得元 URL・取得時刻・行数を記録する。
