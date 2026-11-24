@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 住民基本台帳による世帯と人口の取得元（1行=1月分）。取り込んだ月・URL・行数を記録する。
+hidden: true

@@ -227,7 +227,7 @@ ORDER BY fiscal_year, category;
 ## ビルド
 
 ```bash
-git submodule update --init
+git clone https://github.com/queria-io/dataset-shared.git shared  # 初回のみ。更新は git -C shared pull
 uv sync
 FDL_TOKEN=... bash scripts/build.sh
 ```

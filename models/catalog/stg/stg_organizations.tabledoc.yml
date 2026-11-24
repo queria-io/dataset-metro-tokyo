@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 提供組織のステージング。組織コードから組織種別を導出。
+hidden: true

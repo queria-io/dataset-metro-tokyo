@@ -2,17 +2,6 @@ version: 2
 
 models:
   - name: resident_population
-    description: |
-      東京都の住民基本台帳による世帯数と人口の月次時系列。1行 = 月 × 地域で、
-      2001年1月分から毎月1日現在の値を収録する。地域は区市町村（62）に加えて
-      総数・区部・市部・町村部・郡部・島部・支庁の集計行を含むため、区市町村だけを
-      見るときは area_type = '区市町村' で絞る。地域コードは全国地方公共団体コードの
-      上5桁で、census・boundary・lg_code と直結する。
-      外国人人口は2012年7月分までが外国人登録者数、2012年8月分以降が住民基本台帳上の
-      人口で、世帯数もこのとき外国人世帯を含むようになった。7月分と8月分の間の増減は
-      この制度変更を含むため、そのまま人口動態として読まない。
-      外国人の男女別人口と世帯数の国籍別内訳は原典の様式追加により2012年9月分以降のみで、
-      それ以前は NULL。
     access: public
     columns:
       - name: year_month
@@ -33,16 +22,6 @@ models:
       - name: household_foreign_only
       - name: household_mixed
   - name: foreign_population
-    description: |
-      東京都の国籍・地域別外国人人口の年次時系列。1行 = 年 × 地域 × 国籍・地域で、
-      1979年から各年1月1日現在の値を収録する。地域は区市町村と島部の支庁に加えて
-      総数・区部・市部・町村部・郡部・島部の集計行を含む。島部の町村は支庁単位でしか
-      載らないため、都内を漏れなく分けるときは area_type in ('区市町村', '支庁') で絞る。
-      国籍・地域は総数・主要22か国・地域・その他の24区分で、総数の行を除いて足すと
-      1990年まではドイツ（東西ドイツの合計）と東ドイツ・西ドイツが二重に数えられる。
-      2016年までの「中国」は台湾を、「韓国・朝鮮」は韓国と朝鮮を合わせた区分で、
-      2017年からは中国・台湾・韓国・朝鮮に分かれる（区分名に収録期間が付く）。
-      2012年までは外国人登録者数、2013年からは住民基本台帳上の人口。
     access: public
     columns:
       - name: year
@@ -53,13 +32,6 @@ models:
       - name: nationality
       - name: population
   - name: labour_earnings
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間現金給与額。
-      1行 = 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。事業所規模は5人以上と30人以上の2区分で、
-      5人以上は30人以上の事業所を含むため、2区分を足さない。産業は2017年までは
-      製造業の中分類・特掲産業などを含み、2018年からは調査産業計と大分類の17区分。
-      原典で秘匿（×）または該当なし（－）の値は NULL。
     access: public
     columns:
       - name: year
@@ -80,12 +52,6 @@ models:
       - name: special_earnings_male
       - name: special_earnings_female
   - name: labour_hours
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間出勤日数・実労働時間。
-      1行 = 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。事業所規模・産業の区分は labour_earnings と同じで、
-      5人以上は30人以上の事業所を含むため、2区分を足さない。
-      原典で秘匿（×）または該当なし（－）の値は NULL。
     access: public
     columns:
       - name: year
@@ -107,12 +73,6 @@ models:
       - name: overtime_hours_male
       - name: overtime_hours_female
   - name: labour_employment
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者数（推計）とパートタイム労働者比率。
-      1行 = 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。事業所規模・産業の区分は labour_earnings と同じで、
-      5人以上は30人以上の事業所を含むため、2区分を足さない。
-      原典で秘匿（×）または該当なし（－）の値は NULL。
     access: public
     columns:
       - name: year
@@ -137,12 +97,6 @@ models:
       - name: part_time_ratio_male
       - name: part_time_ratio_female
   - name: labour_earnings_by_employment_type
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間現金給与額を、一般労働者とパートタイム労働者に分けたもの。
-      1行 = 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。事業所規模の区分は labour_earnings と同じで、
-      5人以上は30人以上の事業所を含むため、2区分を足さない。産業は調査産業計と大分類だけ。
-      原典で秘匿（×）または該当なし（－）の値は NULL。
     access: public
     columns:
       - name: year
@@ -162,12 +116,6 @@ models:
       - name: part_time_overtime_earnings
       - name: part_time_special_earnings
   - name: labour_hours_by_employment_type
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間出勤日数・実労働時間を、一般労働者とパートタイム労働者に分けたもの。
-      1行 = 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。事業所規模の区分は labour_hours と同じで、
-      5人以上は30人以上の事業所を含むため、2区分を足さない。産業は調査産業計と大分類だけ。
-      原典で秘匿（×）または該当なし（－）の値は NULL。
     access: public
     columns:
       - name: year
@@ -185,12 +133,6 @@ models:
       - name: part_time_scheduled_hours
       - name: part_time_overtime_hours
   - name: labour_employment_by_employment_type
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者数（推計）を、一般労働者とパートタイム労働者に分けたもの。
-      1行 = 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。事業所規模の区分は labour_employment と同じで、
-      5人以上は30人以上の事業所を含むため、2区分を足さない。産業は調査産業計と大分類だけ。
-      原典で秘匿（×）または該当なし（－）の値は NULL。
     access: public
     columns:
       - name: year
@@ -208,11 +150,6 @@ models:
       - name: part_time_employees_removed
       - name: part_time_employees
   - name: labour_earnings_by_size
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間現金給与額を、事業所規模別に分けたもの。
-      1行 = 年 × 月（または年平均）× 事業所規模で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。産業は調査産業計だけで、事業所規模は
-      5〜29人・30〜99人・100〜499人・500人以上の4区分（区分は重ならない）。
     access: public
     columns:
       - name: year
@@ -231,11 +168,6 @@ models:
       - name: special_earnings_male
       - name: special_earnings_female
   - name: labour_hours_by_size
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間出勤日数・実労働時間を、事業所規模別に分けたもの。
-      1行 = 年 × 月（または年平均）× 事業所規模で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。産業は調査産業計だけで、事業所規模は
-      5〜29人・30〜99人・100〜499人・500人以上の4区分（区分は重ならない）。
     access: public
     columns:
       - name: year
@@ -255,11 +187,6 @@ models:
       - name: overtime_hours_male
       - name: overtime_hours_female
   - name: labour_hours_by_size_and_employment_type
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間出勤日数・実労働時間を、事業所規模別・就業形態別に分けたもの。
-      1行 = 年 × 月（または年平均）× 事業所規模で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。産業は調査産業計だけで、事業所規模は
-      5〜29人・30〜99人・100〜499人・500人以上の4区分（区分は重ならない）。
     access: public
     columns:
       - name: year
@@ -275,11 +202,6 @@ models:
       - name: part_time_scheduled_hours
       - name: part_time_overtime_hours
   - name: labour_earnings_by_size_and_employment_type
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者1人平均月間現金給与額を、事業所規模別・就業形態別に分けたもの。
-      1行 = 年 × 月（または年平均）× 事業所規模で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。産業は調査産業計だけで、事業所規模は
-      5〜29人・30〜99人・100〜499人・500人以上の4区分（区分は重ならない）。
     access: public
     columns:
       - name: year
@@ -297,13 +219,6 @@ models:
       - name: part_time_overtime_earnings
       - name: part_time_special_earnings
   - name: labour_bonus
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の夏季賞与・冬季賞与の支給状況。
-      1行 = 年 × 事業所規模 × 産業で、2013年から収録する。事業所規模は30人以上のみ。
-      夏季賞与はその年の6〜8月、冬季賞与はその年の11月〜翌年1月に支払われた「特別に支払われた給与」の
-      うち賞与として支給されたもの。表に年の列が無いため、年は年報の公表年を付けている。
-      産業は2017年までは製造業の中分類・特掲産業などを含み、2018年からは調査産業計と大分類の17区分。
-      原典で秘匿（×）または該当なし（－）の値は NULL。
     access: public
     columns:
       - name: year
@@ -323,12 +238,6 @@ models:
       - name: winter_bonus_months
       - name: winter_bonus_months_change
   - name: labour_turnover
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の常用労働者の入職率・離職率（労働異動率）。
-      1行 = 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。事業所規模の区分は labour_employment と同じで、
-      5人以上は30人以上の事業所を含むため、2区分を足さない。産業は調査産業計と大分類だけ。
-      原典で秘匿（×）または該当なし（－）の値は NULL。
     access: public
     columns:
       - name: year
@@ -340,13 +249,6 @@ models:
       - name: hiring_rate
       - name: separation_rate
   - name: labour_index
-    description: |
-      毎月勤労統計調査（地方調査）による東京都の名目賃金指数・実質賃金指数・労働時間指数・常用雇用指数。
-      1行 = 指数の種類 × 年 × 月（または年平均）× 事業所規模 × 産業で、2013年から各月と年平均を収録する。
-      各年の値はその年の年報から取っている。指数の基準年は年報によって違い（2013〜2016年は2010年、
-      2017〜2021年は2015年、2022年からは2020年）、base_year が違う行の指数どうしは比べられない。
-      事業所規模の区分は labour_employment と同じで、5人以上は30人以上の事業所を含む。
-      原典で秘匿（×）または該当なし（－）の値は NULL。
     access: public
     columns:
       - name: index_type
@@ -360,14 +262,6 @@ models:
       - name: index_value
       - name: change_rate
   - name: labour_force
-    description: |
-      労働力調査の東京都分を東京都が集計した「東京の労働力」の年平均の第1表。
-      1行 = 年 × 分類 × 区分 × 男女で、2004年から収録する。
-      分類は就業状態・就業者の活動状態別内訳・就業者と雇用者の主な産業別内訳・非農林業雇用者の従業者規模別内訳
-      （単位は千人）と、完全失業率（年齢階級別）・就業率・労働力人口比率（単位は％）。
-      区分は原典の見出しを「／」でつないだもので、上位の区分を含む（「労働力人口／就業者数」は労働力人口の内訳）。
-      前年の値は前年の表の実数と違う年がある（2012・2017・2022年は基準人口の切り替え、2009年は産業分類の改定で遡って計算し直した値）。
-      原典で該当なし（…）または前年が無い区分（-）の値は NULL。
     access: public
     columns:
       - name: year
@@ -380,11 +274,6 @@ models:
       - name: change
       - name: change_rate
   - name: labour_force_quarterly
-    description: |
-      「東京の労働力」の四半期平均の第1表。区分は年平均の labour_force と同じ。
-      1行 = 年 × 四半期 × 分類 × 区分 × 男女で、2003年7〜9月期から収録する。
-      前年同期の値は前年の表の実数と違う年がある（2012・2017・2022年は基準人口の切り替え、2009年は産業分類の改定）。
-      原典で該当なし（…）または前年同期が無い区分（-）の値は NULL。
     access: public
     columns:
       - name: year
@@ -398,10 +287,6 @@ models:
       - name: change
       - name: change_rate
   - name: labour_force_unemployment_rate
-    description: |
-      「東京の労働力」の年平均に付く参考表で、東京都・南関東・全国の完全失業率を男女別に持つ。
-      1行 = 年 × 地域 × 男女で、1997年から収録する。南関東は埼玉県・千葉県・東京都・神奈川県。
-      同じ年の値は複数の年の表に載るので、最も新しい年の表の値を使い、その表の年を report_year に残す。
     access: public
     columns:
       - name: year
@@ -410,11 +295,6 @@ models:
       - name: unemployment_rate
       - name: report_year
   - name: labour_force_activity
-    description: |
-      「東京の労働力」の年平均の第2表。15歳以上人口を就業状態・就業者の活動状態・従業上の地位・
-      非労働力人口の活動状態で分けた人数（千人）と、労働力人口比率・就業率・完全失業率（％）を男女別に持つ。
-      1行 = 年 × 男女 × 区分で、1997年から収録する。区分は原典の見出しを「／」でつないだもので、上位の区分を含む。
-      同じ年の値は複数の年の表に載るので、値のある最も新しい年の表の値を使い、その表の年を report_year に残す。
     access: public
     columns:
       - name: year
@@ -424,11 +304,6 @@ models:
       - name: value
       - name: report_year
   - name: labour_force_by_age
-    description: |
-      「東京の労働力」の年平均の第3表。15歳以上人口・労働力人口・就業者数・完全失業者数・非労働力人口（千人）と、
-      労働力人口比率・就業率・完全失業率（％）を年齢階級別・男女別に持つ。
-      1行 = 年 × 男女 × 年齢階級 × 区分で、1997年から収録する。
-      同じ年の値は複数の年の表に載るので、値のある最も新しい年の表の値を使い、その表の年を report_year に残す。
     access: public
     columns:
       - name: year
@@ -439,10 +314,6 @@ models:
       - name: value
       - name: report_year
   - name: labour_force_by_occupation
-    description: |
-      「東京の労働力」の年平均の第6表。就業者数（千人）を主な職業7区分別・男女別に持つ。
-      1行 = 年 × 男女 × 職業で、2010年から収録する。
-      同じ年の値は複数の年の表に載るので、値のある最も新しい年の表の値を使い、その表の年を report_year に残す。
     access: public
     columns:
       - name: year
@@ -451,10 +322,6 @@ models:
       - name: value
       - name: report_year
   - name: labour_force_by_employment_type
-    description: |
-      「東京の労働力」の年平均の第8表。役員を除く雇用者数（千人）を雇用形態（正規・非正規）別・
-      年齢階級別・男女別に持つ。1行 = 年 × 男女 × 雇用形態 × 年齢階級で、2013年から収録する。
-      同じ年の値は複数の年の表に載るので、値のある最も新しい年の表の値を使い、その表の年を report_year に残す。
     access: public
     columns:
       - name: year

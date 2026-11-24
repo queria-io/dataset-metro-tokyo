@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 公衆トイレのステージング。緯度経度・便器数を数値化、設備の有無を BOOLEAN に正規化。
+hidden: true

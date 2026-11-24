@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 環境衛生施設台帳のステージング。日付を DATE に変換し、住所から求めた ABR 由来の座標を付ける。
+hidden: true

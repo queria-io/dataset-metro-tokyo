@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: データセットメタデータのステージング。列名を英語化し、extras から更新頻度を抽出、日時を TIMESTAMP 化。
+hidden: true

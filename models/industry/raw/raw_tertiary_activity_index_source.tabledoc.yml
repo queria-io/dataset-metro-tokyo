@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 第3次産業活動指数の取得元（1行=1ファイル）。指数の種類・取得元 URL・取得時刻・行数を記録する。
+hidden: true

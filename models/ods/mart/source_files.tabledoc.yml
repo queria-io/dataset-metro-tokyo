@@ -1,0 +1,51 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: ODS取り込み結果
+description: |-
+  自治体標準オープンデータセットの取り込みの結果です。どの自治体のどのファイルを取り込んだか、取り込めなかった理由・文字コード・行数を記録しています。
+
+  - 種類ごとに、どの自治体のデータが入っているかの確認に使います
+topics:
+  - 東京都
+  - 自治体標準オープンデータセット
+  - ODS
+sources:
+  - catalog
+columns:
+  - name: dataset_id
+    title: 種別ID
+    description: ODS のデータセット種別（evacuation_space 等）
+  - name: org_code
+    title: 提供組織コード
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: package_title
+    title: データセット名
+  - name: resource_id
+    title: リソースID
+    description: CKAN のリソース ID。パッケージ単位の行では空
+  - name: resource_name
+    title: リソース名
+    description: CSVリソースが無く、パッケージ単位で記録した行では空
+  - name: url
+    title: 取得元URL
+    description: 取り込んだ CSV の URL。パッケージ単位の行では空
+  - name: via_page_url
+    title: たどったページのURL
+    description: HTML のページからたどった CSV の行での、そのページの URL
+  - name: status
+    title: 取得結果
+    description: ok / failed（取得エラー）/ skipped（ヘッダー不一致・CSV未登録・URL重複等）
+  - name: reason
+    title: 理由
+    description: failed / skipped の理由（no_csv_resource・duplicate_url など）
+  - name: encoding
+    title: エンコーディング
+    description: 判定されたエンコーディング（utf-8-sig / cp932 等）
+  - name: row_count
+    title: 行数
+    description: 取り込んだデータ行数（status=ok のみ）
+  - name: fetched_at
+    title: 取得日時

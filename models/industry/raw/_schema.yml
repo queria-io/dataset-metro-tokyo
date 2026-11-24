@@ -2,8 +2,4 @@ version: 2
 
 models:
   - name: raw_tertiary_activity_index
-    description: |
-      東京都第3次産業活動指数（月次）の生データ。全列 VARCHAR で取り込む。
-      原指数と季節調整済指数の CSV の横持ち（列 = 月）を、業種 × 月 × 指数の種類の行に分けて持つ。
   - name: raw_tertiary_activity_index_source
-    description: 第3次産業活動指数の取得元（1行=1ファイル）。指数の種類・取得元 URL・取得時刻・行数を記録する。

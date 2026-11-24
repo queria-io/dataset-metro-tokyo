@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: ごみの分別方法一覧のステージング。数値・日付列を持たない品目マスタのため生値を保持し、_メタ列のみ改名。
+hidden: true

@@ -1,6 +1,0 @@
-schema: procurement
-name: stg_planned_goods
-description: planned_goods のステージング。
-annotations:
-  queria:
-    published: false

@@ -1,0 +1,16 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: データセットタグ
+description: 東京都オープンデータカタログのデータセットとタグの対応です。「自治体標準オープンデータセット」などのタグでデータセットを絞り込めます。
+topics:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+sources:
+  - catalog
+columns:
+  - name: package_id
+    title: データセットID
+    description: datasets との結合キー
+  - name: tag
+    title: タグ

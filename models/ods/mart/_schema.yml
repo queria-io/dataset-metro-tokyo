@@ -2,12 +2,6 @@ version: 2
 
 models:
   - name: evacuation_space
-    description: |
-      都内区市町村が公開する「指定緊急避難場所一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。災害対策基本法に基づき市町村長が指定する、切迫した災害の危険
-      から逃れるための緊急避難場所。災害種別ごとの対応可否を BOOLEAN で持つ。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
-      全国網羅の類似データとして gsi.emergency_evacuation_site（国土地理院）がある。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -51,10 +45,6 @@ models:
       - name: source_url
 
   - name: aed
-    description: |
-      都内区市町村が公開する「AED設置箇所一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。設置位置・利用可能日時・小児対応設備の有無を持つ。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -92,11 +82,6 @@ models:
       - name: source_url
 
   - name: preschool
-    description: |
-      都内区市町村が公開する「子育て施設一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。施設種別・収容定員・受入年齢・一時預かり/病児保育の有無を持つ。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
-      都全域の認可保育所・児童館は childcare スキーマ（東京都福祉局）にもある。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -140,11 +125,6 @@ models:
       - name: source_url
 
   - name: hospital
-    description: |
-      「医療機関一覧」（自治体標準オープンデータセット）を横断統合したテーブル。
-      東京都保健医療局が公開する都全域の医療機関データを含むため、区市町村独自公開分と
-      同一機関が重複しうる（medical_institution_code や名称+所在地で識別可能）。
-      診療科目・病床数・診療日時・災害拠点分類を持つ。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -188,10 +168,6 @@ models:
       - name: source_url
 
   - name: public_wireless_lan
-    description: |
-      都内区市町村が公開する「公衆無線LANアクセスポイント一覧」（自治体標準オープン
-      データセット）を横断統合したテーブル。SSID・提供エリア・設置者を持つ。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -226,12 +202,6 @@ models:
       - name: source_url
 
   - name: public_facility
-    description: |
-      都内区市町村が公開する「公共施設一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。公民館・図書館・体育館・区民施設等の名称・所在地・連絡先・
-      利用可能時間・アクセス方法を持つ。公開しているのは一部の自治体のみ
-      （カバレッジは ods.source_files を参照）。バリアフリー設備等の標準外・自治体独自の
-      詳細列は extras（JSON）に退避する。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -274,12 +244,6 @@ models:
       - name: source_url
 
   - name: public_toilet
-    description: |
-      都内区市町村が公開する「公衆トイレ一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。設置位置・便器数（男性/女性/男女共用/バリアフリー）・
-      車椅子使用者用/乳幼児用設備/オストメイト設置の有無・利用可能時間を持つ。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
-      和式/洋式/小便器の内訳等の詳細列は extras（JSON）に退避する。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -320,12 +284,6 @@ models:
       - name: source_url
 
   - name: cultural_property
-    description: |
-      都内区市町村が公開する「文化財一覧」（自治体標準オープンデータセット）を横断統合した
-      テーブル。文化財保護法および地方公共団体の文化財保護条例に基づき指定・登録・選定された
-      文化財を、分類（重要文化財・都指定文化財・区登録有形文化財等）・種類・所有者・指定日・
-      所在地とともに収録する。無形文化財や個人所有で住所非公開のものを含むため、緯度経度が
-      入らない行がある。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -378,11 +336,6 @@ models:
       - name: source_url
 
   - name: tourism
-    description: |
-      都内区市町村が公開する「観光施設一覧」（自治体標準オープンデータセット）を横断統合した
-      テーブル。観光施設の位置・利用可能時間・料金・アクセス方法・バリアフリー情報を収録する。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
-      文化財を観光資源として扱う場合は ods.cultural_property も併せて参照する。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -433,13 +386,6 @@ models:
       - name: source_url
 
   - name: event
-    description: |
-      都内区市町村が公開する「イベント一覧」（自治体標準オープンデータセット）を横断統合した
-      テーブル。祭り・講座・展示などの開催日時・会場・料金・申込方法を収録する。
-      過去のイベントも含む蓄積データではなく、各自治体が公開している時点のファイルの内容で、
-      収録期間は自治体ごとに異なる。公開しているのは一部の自治体のみ
-      （カバレッジは ods.source_files を参照）。
-      会場の施設情報は ods.public_facility、観光資源は ods.tourism も併せて参照する。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -505,14 +451,6 @@ models:
       - name: source_url
 
   - name: school_district
-    description: |
-      都内区市町村が公開する「小中学校通学区域情報」（自治体標準オープンデータセット）を
-      横断統合したテーブル。1行=1学校の通学区域で、区域に含まれる住所をセミコロン区切りの
-      文字列で持つ。施設一覧ではないため所在地・緯度経度の列は持たない（学校の位置は
-      nlftp.facility.school を参照）。公開しているのは一部の自治体のみ
-      （カバレッジは ods.source_files を参照）。
-      独自形式で通学区域を公開している自治体（町丁目ごとに学校名を並べる形式など）は
-      標準形式ではないため収録していない。
     access: public
     columns:
       - name: municipality_code
@@ -539,12 +477,6 @@ models:
       - name: source_url
 
   - name: fire_hydrant
-    description: |
-      都内区市町村が公開する「消防水利施設一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。1行=1水利で、消火栓・防火水槽・プール・河川など消防が
-      消火用水として使える水利の位置と口径を持つ。名称の列は定義上持たず、種別で識別する。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
-      標準形式ではない独自様式（管轄・水利番号の一覧など）は収録していない。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -579,13 +511,6 @@ models:
       - name: source_url
 
   - name: care_service
-    description: |
-      都内区市町村が公開する「介護サービス事業所一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。1行=1事業所で、訪問介護・特別養護老人ホーム・通所介護などの
-      介護保険サービス事業所の名称・実施サービス・所在地・定員・運営法人を持つ。
-      全国網羅の類似データとして mhlw.kaigo.establishment（介護サービス情報公表システム）が
-      あり、こちらは区市町村が独自に公開する分。公開しているのは一部の自治体のみ
-      （カバレッジは ods.source_files を参照）。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -631,12 +556,6 @@ models:
       - name: source_url
 
   - name: food_business
-    description: |
-      都内区市町村が公開する「食品等営業許可・届出一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。食品衛生法に基づき保健所が許可・届出を受理した飲食店・食品製造・
-      販売施設を、営業の種類・業態・所在地・許可年月日・申請区分とともに1行=1施設で収録する。
-      施設の位置（緯度経度）を持ち、飲食店の出店動向・エリア別の業態構成・許可の新規/継続分析に
-      使える。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -688,13 +607,6 @@ models:
       - name: source_url
 
   - name: educational_institution
-    description: |
-      都内区市町村が公開する「教育機関一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。幼稚園・小学校・中学校・義務教育学校等の学校種、設置区分、
-      所在地（市区町村・町字・番地以下）、緯度経度、連絡先を持つ。所在地は連結表記の列を
-      持たず市区町村/町字/番地以下に分かれる。学校種は統制コード（A1・B1 等）と日本語
-      ラベルが自治体ごとに混在するため生値のまま保持する。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -740,13 +652,6 @@ models:
       - name: package_id
       - name: source_url
   - name: garbage_separation
-    description: |
-      都内区市町村が公開する「ごみの分別方法一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。1行=1（自治体×品目）で、家庭ごみの品目ごとに分別区分（燃やす
-      ごみ・不燃ごみ・資源・粗大ごみ等）・出し方の注意点・手数料を持つ。施設一覧ではなく
-      品目マスタのため名称・所在地・緯度経度の列は持たず、品目名で実体を識別する。
-      分別区分は統制語彙が無く自治体ごとに表記が揺れる（燃やすごみ / 可燃ごみ など）ため
-      生値のまま保持する。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     columns:
       - name: municipality_code
@@ -769,12 +674,6 @@ models:
       - name: package_id
       - name: source_url
   - name: bicycle_parking
-    description: |
-      都内区市町村が公開する「自転車駐車場一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。駐輪場ごとの名称・位置・収容台数・屋内外区分・利用時間・料金を持つ。
-      新標準（データセット定義書A）の分割形式では位置・住所が対の施設情報ファイル側に
-      分かれるため、当テーブルでは住所が空で緯度経度のみを持つ自治体がある。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -823,13 +722,6 @@ models:
       - name: package_id
       - name: source_url
   - name: polling_place
-    description: |
-      都内区市町村が公開する「投票所一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。選挙の投票所に加え、期日前投票所も投票所区分で区別して
-      収録する（polling_place_type を参照）。名称・投票区名を軸に、緯度経度や
-      住所を持つ自治体もある。標準フォーマットは名称・投票区名・緯度経度が中心で、
-      住所や座標を欠く自治体も多い。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     data_tests:
       - ods_geo_consistent
@@ -874,13 +766,6 @@ models:
       - name: package_id
       - name: source_url
   - name: support_system
-    description: |
-      都内区市町村が公開する「支援制度情報」（自治体標準オープンデータセット）を
-      横断統合したテーブル。1行=1制度で、補助金・助成・手当などの支援制度の
-      名称・対象者・制度概要・申請方法・問い合わせ先を持つ。施設ではなく制度の
-      カタログのため名称列を持たず、制度名（title）で識別する。金額・条件などの
-      数値項目や産業分類・ライフステージ等の統制語彙タグは extras (JSON) に退避。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     columns:
       - name: municipality_code
@@ -918,15 +803,6 @@ models:
       - name: package_id
       - name: source_url
   - name: school_lunch
-    description: |
-      都内区市町村が公開する「学校給食献立情報」（自治体標準オープンデータセット）を
-      横断統合したテーブル。1行=学校×提供年月日×料理（さらに食材単位まで分かれる場合あり）で、
-      献立の料理名・食品・栄養価・アレルゲンを持つ。施設一覧ではないため所在地・緯度経度の
-      列は持たない（学校の位置は nlftp.facility.school を参照）。
-      栄養価・アレルゲン・食品成分表の列は定義上は用意されているが、料理名だけを公開し
-      栄養価を空欄とする自治体が多く、埋まり具合は自治体ごとに大きく異なる。
-      学校ID を空欄にしたまま学校名称で運用している自治体があるため、実体の判定は学校名称で行う。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     columns:
       - name: municipality_code
@@ -982,17 +858,6 @@ models:
       - name: package_id
       - name: source_url
   - name: open_data_list
-    description: |
-      都内区市町村・東京都が公開する「オープンデータ一覧」（自治体標準オープンデータセット）を
-      横断統合したテーブル。1行=1データセット（またはデータセット×ファイル）のメタデータで、
-      各自治体が自ら公開している「どんなオープンデータを出しているか」の目録。施設一覧ではない
-      ため所在地・緯度経度の列は持たない。
-      これは自治体が申告した目録であり、CKAN カタログを横断集計した catalog スキーマ
-      （データセット・組織・リソースのメタデータ）とは別物。catalog は運営基盤側が全件を機械的に
-      集約したメタデータ、本テーブルは各自治体が ODS 様式で手作業に近い形で公開した申告目録で、
-      収録範囲・粒度・鮮度が自治体ごとに異なる。
-      新標準（データセット定義書A、42列）と旧推奨データセット形式（15列）の両方の様式を統合して
-      いる。公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
     access: public
     columns:
       - name: municipality_code
@@ -1043,19 +908,6 @@ models:
       - name: package_id
       - name: source_url
   - name: population
-    description: |
-      都内区市町村が公開する「地域・年齢別人口」（自治体標準オープンデータセット）を
-      横断統合したテーブル。1行 = 地域 × 調査年月日で、総人口・男女別人口に加えて
-      5歳階級×男女の人口（0-4歳〜85歳以上）と世帯数をワイドに持つ。町丁字単位で
-      公開する自治体（区部・練馬区など）と、自治体全体の1行のみで公開する自治体が混在する。
-      同一ファイル内に複数の調査年月日を追記する方式のため、時系列比較は survey_date で行う。
-      公開しているのは一部の自治体のみ（カバレッジは ods.source_files を参照）。
-      月次で公開する自治体では、新しい月のリソースが前の月と同じファイルを指していたり、
-      登録された URL が失効していて、その月が収録されないことがある。どの月が
-      収録できたかは ods.source_files の status と reason で確かめられる。
-      年齢階級を縦持ちで扱いたい場合は補助ビュー population_by_age を利用できる。
-      独自形式（1歳刻み・性別を行持ちするクロス集計など）で公開する自治体は
-      標準形式ではないため収録していない。
     access: public
     data_tests:
       # 同じ月の同じ地域が2行に増えると、区の総人口を survey_date で合計しただけで
@@ -1118,10 +970,6 @@ models:
       - name: package_id
       - name: source_url
   - name: population_by_age
-    description: |
-      地域・年齢別人口（ods.population）を年齢階級×性別で縦持ちにした補助ビュー。
-      1行 = 地域 × 調査年月日 × 年齢階級 × 性別 → 人口。人口ピラミッドや高齢化率など
-      年齢階級別の集計・可視化を容易にするために提供する。
     access: public
     columns:
       - name: municipality_code
@@ -1134,16 +982,6 @@ models:
       - name: sex
       - name: population
   - name: source_files
-    description: |
-      自治体標準ODS取り込みの実行結果。どの自治体のどのファイルを
-      取り込んだか・スキップや失敗の理由・エンコーディング・行数を記録する。
-      基本は1行=1リソースだが、種別に一致しながら CSV リソースを1つも持たない
-      パッケージは、パッケージ単位で1行（status=skipped / reason=no_csv_resource）
-      記録する。同じ URL が複数のリソースとして登録されているときは、取り込んだ側と
-      落とした側（status=skipped / reason=duplicate_url）の両方を記録する。
-      HTML のページへのリンクだけで登録されたパッケージは、そのページに置かれた
-      CSV をたどって取り込み、CSV ごとに1行（via_page_url にたどったページ）記録する。
-      種別ごとの自治体カバレッジの把握に使う。
     access: public
     columns:
       - name: dataset_id

@@ -1,0 +1,19 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: 分野分類
+description: 東京都オープンデータカタログの分野分類（16 分類）の一覧です。
+topics:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+sources:
+  - catalog
+columns:
+  - name: group_code
+    title: グループコード
+  - name: title
+    title: 分野名
+  - name: description
+    title: 説明
+  - name: dataset_count
+    title: データセット数

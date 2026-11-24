@@ -1,0 +1,40 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: リソース一覧
+description: |-
+  東京都オープンデータカタログのデータセットのリソース（配布ファイル）の一覧です。ファイル名・形式・ダウンロード URL を持ちます。
+
+  - ファイルの更新で URL が変わることがあります。このテーブルの最新の URL を使ってください
+topics:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+sources:
+  - catalog
+columns:
+  - name: resource_id
+    title: リソースID
+  - name: package_id
+    title: データセットID
+    description: datasets との結合キー
+  - name: name
+    title: リソース名
+  - name: description
+    title: 説明
+  - name: format
+    title: フォーマット
+    description: CSV / XLS / XLSX / PDF / GeoJSON 等
+  - name: url
+    title: ダウンロードURL
+  - name: mimetype
+    title: MIMEタイプ
+  - name: size_bytes
+    title: サイズ
+    description: バイト数（未記載は NULL）
+  - name: created
+    title: 作成日時
+  - name: last_modified
+    title: 最終更新日時
+  - name: resource_position
+    title: 表示順
+    description: データセット内での表示順（0始まり）

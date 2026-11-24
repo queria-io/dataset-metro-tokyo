@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 住所をジオコーディングした結果の生データ。(組織コード, 住所) 単位で abr-geocoder の出力を持つ。ODS と保健所台帳の住所が同じ表に入る。
+hidden: true

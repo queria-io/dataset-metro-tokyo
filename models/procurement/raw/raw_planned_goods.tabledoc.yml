@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 区市町村が公表した物品買入れの発注予定の生データ（1行=1件）。
+hidden: true

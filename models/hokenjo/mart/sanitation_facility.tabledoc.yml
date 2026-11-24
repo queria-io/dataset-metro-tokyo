@@ -1,0 +1,71 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: 環境衛生施設台帳
+description: |-
+  東京都保健医療局「環境衛生施設台帳」の理容所・美容所・旅館・クリーニング所の一覧です。
+
+  - 東京都が設置する保健所の管轄（八王子市・町田市を除く多摩地域と島しょ）だけで、23 区・八王子市・町田市は含みません
+  - 位置は所在地から Queria が求めたものです
+topics:
+  - 東京都
+  - 生活衛生
+  - 理容
+  - 美容
+  - クリーニング
+  - 旅館
+  - 施設
+  - GIS
+sources:
+  - shokuhineigyokyokadaicho
+columns:
+  - name: source_as_of
+    title: 台帳の時点
+    description: 配布ページが示す「○年○月○日現在」
+  - name: facility_type
+    title: 施設の種別
+    description: 理容所 / 美容所 / 旅館 / クリーニング所
+  - name: permit_number
+    title: 確認番号
+    description: 理容所・美容所・クリーニング所は確認番号、旅館は許可番号
+  - name: business_form
+    title: 営業形態
+    description: クリーニング所は一般・取次所など、旅館は旅館・ホテル営業など。理容所・美容所は空
+  - name: name
+    title: 施設名称
+  - name: address
+    title: 施設所在地
+  - name: building
+    title: 施設ビル名
+  - name: phone_number
+    title: 施設電話番号
+  - name: permit_date
+    title: 確認日
+    description: 理容所・美容所・クリーニング所は確認年月日、旅館は許可年月日
+  - name: operator_name
+    title: 営業者氏名
+  - name: operator_address
+    title: 営業者住所
+  - name: operator_building
+    title: 営業者ビル名
+  - name: operator_phone_number
+    title: 営業者電話番号
+  - name: representative_name
+    title: 法人代表者氏名
+  - name: city_code
+    title: 市区町村コード
+    description: 所在地から求めた 5 桁の市区町村コード
+    entity: city
+  - name: geo_lat
+    title: 緯度
+    description: 所在地から求めた十進度（JGD2011）
+  - name: geo_lon
+    title: 経度
+    description: 所在地から求めた十進度（JGD2011）
+  - name: geo_source
+    title: 座標の由来
+    description: abr（所在地から求めた）または空
+  - name: geo_level
+    title: 座標の粒度
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
+  - name: geometry
+    title: ジオメトリ
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL

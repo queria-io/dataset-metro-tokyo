@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: ジオコーディング結果のステージング。座標が入った行だけに絞り、(組織コード, 住所) で一意にする。
+hidden: true

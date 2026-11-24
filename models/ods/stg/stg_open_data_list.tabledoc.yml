@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: オープンデータ一覧のステージング。公開日・最終更新日を DATE に、ファイルサイズを数値に、API対応有無を BOOLEAN に正規化。
+hidden: true

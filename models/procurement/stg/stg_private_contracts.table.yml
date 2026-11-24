@@ -1,6 +1,0 @@
-schema: procurement
-name: stg_private_contracts
-description: private_contracts のステージング。
-annotations:
-  queria:
-    published: false

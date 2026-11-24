@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 子育て施設データの取得元（1行=1ファイル）。取り込んだ一覧の版・パッケージ・URL を記録する。
+hidden: true

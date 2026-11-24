@@ -1,0 +1,60 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: 毎月勤労統計調査 就業形態別常用労働者数
+description: |-
+  毎月勤労統計調査（地方調査）の、東京都の常用労働者数（推計）を一般労働者とパートタイム労働者に分けたものです。1 行が 1 年・月（または年平均）・事業所規模・産業で、2013 年からです。
+
+  - 事業所規模の「5人以上」は「30人以上」の事業所を含みます。2 つの区分を足さないでください
+  - 就業形態を合わせた値は `labour_employment` にあります
+topics:
+  - 東京都
+  - 毎月勤労統計
+  - 雇用
+  - 労働者数
+  - パートタイム
+  - 就業形態
+  - 産業
+  - 時系列
+sources:
+  - mk-index
+columns:
+  - name: year
+    title: 年
+    description: 対象年（西暦）
+  - name: period_type
+    title: 期間区分
+    description: 月次 / 年平均
+  - name: month
+    title: 月
+    description: 対象月（1〜12）。年平均の行は NULL
+  - name: establishment_size
+    title: 事業所規模
+    description: 5人以上 / 30人以上。5人以上は30人以上の事業所を含む
+  - name: industry_code
+    title: 産業符号
+    description: 原典の産業符号。TL は調査産業計、英字1字は日本標準産業分類の大分類
+  - name: industry_name
+    title: 産業
+  - name: general_employees_start
+    title: 前月末労働者数（一般労働者）
+    description: 一般労働者の前月末の人数の推計（人）。年平均の行は各月の平均
+  - name: general_employees_added
+    title: 増加労働者数（一般労働者）
+    description: 本月中に増えた一般労働者数（人）。年平均の行は各月の平均
+  - name: general_employees_removed
+    title: 減少労働者数（一般労働者）
+    description: 本月中に減った一般労働者数（人）。年平均の行は各月の平均
+  - name: general_employees
+    title: 本月末労働者数（一般労働者）
+    description: 一般労働者の本月末の人数の推計（人）。年平均の行は各月の平均
+  - name: part_time_employees_start
+    title: 前月末労働者数（パートタイム労働者）
+    description: パートタイム労働者の前月末の人数の推計（人）。年平均の行は各月の平均
+  - name: part_time_employees_added
+    title: 増加労働者数（パートタイム労働者）
+    description: 人
+  - name: part_time_employees_removed
+    title: 減少労働者数（パートタイム労働者）
+    description: 人
+  - name: part_time_employees
+    title: 本月末労働者数（パートタイム労働者）
+    description: 人

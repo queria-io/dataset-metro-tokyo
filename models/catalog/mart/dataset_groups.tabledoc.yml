@@ -1,0 +1,17 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: データセット分野
+description: 東京都オープンデータカタログのデータセットと分野分類の対応です。
+topics:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+sources:
+  - catalog
+columns:
+  - name: package_id
+    title: データセットID
+    description: datasets との結合キー
+  - name: group_code
+    title: グループコード
+    description: groups との結合キー

@@ -1,0 +1,37 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: 国籍・地域別外国人人口
+description: |-
+  東京都の国籍・地域別の外国人人口です。1 行が 1 年・地域・国籍で、1979 年から各年 1 月 1 日の値です。
+
+  - 都内を漏れなく分けるときは `area_type IN ('区市町村', '支庁')` で絞ってください
+  - 国籍は総数の行を持ちます。国籍を足して総数を作らないでください（1990 年まではドイツが二重に数えられます）
+topics:
+  - 東京都
+  - 外国人
+  - 国籍
+  - 人口
+  - 時系列
+sources:
+  - t000003
+columns:
+  - name: year
+    title: 年
+    description: 対象年（西暦）
+  - name: as_of_date
+    title: 現在日
+    description: 集計時点（各年1月1日）
+  - name: area_code
+    title: 地域コード
+    description: 全国地方公共団体コードの上 5 桁。集計行と支庁は都が付すコード
+    entity: city
+  - name: area_name
+    title: 地域
+  - name: area_type
+    title: 地域区分
+    description: 総数 / 地域区分（区部・市部・町村部・郡部・島部）/ 支庁 / 区市町村。地域コードから導出
+  - name: nationality
+    title: 国籍・地域
+    description: 原典の区分名（総数・その他を含む 24 区分）
+  - name: population
+    title: 外国人人口
+    description: 2012年までは外国人登録者数、2013年からは住民基本台帳上の人口（人）

@@ -1,7 +1,7 @@
 """台帳 (source_files.ndjson) に実際に書かれる行を確かめる。
 
 classify() の戻り値ではなく、download_and_normalize() が書くファイルを読む。
-reason の文字列形式は source_files.table.yml の列説明で利用者に約束している内容なので、
+reason の文字列形式は source_files.tabledoc.yml の列説明で利用者に約束している内容なので、
 戻り値だけを見ていると形式を壊してもテストが緑のままになる。
 
 取得はモックする。ネットワークにも DuckLake にもつながない。
