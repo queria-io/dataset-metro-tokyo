@@ -37,6 +37,7 @@ from pipelines.foreign_population import download_foreign_population
 from pipelines.geocode import geocode
 from pipelines.hokenjo import download_hokenjo
 from pipelines.labour_bonus import download_labour_bonus
+from pipelines.household_budget import download_household_budget
 from pipelines.labour_earnings import download_labour_earnings
 from pipelines.labour_earnings_by_employment_type import (
     download_labour_earnings_by_employment_type,
@@ -97,131 +98,135 @@ def dbt_build():
 
 def main():
     # 1. カタログメタデータ（CKAN API）
-    logger.info("1/30: catalog (カタログメタデータ)")
+    logger.info("1/31: catalog (カタログメタデータ)")
     download_catalog("data/catalog")
 
     # 2. 自治体標準オープンデータセット（catalog のメタデータから対象を判定）
-    logger.info("2/30: ods (自治体標準オープンデータセット)")
+    logger.info("2/31: ods (自治体標準オープンデータセット)")
     download_and_normalize()
 
     # 3. 都の保健所台帳（配布ページから CSV のリンクを解決）
-    logger.info("3/30: hokenjo (保健所台帳)")
+    logger.info("3/31: hokenjo (保健所台帳)")
     download_hokenjo("data/hokenjo")
 
     # 4. 住所のジオコーディング（ods と hokenjo が書いた NDJSON の住所を読む）
-    logger.info("4/30: geocode (住所のジオコーディング)")
+    logger.info("4/31: geocode (住所のジオコーディング)")
     geocode()
 
     # 5. 子育て施設データ（catalog のメタデータから最新版の一覧を解決）
-    logger.info("5/30: childcare (子育て施設データ)")
+    logger.info("5/31: childcare (子育て施設データ)")
     download_childcare("data/childcare")
 
     # 6. 都の統計データ（catalog のメタデータから最新月を解決）
-    logger.info("6/30: stats (住民基本台帳による世帯と人口)")
+    logger.info("6/31: stats (住民基本台帳による世帯と人口)")
     download_resident_population("data/resident_population")
 
     # 7. 都の統計データ（外国人人口の時系列。1ファイルに全年が入る）
-    logger.info("7/30: stats (外国人人口)")
+    logger.info("7/31: stats (外国人人口)")
     download_foreign_population("data/foreign_population")
 
     # 8. 都の統計データ（毎月勤労統計調査。年報の一覧から各年の表を解決する）
-    logger.info("8/30: stats (毎月勤労統計調査)")
+    logger.info("8/31: stats (毎月勤労統計調査)")
     download_labour_earnings("data/labour_earnings")
 
     # 9. 都の統計データ（毎月勤労統計調査の第6表。第1表と同じ年報から取る）
-    logger.info("9/30: stats (毎月勤労統計調査の労働時間)")
+    logger.info("9/31: stats (毎月勤労統計調査の労働時間)")
     download_labour_hours("data/labour_hours")
 
     # 10. 都の統計データ（毎月勤労統計調査の第10表。第1表と同じ年報から取る）
-    logger.info("10/30: stats (毎月勤労統計調査の常用労働者数)")
+    logger.info("10/31: stats (毎月勤労統計調査の常用労働者数)")
     download_labour_employment("data/labour_employment")
 
     # 11. 都の統計データ（毎月勤労統計調査の第2表。第1表と同じ年報から取る）
-    logger.info("11/30: stats (毎月勤労統計調査の就業形態別現金給与額)")
+    logger.info("11/31: stats (毎月勤労統計調査の就業形態別現金給与額)")
     download_labour_earnings_by_employment_type(
         "data/labour_earnings_by_employment_type"
     )
 
     # 12. 都の統計データ（毎月勤労統計調査の第7表。第1表と同じ年報から取る）
-    logger.info("12/30: stats (毎月勤労統計調査の就業形態別労働時間)")
+    logger.info("12/31: stats (毎月勤労統計調査の就業形態別労働時間)")
     download_labour_hours_by_employment_type("data/labour_hours_by_employment_type")
 
     # 13. 都の統計データ（毎月勤労統計調査の第11表。第1表と同じ年報から取る）
-    logger.info("13/30: stats (毎月勤労統計調査の就業形態別常用労働者数)")
+    logger.info("13/31: stats (毎月勤労統計調査の就業形態別常用労働者数)")
     download_labour_employment_by_employment_type(
         "data/labour_employment_by_employment_type"
     )
 
     # 14. 都の統計データ（毎月勤労統計調査の第3表。第1表と同じ年報から取る）
-    logger.info("14/30: stats (毎月勤労統計調査の規模別現金給与額)")
+    logger.info("14/31: stats (毎月勤労統計調査の規模別現金給与額)")
     download_labour_earnings_by_size("data/labour_earnings_by_size")
 
     # 15. 都の統計データ（毎月勤労統計調査の第8表。第1表と同じ年報から取る）
-    logger.info("15/30: stats (毎月勤労統計調査の規模別労働時間)")
+    logger.info("15/31: stats (毎月勤労統計調査の規模別労働時間)")
     download_labour_hours_by_size("data/labour_hours_by_size")
 
     # 16. 都の統計データ（毎月勤労統計調査の第9表。第1表と同じ年報から取る）
-    logger.info("16/30: stats (毎月勤労統計調査の規模・就業形態別労働時間)")
+    logger.info("16/31: stats (毎月勤労統計調査の規模・就業形態別労働時間)")
     download_labour_hours_by_size_and_employment_type(
         "data/labour_hours_by_size_and_employment_type"
     )
 
     # 17. 都の統計データ（毎月勤労統計調査の第4表。第1表と同じ年報から取る）
-    logger.info("17/30: stats (毎月勤労統計調査の規模・就業形態別現金給与額)")
+    logger.info("17/31: stats (毎月勤労統計調査の規模・就業形態別現金給与額)")
     download_labour_earnings_by_size_and_employment_type(
         "data/labour_earnings_by_size_and_employment_type"
     )
 
     # 18. 都の統計データ（毎月勤労統計調査の第5表。第1表と同じ年報から取る）
-    logger.info("18/30: stats (毎月勤労統計調査の夏季・冬季賞与)")
+    logger.info("18/31: stats (毎月勤労統計調査の夏季・冬季賞与)")
     download_labour_bonus("data/labour_bonus")
 
     # 19. 都の統計データ（毎月勤労統計調査の第12表。第1表と同じ年報から取る）
-    logger.info("19/30: stats (毎月勤労統計調査の産業別労働異動率)")
+    logger.info("19/31: stats (毎月勤労統計調査の産業別労働異動率)")
     download_labour_turnover("data/labour_turnover")
 
     # 20. 都の統計データ（毎月勤労統計調査の第13〜21表。第1表と同じ年報から取る）
-    logger.info("20/30: stats (毎月勤労統計調査の規模・産業別の指数)")
+    logger.info("20/31: stats (毎月勤労統計調査の規模・産業別の指数)")
     download_labour_index("data/labour_index")
 
     # 21. 都の統計データ（東京の労働力。年平均の一覧から各年の第1表を解決する）
-    logger.info("21/30: stats (東京の労働力)")
+    logger.info("21/31: stats (東京の労働力)")
     download_labour_force("data/labour_force")
 
     # 22. 都の統計データ（東京の労働力。年平均の一覧から各年の参考表を解決する）
-    logger.info("22/30: stats (東京の労働力の完全失業率の比較)")
+    logger.info("22/31: stats (東京の労働力の完全失業率の比較)")
     download_labour_force_unemployment_rate("data/labour_force_unemployment_rate")
 
     # 23. 都の統計データ（東京の労働力。年平均の一覧から各年の第2表を解決する）
-    logger.info("23/30: stats (東京の労働力の就業状態・活動状態別15歳以上人口)")
+    logger.info("23/31: stats (東京の労働力の就業状態・活動状態別15歳以上人口)")
     download_labour_force_activity("data/labour_force_activity")
 
     # 24. 都の統計データ（東京の労働力。年平均の一覧から各年の第3表を解決する）
-    logger.info("24/30: stats (東京の労働力の年齢階級別就業状態)")
+    logger.info("24/31: stats (東京の労働力の年齢階級別就業状態)")
     download_labour_force_by_age("data/labour_force_by_age")
 
     # 25. 都の統計データ（東京の労働力。年平均の一覧から各年の第6表を解決する）
-    logger.info("25/30: stats (東京の労働力の主な職業別就業者数)")
+    logger.info("25/31: stats (東京の労働力の主な職業別就業者数)")
     download_labour_force_by_occupation("data/labour_force_by_occupation")
 
     # 26. 都の統計データ（東京の労働力。年平均の一覧から各年の第8表を解決する）
-    logger.info("26/30: stats (東京の労働力の年齢階級・雇用形態別の役員を除く雇用者数)")
+    logger.info("26/31: stats (東京の労働力の年齢階級・雇用形態別の役員を除く雇用者数)")
     download_labour_force_by_employment_type("data/labour_force_by_employment_type")
 
     # 27. 都の統計データ（東京の労働力。四半期平均の一覧から各四半期の第1表を解決する）
-    logger.info("27/30: stats (東京の労働力の四半期平均)")
+    logger.info("27/31: stats (東京の労働力の四半期平均)")
     download_labour_force_quarterly("data/labour_force_quarterly")
 
-    # 28. 東京都第3次産業活動指数（CKAN のパッケージから月次の2ファイルを解決する）
-    logger.info("28/30: industry (第3次産業活動指数)")
+    # 28. 東京都生計分析調査（都民のくらしむき。年報の一覧から最新年の長期時系列表1を解決する）
+    logger.info("28/31: stats (都民のくらしむきの家計収支)")
+    download_household_budget("data/household_budget")
+
+    # 29. 東京都第3次産業活動指数（CKAN のパッケージから月次の2ファイルを解決する）
+    logger.info("29/31: industry (第3次産業活動指数)")
     download_tertiary_activity_index("data/tertiary_activity_index")
 
-    # 29. 区市町村の調達情報（catalog のメタデータからリソースを分類する）
-    logger.info("29/30: procurement (調達情報)")
+    # 30. 区市町村の調達情報（catalog のメタデータからリソースを分類する）
+    logger.info("30/31: procurement (調達情報)")
     download_procurement("data/procurement")
 
-    # 30. dbt ビルド
-    logger.info("30/30: dbt build")
+    # 31. dbt ビルド
+    logger.info("31/31: dbt build")
     dbt_build()
 
 
