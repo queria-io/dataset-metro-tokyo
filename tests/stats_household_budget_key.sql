@@ -1,5 +1,5 @@
 {# 1行 = 年 × 項目であること、各年に72項目がそろうこと、
-   1975〜2025年の51年が欠けないこと、エンゲル係数が生計支出／消費支出／食料 ÷ 消費支出（％）と
+   1975年から始まり年が欠けないこと、エンゲル係数が生計支出／消費支出／食料 ÷ 消費支出（％）と
    0.1ポイント以内で一致することを確かめる。 #}
 
 with by_key as (
@@ -35,7 +35,7 @@ select year, null, 'item count is not 72' as check_name
 from by_year
 where item_count <> 72
 union all
-select null, null, 'years are not 1975-2025' as check_name
+select null, null, 'years do not start at 1975 or have gaps' as check_name
 from (select min(year) as first_year, max(year) as last_year, count(distinct year) as years from by_year)
 where first_year <> 1975 or last_year - first_year + 1 <> years
 union all
