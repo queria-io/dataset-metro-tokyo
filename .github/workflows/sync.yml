@@ -3,8 +3,6 @@ name: Sync
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - "*.md"
   schedule:
     # 毎週月曜 05:00 JST。カタログメタデータと ODS リソースを再取得する
     - cron: "0 20 * * 0"
@@ -20,7 +18,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: queria-io/dataset-shared/.github/workflows/sync.yml@67443c88b6ec355559c91bf866239e10073ccf83
+    uses: queria-io/dataset-shared/.github/workflows/sync.yml@main
     with:
       dataset_name: metro_tokyo
       # ODS の住所のジオコーディングに abr-geocoder（Node のツール）を使う。
