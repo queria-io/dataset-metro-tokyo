@@ -1,6 +1,0 @@
-schema: catalog
-name: stg_dataset_groups
-description: データセットとグループの対応のステージング。
-annotations:
-  queria:
-    published: false

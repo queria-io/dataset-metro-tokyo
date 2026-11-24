@@ -2,11 +2,6 @@ version: 2
 
 models:
   - name: datasets
-    description: |
-      東京都オープンデータカタログ (catalog.data.metro.tokyo.lg.jp) に登録された
-      全データセットのメタデータ一覧（約9,600件）。都庁各局と都内62区市町村が提供する
-      オープンデータの台帳で、タイトル・提供組織・ライセンス・更新頻度・リソース数を持つ。
-      CKAN API (package_search) から毎回全量を取得して洗い替える。
     access: public
     columns:
       - name: package_id
@@ -25,10 +20,6 @@ models:
       - name: portal_url
 
   - name: resources
-    description: |
-      全データセットのリソース（配布ファイル）一覧。ファイル名・フォーマット・
-      ダウンロード URL を持つ。URL は都の共有ストレージや各自治体サイトに分散しており、
-      ファイル更新で URL が変わることがあるため、常に本テーブルの最新 URL を参照する。
     access: public
     columns:
       - name: resource_id
@@ -44,10 +35,6 @@ models:
       - name: resource_position
 
   - name: organizations
-    description: |
-      データ提供組織の一覧（約100組織）。東京都の各局と都内62区市町村。
-      組織コードは JIS 全国地方公共団体コード準拠（t000xxx=都庁各局、
-      t131xxx=特別区、t132xxx=市、t133xxx=町村）。
     access: public
     columns:
       - name: organization_code
@@ -57,7 +44,6 @@ models:
       - name: dataset_count
 
   - name: groups
-    description: 東京都オープンデータカタログの分野分類（グループ、全16分類）の一覧。行財政・くらし・防災・交通などの区分について、グループコード、名称、説明、所属データセット数を収録する。
     access: public
     columns:
       - name: group_code
@@ -66,16 +52,12 @@ models:
       - name: dataset_count
 
   - name: dataset_tags
-    description: |
-      データセットとタグの対応（多対多）。「自治体標準オープンデータセット」
-      「都知事杯ハッカソン」などのタグでデータセットを絞り込める。
     access: public
     columns:
       - name: package_id
       - name: tag
 
   - name: dataset_groups
-    description: 東京都オープンデータカタログにおける、データセットと分野分類（グループ）の対応を表す多対多の関連テーブル。データセットのパッケージIDとグループコードの組で収録する。
     access: public
     columns:
       - name: package_id

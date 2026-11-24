@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 介護サービス事業所のステージング。緯度経度・定員を数値に変換。
+hidden: true

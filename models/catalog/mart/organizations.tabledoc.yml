@@ -1,0 +1,22 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: 提供組織
+description: 東京都オープンデータカタログのデータ提供組織の一覧（約 100 組織）です。東京都の各局と都内 62 区市町村です。
+topics:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+sources:
+  - catalog
+columns:
+  - name: organization_code
+    title: 組織コード
+  - name: title
+    title: 組織名
+  - name: organization_type
+    title: 組織種別
+    description: 都庁各局 / 特別区 / 市 / 町村
+  - name: description
+    title: 説明
+  - name: dataset_count
+    title: データセット数

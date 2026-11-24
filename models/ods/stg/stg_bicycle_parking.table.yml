@@ -1,6 +1,0 @@
-schema: ods
-name: stg_bicycle_parking
-description: 自転車駐車場のステージング。緯度経度・収容台数を数値化、開設日を DATE に正規化。屋内外・料金は生値のまま保持。
-annotations:
-  queria:
-    published: false

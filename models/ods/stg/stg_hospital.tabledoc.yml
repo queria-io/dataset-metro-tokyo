@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 医療機関のステージング。緯度経度・病床数を数値化。
+hidden: true

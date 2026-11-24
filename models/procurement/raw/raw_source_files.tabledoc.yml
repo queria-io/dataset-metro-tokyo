@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 調達情報の取得結果（1行=1リソース）。
+hidden: true

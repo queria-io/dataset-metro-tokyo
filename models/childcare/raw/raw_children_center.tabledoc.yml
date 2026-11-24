@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 東京都福祉局「社会福祉施設等一覧」の児童館の生データ。全列 VARCHAR で取り込む。
+hidden: true

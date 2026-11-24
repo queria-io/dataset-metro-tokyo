@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 東京の労働力（年平均の第8表）の取得元（1行=1ファイル）。表の年・取得元 URL・取得時刻・行数を記録する。
+hidden: true

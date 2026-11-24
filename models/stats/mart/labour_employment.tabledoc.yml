@@ -1,0 +1,80 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: 毎月勤労統計調査 常用労働者数・パートタイム労働者比率
+description: |-
+  毎月勤労統計調査（地方調査）の、東京都の常用労働者数（推計）とパートタイム労働者比率です。1 行が 1 年・月（または年平均）・事業所規模・産業で、2013 年からです。
+
+  - 事業所規模の「5人以上」は「30人以上」の事業所を含みます。2 つの区分を足さないでください
+  - 産業の区分は 2018 年から 17 区分に減りました。年をまたいで比べるときは `industry_code` で揃えてください
+topics:
+  - 東京都
+  - 毎月勤労統計
+  - 雇用
+  - 労働者数
+  - パートタイム
+  - 産業
+  - 時系列
+sources:
+  - mk-index
+columns:
+  - name: year
+    title: 年
+    description: 対象年（西暦）
+  - name: period_type
+    title: 期間区分
+    description: 月次 / 年平均
+  - name: month
+    title: 月
+    description: 対象月（1〜12）。年平均の行は NULL
+  - name: establishment_size
+    title: 事業所規模
+    description: 5人以上 / 30人以上。5人以上は30人以上の事業所を含む
+  - name: industry_code
+    title: 産業符号
+    description: 原典の産業符号。TL は調査産業計、英字 1 字は大分類
+  - name: industry_name
+    title: 産業
+  - name: employees_start
+    title: 前月末労働者数
+    description: 前月末の常用労働者数の推計（人）。年平均の行は各月の平均
+  - name: employees_start_male
+    title: 前月末労働者数（男）
+    description: 人
+  - name: employees_start_female
+    title: 前月末労働者数（女）
+    description: 人
+  - name: employees_added
+    title: 増加労働者数
+    description: 本月中に採用・転入などで増えた常用労働者数（人）。年平均の行は各月の平均
+  - name: employees_added_male
+    title: 増加労働者数（男）
+    description: 人
+  - name: employees_added_female
+    title: 増加労働者数（女）
+    description: 人
+  - name: employees_removed
+    title: 減少労働者数
+    description: 本月中に退職・転出などで減った常用労働者数（人）。年平均の行は各月の平均
+  - name: employees_removed_male
+    title: 減少労働者数（男）
+    description: 人
+  - name: employees_removed_female
+    title: 減少労働者数（女）
+    description: 人
+  - name: employees
+    title: 本月末労働者数
+    description: 本月末の常用労働者数の推計（人）。年平均の行は各月の平均
+  - name: employees_male
+    title: 本月末労働者数（男）
+    description: 人
+  - name: employees_female
+    title: 本月末労働者数（女）
+    description: 人
+  - name: part_time_ratio
+    title: パートタイム労働者比率
+    description: 本月末の常用労働者に占めるパートタイム労働者の割合（％）
+  - name: part_time_ratio_male
+    title: パートタイム労働者比率（男）
+    description: ％
+  - name: part_time_ratio_female
+    title: パートタイム労働者比率（女）
+    description: ％

@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: ODS 取り込み結果のステージング。行数・取得日時を型変換。
+hidden: true

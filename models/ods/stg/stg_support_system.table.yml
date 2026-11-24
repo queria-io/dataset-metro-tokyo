@@ -1,6 +1,0 @@
-schema: ods
-name: stg_support_system
-description: 支援制度情報のステージング。受付日・公開日を DATE に変換。
-annotations:
-  queria:
-    published: false

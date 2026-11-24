@@ -1,6 +1,0 @@
-schema: procurement
-name: stg_planned_works
-description: planned_works のステージング。
-annotations:
-  queria:
-    published: false

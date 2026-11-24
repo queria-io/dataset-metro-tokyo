@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 東京都保健医療局「環境衛生施設台帳」（理容所・美容所・旅館・クリーニング所）の生データ。標準キーに正規化済み、全列 VARCHAR。
+hidden: true

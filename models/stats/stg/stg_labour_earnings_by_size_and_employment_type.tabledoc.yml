@@ -1,0 +1,5 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: |-
+  毎月勤労統計調査（規模・就業形態別月間現金給与額）のステージング。金額を INTEGER に型変換し（「×」と「－」は NULL）、
+  「年平均・月」を月の番号に直す。
+hidden: true

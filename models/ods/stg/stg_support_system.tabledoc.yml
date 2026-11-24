@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 支援制度情報のステージング。受付日・公開日を DATE に変換。
+hidden: true

@@ -1,0 +1,99 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: 医療機関
+description: |-
+  都内の区市町村と東京都保健医療局が公開する「医療機関一覧」（自治体標準オープンデータセット）を統合したものです。診療科目・病床数・診療日時を持ちます。
+
+  - 東京都の都全域のデータと区市町村のデータで、同じ医療機関が重複することがあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
+topics:
+  - 東京都
+  - 医療
+  - 病院
+  - 自治体標準オープンデータセット
+  - GIS
+sources:
+  - catalog
+columns:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    entity: city
+  - name: facility_id
+    title: ID
+  - name: name
+    title: 名称
+  - name: name_kana
+    title: 名称カナ
+  - name: institution_type
+    title: 医療機関の種類
+    description: 病院・診療所・歯科診療所等（元データの表記のまま）
+  - name: address
+    title: 所在地
+  - name: prefecture
+    title: 都道府県
+  - name: city
+    title: 市区町村
+  - name: postal_code
+    title: 郵便番号
+    entity: postal_code
+  - name: phone_number
+    title: 電話番号
+  - name: lat
+    title: 緯度
+  - name: lon
+    title: 経度
+  - name: geo_lat
+    title: 緯度（地図表示用）
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
+  - name: geo_lon
+    title: 経度（地図表示用）
+    description: Queria が付与。geo_lat と対になる経度
+  - name: geo_source
+    title: 座標の由来
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
+  - name: geo_level
+    title: 座標の粒度
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
+  - name: geometry
+    title: ジオメトリ
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
+  - name: corporate_name
+    title: 法人の名称
+  - name: medical_institution_code
+    title: 医療機関コード
+  - name: consultation_days
+    title: 診療曜日
+  - name: start_time
+    title: 診療開始時間
+  - name: end_time
+    title: 診療終了時間
+  - name: consultation_notes
+    title: 診療日時特記事項
+  - name: after_hours
+    title: 時間外対応
+  - name: departments
+    title: 診療科目
+    description: 複数値は ; 区切り
+  - name: beds
+    title: 病床数
+    description: 床。数値化できない表記は NULL
+  - name: disaster_base
+    title: 災害拠点分類
+  - name: status
+    title: 状況
+  - name: url
+    title: URL
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

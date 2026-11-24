@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 東京の労働力（年平均の第2表）のステージング。区分の見出しの単位を unit に移し、値を DECIMAL に型変換し（「…」「-」「－」は NULL）、年ごとに値のある最も新しい年の表の値を選ぶ。
+hidden: true

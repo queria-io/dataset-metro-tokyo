@@ -1,0 +1,99 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: 公衆トイレ
+description: |-
+  都内の区市町村が公開する「公衆トイレ一覧」（自治体標準オープンデータセット）を統合したものです。便器数とバリアフリーの設備の有無・利用可能時間を持ちます。
+
+  - 公開している自治体は一部だけです。どの自治体のファイルを収録したかは `ods.source_files` にあります
+  - 地図に表示するときは、Queria が付与した `geo_lat`・`geo_lon` を使ってください（由来は `geo_source`）
+topics:
+  - 東京都
+  - 公衆トイレ
+  - バリアフリー
+  - 自治体標準オープンデータセット
+  - GIS
+sources:
+  - catalog
+columns:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    entity: city
+  - name: facility_id
+    title: ID
+  - name: name
+    title: 名称
+    description: 設置施設・建物等の名称
+  - name: name_kana
+    title: 名称カナ
+  - name: address
+    title: 所在地
+  - name: prefecture
+    title: 都道府県
+  - name: city
+    title: 市区町村
+  - name: install_position
+    title: 設置位置
+    description: 施設内のどこに設置されているか
+  - name: lat
+    title: 緯度
+  - name: lon
+    title: 経度
+  - name: geo_lat
+    title: 緯度（地図表示用）
+    description: Queria が付与した緯度。原典の値か住所から求めた値。由来は geo_source
+  - name: geo_lon
+    title: 経度（地図表示用）
+    description: Queria が付与。geo_lat と対になる経度
+  - name: geo_source
+    title: 座標の由来
+    description: source=原典 / source_swapped=緯度経度を入れ替え / abr=住所から / NULL=なし
+  - name: geo_level
+    title: 座標の粒度
+    description: 座標の粒度。原典由来は source、住所から求めたものは町字〜住居番号
+  - name: geometry
+    title: ジオメトリ
+    description: geo_lat / geo_lon の POINT。座標が無い行は NULL
+  - name: male_total
+    title: 男性トイレ総数
+    description: 便座単位。数値化できない表記は NULL
+  - name: female_total
+    title: 女性トイレ総数
+    description: 便座単位。数値化できない表記は NULL
+  - name: unisex_total
+    title: 男女共用トイレ総数
+    description: 便座単位。数値化できない表記は NULL
+  - name: barrier_free_total
+    title: バリアフリートイレ数
+    description: 便座単位。数値化できない表記は NULL
+  - name: wheelchair
+    title: 車椅子使用者用トイレ
+    description: 有=true、無=false、不明=NULL
+  - name: baby_facility
+    title: 乳幼児用設備設置トイレ
+    description: 有=true、無=false、不明=NULL
+  - name: ostomate
+    title: オストメイト設置トイレ
+    description: 有=true、無=false、不明=NULL
+  - name: start_time
+    title: 利用開始時間
+  - name: end_time
+    title: 利用終了時間
+  - name: available_notes
+    title: 利用可能時間特記事項
+  - name: image
+    title: 画像
+    description: 画像の格納先 URL
+  - name: notes
+    title: 備考
+  - name: extras
+    title: 追加列
+    description: 標準列にマッピングできなかった元データの列（JSON）。和式/洋式/小便器の内訳等
+  - name: org_code
+    title: 提供組織コード
+    description: catalog.organizations との結合キー
+  - name: org_title
+    title: 提供組織名
+  - name: package_id
+    title: データセットID
+    description: catalog.datasets との結合キー
+  - name: source_url
+    title: 取得元URL

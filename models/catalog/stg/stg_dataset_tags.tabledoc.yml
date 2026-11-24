@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: データセットとタグの対応のステージング。
+hidden: true

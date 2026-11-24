@@ -2,53 +2,29 @@ version: 2
 
 models:
   - name: stg_evacuation_space
-    description: 指定緊急避難場所のステージング。緯度経度・標高を数値化、災害種別を BOOLEAN に正規化。
   - name: stg_aed
-    description: AED設置箇所のステージング。緯度経度を数値化、小児対応設備を BOOLEAN に正規化。
   - name: stg_preschool
-    description: 子育て施設のステージング。緯度経度・収容定員を数値化、一時預かり・病児保育を BOOLEAN に正規化。
   - name: stg_hospital
-    description: 医療機関のステージング。緯度経度・病床数を数値化。
   - name: stg_public_wireless_lan
-    description: 公衆無線LANアクセスポイントのステージング。緯度経度を数値化。
   - name: stg_public_facility
-    description: 公共施設のステージング。緯度経度を数値化。
   - name: stg_public_toilet
-    description: 公衆トイレのステージング。緯度経度・便器数を数値化、設備の有無を BOOLEAN に正規化。
   - name: stg_cultural_property
-    description: 文化財のステージング。緯度経度・員数を数値化。文化財指定日は日不明表記があるため文字列のまま保持。
   - name: stg_tourism
-    description: 観光施設のステージング。緯度経度・基本料金を数値化。
   - name: stg_event
-    description: イベントのステージング。開催日・申込締切日を DATE に正規化、緯度経度・基本料金を数値化。定員は自由記述が混在するため文字列のまま保持。
   - name: stg_school_district
-    description: 小中学校通学区域のステージング。登録日・廃止日を DATE に正規化、POIコードから学校種別を導出。
   - name: stg_fire_hydrant
-    description: 消防水利施設のステージング。緯度経度・口径を数値に変換。
   - name: stg_care_service
-    description: 介護サービス事業所のステージング。緯度経度・定員を数値に変換。
   - name: stg_food_business
-    description: 食品等営業許可・届出のステージング。緯度経度を数値化、許可関連の日付を DATE に正規化。営業の種類・業態は生値のまま保持。
   - name: stg_educational_institution
-    description: 教育機関一覧のステージング。緯度経度を数値化、属性情報の設定日・廃止日を DATE に正規化。学校種・設置区分は生値を保持。
   - name: stg_garbage_separation
-    description: ごみの分別方法一覧のステージング。数値・日付列を持たない品目マスタのため生値を保持し、_メタ列のみ改名。
   - name: stg_bicycle_parking
-    description: 自転車駐車場のステージング。緯度経度・収容台数を数値化、開設日を DATE に正規化。屋内外・料金は生値のまま保持。
   - name: stg_polling_place
-    description: 投票所（期日前投票所を含む）のステージング。緯度経度を数値化。
   - name: stg_support_system
-    description: 支援制度情報のステージング。受付日・公開日を DATE に変換。
   - name: stg_school_lunch
-    description: 学校給食献立情報のステージング。提供年月日を DATE に正規化、分量・栄養価を数値化、アレルゲン情報公開区分を BOOLEAN 化。
   - name: stg_open_data_list
-    description: オープンデータ一覧のステージング。公開日・最終更新日を DATE に、ファイルサイズを数値に、API対応有無を BOOLEAN に正規化。
   - name: stg_population
-    description: 地域・年齢別人口のステージング。総人口・男女別・5歳階級×男女の人口・世帯数を数値化、調査年月日を DATE に正規化（YYYYMMDD 表記も許容）。
   - name: stg_ods_source_files
-    description: ODS 取り込み結果のステージング。行数・取得日時を型変換。
   - name: stg_geocode
-    description: ジオコーディング結果のステージング。採用できる座標が入った行だけを (org_code, address) 単位で持つ。
     data_tests:
       # ods の16モデルがこのキーで左結合する。重複すると結合先の行が黙って倍増し、
       # 値の整合性を見る検査は全部 PASS したまま公開まで進む

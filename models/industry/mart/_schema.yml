@@ -2,9 +2,6 @@ version: 2
 
 models:
   - name: tertiary_activity_index
-    description: |
-      東京都総務局統計部の第3次産業活動指数（平成27年=100）の月次。業種別の原指数と季節調整済指数を、
-      1行 = 月 × 業種 × 指数の種類で持つ。2013年1月から。
     access: public
     columns:
       - name: year

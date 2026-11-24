@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 東京の労働力（東京都）年平均の第3表（年齢階級別就業状態）の生データ。全列 VARCHAR で取り込む。各年の表に載る全年分を、どの年の表か（report_year）と合わせて持つ。
+hidden: true

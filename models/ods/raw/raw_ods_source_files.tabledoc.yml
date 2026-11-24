@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: ODS 取り込みの実行結果（成功/失敗/スキップと理由）。基本は1行=1リソースだが、CSV リソースを持たないパッケージはパッケージ単位で1行。HTML のページだけで登録されたパッケージは、ページに置かれた CSV ごとに1行。
+hidden: true

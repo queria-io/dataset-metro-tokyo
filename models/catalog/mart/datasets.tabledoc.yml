@@ -1,0 +1,47 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: データセット一覧
+description: 東京都オープンデータカタログに登録されたデータセットの一覧（約 9,600 件）です。都庁各局と都内 62 区市町村のデータセットのタイトル・提供組織・ライセンス・更新頻度を持ちます。
+topics:
+  - 東京都
+  - オープンデータ
+  - カタログ
+  - メタデータ
+sources:
+  - catalog
+columns:
+  - name: package_id
+    title: データセットID
+    description: CKAN の内部 UUID。resources などとの結合キー
+  - name: dataset_code
+    title: データセットコード
+    description: カタログ上の識別名（例 t132071d3100000006）。先頭が組織コード
+  - name: title
+    title: タイトル
+  - name: description
+    title: 説明
+  - name: organization_code
+    title: 提供組織コード
+    description: organizations との結合キー（例 t000003 = 東京都総務局）
+  - name: organization_title
+    title: 提供組織名
+  - name: license_id
+    title: ライセンスID
+    description: ほぼ全件が CC-BY-4.0
+  - name: license_title
+    title: ライセンス名
+  - name: maintainer
+    title: 管理者
+    description: データを管理する部署名
+  - name: update_frequency
+    title: 更新頻度
+    description: 元データの自由記述（「年１回」「随時」「月次」等。未記載は NULL）
+  - name: num_resources
+    title: リソース数
+  - name: metadata_created
+    title: メタデータ作成日時
+  - name: metadata_modified
+    title: メタデータ更新日時
+    description: データセットの更新検知に使える最終更新日時
+  - name: portal_url
+    title: ポータルURL
+    description: カタログサイトのデータセットページ URL

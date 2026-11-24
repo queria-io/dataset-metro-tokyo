@@ -1,0 +1,32 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+title: 地域・年齢別人口（年齢階級ロング）
+description: '`ods.population` を年齢階級・性別の縦持ちにしたものです。1 行が 1 地域・調査年月日・年齢階級・性別の人口です。'
+topics:
+  - 東京都
+  - 人口
+  - 年齢別人口
+  - 自治体標準オープンデータセット
+sources:
+  - catalog
+columns:
+  - name: municipality_code
+    title: 全国地方公共団体コード
+    entity: city
+  - name: prefecture
+    title: 都道府県名
+  - name: city
+    title: 市区町村名
+  - name: organization_name
+    title: 地方公共団体名
+  - name: survey_date
+    title: 調査年月日
+  - name: area_name
+    title: 地域名
+  - name: age_band
+    title: 年齢階級
+    description: 5歳階級（0-4 〜 80-84、85歳以上は 85+）
+  - name: sex
+    title: 性別
+    description: 男性 / 女性
+  - name: population
+    title: 人口

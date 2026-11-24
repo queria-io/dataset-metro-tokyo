@@ -1,0 +1,104 @@
+$schema: https://tabledoc.queria.io/schemas/dataset/v1.json
+name: metro_tokyo
+title: 東京都オープンデータカタログ
+description: |-
+  東京都オープンデータカタログのデータセットの一覧と、都内の区市町村が公開する自治体標準オープンデータセット（AED・避難場所・公共施設など 22 種類）を統合したものです。都の保育所・児童館、保健所台帳、住民基本台帳の人口、毎月勤労統計調査、区市町村の調達情報（随意契約の締結状況・発注予定）も収録しています。
+
+  出典：東京都オープンデータカタログ（東京都・都内区市町村）。Queria が加工したものです。
+image: cover.png
+topics:
+  - 東京都
+  - 子育て
+  - 保育所
+  - 児童館
+  - 施設
+  - GIS
+  - カタログ
+  - メタデータ
+  - 人口
+  - 世帯
+  - 外国人
+  - 賃金
+  - 賞与
+  - 労働時間
+  - パートタイム
+  - 雇用
+  - 入職率
+  - 離職率
+  - 賃金指数
+  - 実質賃金
+  - 食品衛生
+  - 営業許可
+  - 飲食店
+  - 生活衛生
+  - 調達
+  - 随意契約
+  - 発注予定
+  - 入札
+synonyms:
+  - 東京都オープンデータ
+  - 自治体標準オープンデータセット
+  - ODS
+  - CKAN
+  - 区市町村
+language: ja
+licenses:
+  - CC-BY-4.0
+sources:
+  - id: catalog
+    title: 東京都オープンデータカタログサイト
+    url: https://catalog.data.metro.tokyo.lg.jp/
+  - id: opendata
+    title: 社会福祉施設等一覧（東京都福祉局）
+    url: https://www.opendata.metro.tokyo.lg.jp/
+  - id: js-index
+    title: 住民基本台帳による世帯と人口（東京都総務局統計部）
+    url: https://www.toukei.metro.tokyo.lg.jp/juukiv/js-index.htm
+  - id: ga-index
+    title: 外国人人口（東京都総務局統計部）
+    url: https://www.toukei.metro.tokyo.lg.jp/gaikoku/ga-index.htm
+  - id: mk-index
+    title: 毎月勤労統計調査（東京都総務局統計部）
+    url: https://www.toukei.metro.tokyo.lg.jp/maikin/mk-index.htm
+  - id: shokuhineigyokyokadaicho
+    title: 保健所台帳（東京都保健医療局）
+    url: https://www.hokeniryo.metro.tokyo.lg.jp/kenkou/hokenjo_daicho/shokuhineigyokyokadaicho
+  - id: t131202d0000000114
+    title: 調達情報（練馬区）
+    url: https://catalog.data.metro.tokyo.lg.jp/dataset/t131202d0000000114
+  - id: t000054
+    url: https://catalog.data.metro.tokyo.lg.jp/organization/t000054
+  - id: ss-index
+    url: https://www.toukei.metro.tokyo.lg.jp/ssisuu/ss-index.htm
+  - id: t000003
+    url: https://catalog.data.metro.tokyo.lg.jp/organization/t000003
+  - id: rd-index
+    url: https://www.toukei.metro.tokyo.lg.jp/roudou/rd-index.htm
+contributors:
+  - id: metro
+    title: 東京都
+    url: https://www.metro.tokyo.lg.jp/
+    roles:
+      - rightsHolder
+  - id: 東京都内の区市町村
+    title: 東京都内の区市町村
+    roles:
+      - rightsHolder
+spatial_coverage:
+  - JP
+update_frequency: monthly
+schemas:
+  - name: catalog
+    title: カタログ
+  - name: childcare
+    title: 子育て施設
+  - name: hokenjo
+    title: 保健所台帳
+  - name: ods
+    title: 自治体標準データセット
+  - name: stats
+    title: 都の統計
+  - name: industry
+    title: 産業活動指数
+  - name: procurement
+    title: 調達情報

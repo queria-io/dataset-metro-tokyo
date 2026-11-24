@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: グループ（分野分類）のステージング。
+hidden: true

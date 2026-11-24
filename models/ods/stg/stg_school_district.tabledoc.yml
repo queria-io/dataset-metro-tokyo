@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 小中学校通学区域のステージング。登録日・廃止日を DATE に正規化、POIコードから学校種別を導出。
+hidden: true

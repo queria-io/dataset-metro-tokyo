@@ -1,6 +1,0 @@
-schema: stats
-name: stg_labour_force_quarterly
-description: 東京の労働力（四半期平均の第1表）のステージング。区分を分類と区分に分け、2004年1〜3月期までの見出しを後の形にそろえ、値を DECIMAL に型変換する（「…」と「-」は NULL）。
-annotations:
-  queria:
-    published: false
