@@ -47,7 +47,7 @@ select
                 ),
                 '／'
             ),
-            part -> case
+            lambda part: case
                 when part in ('就業者', '完全失業者', '自営業主', '家族従業者', '雇用者', '従業者', '休業者')
                     then part || '数'
                 when part = '就業者（再掲）' then '就業者数（再掲）'
