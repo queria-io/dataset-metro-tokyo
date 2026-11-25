@@ -13,7 +13,7 @@ select
     maintainer,
     list_filter(
         from_json(extras, '[{"key":"VARCHAR","value":"VARCHAR"}]'),
-        e -> e.key = '更新頻度'
+        lambda e: e.key = '更新頻度'
     )[1].value as update_frequency,
     try_cast(num_resources as integer) as num_resources,
     try_cast(num_tags as integer) as num_tags,
