@@ -1,0 +1,3 @@
+$schema: https://tabledoc.queria.io/schemas/table/v1.json
+description: 東京の労働力（東京都）四半期平均の第2表（就業状態別15歳以上人口）の生データ。全列 VARCHAR で取り込む。各四半期の表に載る全期間分を、どの四半期の表か（report_year・report_quarter）と合わせて持つ。区分は原典の見出しから男女を除いた文字列のまま。
+hidden: true

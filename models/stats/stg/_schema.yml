@@ -20,6 +20,7 @@ models:
   - name: stg_labour_force_quarterly
   - name: stg_labour_force_unemployment_rate
   - name: stg_labour_force_activity
+  - name: stg_labour_force_activity_quarterly
   - name: stg_labour_force_by_age
   - name: stg_labour_force_by_occupation
   - name: stg_labour_force_by_employment_type
