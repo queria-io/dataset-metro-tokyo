@@ -39,6 +39,8 @@ models:
   - name: raw_labour_force_unemployment_rate_source
   - name: raw_labour_force_activity
   - name: raw_labour_force_activity_source
+  - name: raw_labour_force_activity_quarterly
+  - name: raw_labour_force_activity_quarterly_source
   - name: raw_labour_force_by_age
   - name: raw_labour_force_by_age_source
   - name: raw_labour_force_by_occupation

@@ -303,6 +303,17 @@ models:
       - name: unit
       - name: value
       - name: report_year
+  - name: labour_force_activity_quarterly
+    access: public
+    columns:
+      - name: year
+      - name: quarter
+      - name: sex
+      - name: item
+      - name: unit
+      - name: value
+      - name: report_year
+      - name: report_quarter
   - name: labour_force_by_age
     access: public
     columns:
